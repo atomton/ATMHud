@@ -1,0 +1,460 @@
+// !$*UTF8*$!
+{
+	1D3623240D0F684500981E51 /* ATMHudAppDelegate.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 557}}";
+			sepNavSelRange = "{690, 0}";
+			sepNavVisRange = "{0, 961}";
+		};
+	};
+	1D3623250D0F684500981E51 /* ATMHudAppDelegate.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 858}}";
+			sepNavSelRange = "{690, 0}";
+			sepNavVisRange = "{0, 1263}";
+		};
+	};
+	1D6058900D05DD3D006BFB54 /* ATMHud */ = {
+		activeExec = 0;
+		executables = (
+			1FDE2129131C4431000196EB /* ATMHud */,
+		);
+	};
+	1F0DEFAF131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B74131CD65A00C59266 /* ATMHud.h */;
+		name = "ATMHud.h: 8";
+		rLen = 44;
+		rLoc = 154;
+		rType = 0;
+		vrLen = 898;
+		vrLoc = 0;
+	};
+	1F0DEFB0131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B75131CD65A00C59266 /* ATMHud.m */;
+		name = "ATMHud.m: 10";
+		rLen = 0;
+		rLoc = 197;
+		rType = 0;
+		vrLen = 1084;
+		vrLoc = 0;
+	};
+	1F0DEFB1131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B76131CD65A00C59266 /* ATMHudDelegate.h */;
+		name = "ATMHudDelegate.h: 8";
+		rLen = 43;
+		rLoc = 162;
+		rType = 0;
+		vrLen = 534;
+		vrLoc = 0;
+	};
+	1F0DEFB2131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B77131CD65A00C59266 /* ATMHudQueueItem.h */;
+		name = "ATMHudQueueItem.h: 11";
+		rLen = 0;
+		rLoc = 207;
+		rType = 0;
+		vrLen = 749;
+		vrLoc = 0;
+	};
+	1F0DEFB3131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B78131CD65A00C59266 /* ATMHudQueueItem.m */;
+		name = "ATMHudQueueItem.m: 10";
+		rLen = 0;
+		rLoc = 206;
+		rType = 0;
+		vrLen = 648;
+		vrLoc = 0;
+	};
+	1F0DEFB4131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B79131CD65A00C59266 /* ATMHudView.h */;
+		name = "ATMHudView.h: 10";
+		rLen = 0;
+		rLoc = 201;
+		rType = 0;
+		vrLen = 845;
+		vrLoc = 0;
+	};
+	1F0DEFB5131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B7A131CD65A00C59266 /* ATMHudView.m */;
+		name = "ATMHudView.m: 10";
+		rLen = 0;
+		rLoc = 201;
+		rType = 0;
+		vrLen = 1011;
+		vrLoc = 0;
+	};
+	1F0DEFB6131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B7B131CD65A00C59266 /* ATMProgressLayer.h */;
+		name = "ATMProgressLayer.h: 10";
+		rLen = 0;
+		rLoc = 210;
+		rType = 0;
+		vrLen = 714;
+		vrLoc = 0;
+	};
+	1F0DEFB7131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B7C131CD65A00C59266 /* ATMProgressLayer.m */;
+		name = "ATMProgressLayer.m: 10";
+		rLen = 0;
+		rLoc = 210;
+		rType = 0;
+		vrLen = 1698;
+		vrLoc = 0;
+	};
+	1F0DEFB8131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B7D131CD65A00C59266 /* ATMSoundFX.h */;
+		name = "ATMSoundFX.h: 10";
+		rLen = 0;
+		rLoc = 201;
+		rType = 0;
+		vrLen = 428;
+		vrLoc = 0;
+	};
+	1F0DEFB9131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B7E131CD65A00C59266 /* ATMSoundFX.m */;
+		name = "ATMSoundFX.m: 10";
+		rLen = 0;
+		rLoc = 201;
+		rType = 0;
+		vrLen = 1047;
+		vrLoc = 0;
+	};
+	1F0DEFBA131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B7F131CD65A00C59266 /* ATMTextLayer.h */;
+		name = "ATMTextLayer.h: 10";
+		rLen = 0;
+		rLoc = 203;
+		rType = 0;
+		vrLen = 351;
+		vrLoc = 0;
+	};
+	1F0DEFBB131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B80131CD65A00C59266 /* ATMTextLayer.m */;
+		name = "ATMTextLayer.m: 10";
+		rLen = 0;
+		rLoc = 203;
+		rType = 0;
+		vrLen = 1003;
+		vrLoc = 0;
+	};
+	1F0DEFBC131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B71131CD64B00C59266 /* DemoViewController.h */;
+		name = "DemoViewController.h: 21";
+		rLen = 0;
+		rLoc = 691;
+		rType = 0;
+		vrLen = 1271;
+		vrLoc = 0;
+	};
+	1F0DEFBE131CDFA700654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623240D0F684500981E51 /* ATMHudAppDelegate.h */;
+		name = "ATMHudAppDelegate.h: 21";
+		rLen = 0;
+		rLoc = 690;
+		rType = 0;
+		vrLen = 961;
+		vrLoc = 0;
+	};
+	1F0DEFC5131CDFBF00654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623250D0F684500981E51 /* ATMHudAppDelegate.m */;
+		name = "ATMHudAppDelegate.m: 21";
+		rLen = 0;
+		rLoc = 690;
+		rType = 0;
+		vrLen = 1263;
+		vrLoc = 0;
+	};
+	1F0DEFC6131CDFBF00654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B72131CD64B00C59266 /* DemoViewController.m */;
+		name = "DemoViewController.m: 21";
+		rLen = 0;
+		rLoc = 691;
+		rType = 0;
+		vrLen = 1378;
+		vrLoc = 0;
+	};
+	1F0DEFC8131CE1D000654998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1FEF4B72131CD64B00C59266 /* DemoViewController.m */;
+		name = "DemoViewController.m: 22";
+		rLen = 0;
+		rLoc = 692;
+		rType = 0;
+		vrLen = 1378;
+		vrLoc = 0;
+	};
+	1FDE2129131C4431000196EB /* ATMHud */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = ATMHud;
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	1FDE2138131C4433000196EB /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	1FDE2139131C4433000196EB /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	1FEF4B71131CD64B00C59266 /* DemoViewController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 611}}";
+			sepNavSelRange = "{691, 0}";
+			sepNavVisRange = "{0, 1271}";
+		};
+	};
+	1FEF4B72131CD64B00C59266 /* DemoViewController.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 4667}}";
+			sepNavSelRange = "{692, 0}";
+			sepNavVisRange = "{0, 1378}";
+		};
+	};
+	1FEF4B74131CD65A00C59266 /* ATMHud.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 1586}}";
+			sepNavSelRange = "{154, 44}";
+			sepNavVisRange = "{0, 898}";
+		};
+	};
+	1FEF4B75131CD65A00C59266 /* ATMHud.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 3900}}";
+			sepNavSelRange = "{197, 0}";
+			sepNavVisRange = "{0, 1084}";
+		};
+	};
+	1FEF4B76131CD65A00C59266 /* ATMHudDelegate.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 557}}";
+			sepNavSelRange = "{162, 43}";
+			sepNavVisRange = "{0, 534}";
+		};
+	};
+	1FEF4B77131CD65A00C59266 /* ATMHudQueueItem.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 557}}";
+			sepNavSelRange = "{207, 0}";
+			sepNavVisRange = "{0, 749}";
+		};
+	};
+	1FEF4B78131CD65A00C59266 /* ATMHudQueueItem.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 557}}";
+			sepNavSelRange = "{206, 0}";
+			sepNavVisRange = "{0, 648}";
+		};
+	};
+	1FEF4B79131CD65A00C59266 /* ATMHudView.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 1209}}";
+			sepNavSelRange = "{201, 0}";
+			sepNavVisRange = "{0, 845}";
+		};
+	};
+	1FEF4B7A131CD65A00C59266 /* ATMHudView.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 7670}}";
+			sepNavSelRange = "{201, 0}";
+			sepNavVisRange = "{0, 1011}";
+		};
+	};
+	1FEF4B7B131CD65A00C59266 /* ATMProgressLayer.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 557}}";
+			sepNavSelRange = "{210, 0}";
+			sepNavVisRange = "{0, 714}";
+		};
+	};
+	1FEF4B7C131CD65A00C59266 /* ATMProgressLayer.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 689}}";
+			sepNavSelRange = "{210, 0}";
+			sepNavVisRange = "{0, 1698}";
+		};
+	};
+	1FEF4B7D131CD65A00C59266 /* ATMSoundFX.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 557}}";
+			sepNavSelRange = "{201, 0}";
+			sepNavVisRange = "{0, 428}";
+		};
+	};
+	1FEF4B7E131CD65A00C59266 /* ATMSoundFX.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 663}}";
+			sepNavSelRange = "{201, 0}";
+			sepNavVisRange = "{0, 1047}";
+		};
+	};
+	1FEF4B7F131CD65A00C59266 /* ATMTextLayer.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 557}}";
+			sepNavSelRange = "{203, 0}";
+			sepNavVisRange = "{0, 351}";
+		};
+	};
+	1FEF4B80131CD65A00C59266 /* ATMTextLayer.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 650}}";
+			sepNavSelRange = "{203, 0}";
+			sepNavVisRange = "{0, 1003}";
+		};
+	};
+	1FEF4BAE131CD71300C59266 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 8D1107310486CEB800E47090 /* ATMHud-Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = "/Volumes/250 GB/Benutzer/Marcel/denisundich/iOS Development/github/ATMHud/ATMHud-Info.plist";
+		rLen = 0;
+		rLoc = 9223372036854775808;
+	};
+	1FEF4BC7131CDD5E00C59266 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 32CA4F630368D1EE00C91783 /* ATMHud_Prefix.pch */;
+		name = "ATMHud_Prefix.pch: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 181;
+		vrLoc = 0;
+	};
+	1FEF4BD7131CDD5E00C59266 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 29B97316FDCFA39411CA2CEA /* main.m */;
+		name = "main.m: 2";
+		rLen = 0;
+		rLoc = 13;
+		rType = 0;
+		vrLen = 867;
+		vrLoc = 0;
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 1FDE2129131C4431000196EB /* ATMHud */;
+		activeSDKPreference = iphonesimulator4.2;
+		activeTarget = 1D6058900D05DD3D006BFB54 /* ATMHud */;
+		addToTargets = (
+			1D6058900D05DD3D006BFB54 /* ATMHud */,
+		);
+		codeSenseManager = 1FDE2139131C4433000196EB /* Code sense */;
+		executables = (
+			1FDE2129131C4431000196EB /* ATMHud */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					993,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 320659166;
+			PBXWorkspaceStateSaveDate = 320659166;
+		};
+		perUserProjectItems = {
+			1F0DEFAF131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFAF131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFB0131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFB0131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFB1131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFB1131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFB2131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFB2131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFB3131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFB3131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFB4131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFB4131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFB5131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFB5131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFB6131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFB6131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFB7131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFB7131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFB8131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFB8131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFB9131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFB9131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFBA131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFBA131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFBB131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFBB131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFBC131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFBC131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFBE131CDFA700654998 /* PBXTextBookmark */ = 1F0DEFBE131CDFA700654998 /* PBXTextBookmark */;
+			1F0DEFC5131CDFBF00654998 /* PBXTextBookmark */ = 1F0DEFC5131CDFBF00654998 /* PBXTextBookmark */;
+			1F0DEFC6131CDFBF00654998 /* PBXTextBookmark */ = 1F0DEFC6131CDFBF00654998 /* PBXTextBookmark */;
+			1F0DEFC8131CE1D000654998 /* PBXTextBookmark */ = 1F0DEFC8131CE1D000654998 /* PBXTextBookmark */;
+			1FEF4BAE131CD71300C59266 /* PlistBookmark */ = 1FEF4BAE131CD71300C59266 /* PlistBookmark */;
+			1FEF4BC7131CDD5E00C59266 /* PBXTextBookmark */ = 1FEF4BC7131CDD5E00C59266 /* PBXTextBookmark */;
+			1FEF4BD7131CDD5E00C59266 /* PBXTextBookmark */ = 1FEF4BD7131CDD5E00C59266 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 1FDE2138131C4433000196EB /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	29B97316FDCFA39411CA2CEA /* main.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 562}}";
+			sepNavSelRange = "{13, 0}";
+			sepNavVisRange = "{0, 867}";
+		};
+	};
+	32CA4F630368D1EE00C91783 /* ATMHud_Prefix.pch */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1171, 562}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 181}";
+		};
+	};
+}
