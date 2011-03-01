@@ -39,7 +39,8 @@ ATMHud is licensed under BSD, have a look at the appropriate file for more infor
 
 Contributions
 -------------
-  Beta testers: @jonsterling @thermogl @GiloTM @phollow @Thyraz @saschalein @EdwinBrett @rbfigueira @abrrow @choise
-  @ChrisNTR for porting this to MonoTouch
-  @C418 for his [awesome music](http://c418.bandcamp.com/track/no-but-yes) as seen in the release video
-  and anyone else I forgot.
+
+  * Beta testers: @jonsterling @thermogl @GiloTM @phollow @Thyraz @saschalein @EdwinBrett @rbfigueira @abrrow @choise
+  * @ChrisNTR for porting this to MonoTouch
+  * @C418 for his [awesome music](http://c418.bandcamp.com/track/no-but-yes) as seen in the release video
+  * and anyone else I forgot.
