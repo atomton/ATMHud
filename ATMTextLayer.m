@@ -15,7 +15,7 @@
 @synthesize caption;
 
 - (id)initWithLayer:(id)layer {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		caption = @"";
 	}
 	return self;

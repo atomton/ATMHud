@@ -41,7 +41,7 @@
 }
 
 - (id)initWithFrame:(CGRect)frame andController:(ATMHud *)c {
-    if (self = [super initWithFrame:frame]) {
+    if ((self = [super initWithFrame:frame])) {
 		self.p = c;
 		self.backgroundColor = [UIColor clearColor];
 		self.opaque = NO;

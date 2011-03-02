@@ -39,7 +39,7 @@
 #pragma mark -
 #pragma mark View lifecycle
 - (id)init {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		NSArray *section0 = [NSArray arrayWithObjects:@"Show with caption only", @"Show with caption and activity", @"Show with caption and image", @"Show activity only", @"Play sound on show", nil];
 		NSArray *section1 = [NSArray arrayWithObjects:@"Show and auto-hide", @"Show, update and auto-hide", @"Show progress bar", @"Show queued HUD", nil];
 		NSArray *section2 = [NSArray arrayWithObjects:@"Accessory top", @"Accessory right", @"Accessory bottom", @"Accessory left", nil];

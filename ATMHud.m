@@ -31,14 +31,14 @@
 @synthesize __view, sound, displayQueue, queuePosition;
 
 - (id)init {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		[self construct];
 	}
 	return self;
 }
 
 - (id)initWithDelegate:(id)hudDelegate {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		delegate = hudDelegate;
 		[self construct];
 	}

@@ -15,7 +15,7 @@
 @synthesize caption, image, showActivity, accessoryPosition, activityStyle;
 
 - (id)init {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		caption = @"";
 		image = nil;
 		showActivity = NO;
