@@ -17,7 +17,7 @@
 	UIImage *image;
 	BOOL showActivity;
 	ATMHudAccessoryPosition accessoryPosition;
-	UIActivityIndicatorViewStyle accessoryStyle;
+	UIActivityIndicatorViewStyle activityStyle;
 }
 
 @property (nonatomic, retain) NSString *caption;
