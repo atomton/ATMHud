@@ -141,7 +141,7 @@
 	}
 }
 
-- (void)setActivityStyle:(BOOL)activityStyle {
+- (void)setActivityStyle:(UIActivityIndicatorViewStyle)activityStyle {
 	__view.activityStyle = activityStyle;
 	if (activityStyle == UIActivityIndicatorViewStyleWhiteLarge) {
 		__view.activitySize = CGSizeMake(37, 37);
