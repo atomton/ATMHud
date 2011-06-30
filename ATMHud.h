@@ -86,7 +86,7 @@ typedef enum {
 - (void)setCaption:(NSString *)caption;
 - (void)setImage:(UIImage *)image;
 - (void)setActivity:(BOOL)activity;
-- (void)setActivityStyle:(BOOL)activityStyle;
+- (void)setActivityStyle:(UIActivityIndicatorViewStyle)activityStyle;
 - (void)setFixedSize:(CGSize)fixedSize;
 - (void)setProgress:(CGFloat)progress;
 
