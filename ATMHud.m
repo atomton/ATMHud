@@ -251,6 +251,12 @@
 	[self performSelector:@selector(hide) withObject:nil afterDelay:delay];
 }
 
+- (void)showWithCaption:(NSString *)caption andHideAfter:(NSTimeInterval)delay {
+    [self setCaption:caption];
+    [self show];
+    [self hideAfter:delay];
+}
+
 #pragma mark -
 #pragma mark Internal methods
 - (void)construct {
