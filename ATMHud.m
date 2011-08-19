@@ -24,6 +24,7 @@
 
 @implementation ATMHud
 @synthesize margin, padding, alpha, appearScaleFactor, disappearScaleFactor, progressBorderRadius, progressBorderWidth, progressBarRadius, progressBarInset;
+@synthesize gray;
 @synthesize delegate, accessoryPosition;
 @synthesize center;
 @synthesize shadowEnabled, blockTouches, allowSuperviewInteraction;
@@ -109,8 +110,16 @@
 	alpha = value;
 	[CATransaction begin];
 	[CATransaction setDisableActions:YES];
-	__view.backgroundLayer.backgroundColor = [UIColor colorWithWhite:0.0 alpha:value].CGColor;
+	__view.backgroundLayer.backgroundColor = [UIColor colorWithWhite:gray alpha:value].CGColor;
 	[CATransaction commit];
+}
+
+- (void)setGray:(CGFloat)value {
+    gray = value;
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    __view.backgroundLayer.backgroundColor = [UIColor colorWithWhite:gray alpha:alpha].CGColor;
+ 	[CATransaction commit];
 }
 
 - (void)setShadowEnabled:(BOOL)value {
@@ -267,6 +276,7 @@
 - (void)construct {
 	margin = padding = 10.0;
 	alpha = 0.7;
+    gray = 0.0;
 	progressBorderRadius = 8.0;
 	progressBorderWidth = 2.0;
 	progressBarRadius = 5.0;
