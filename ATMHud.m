@@ -161,6 +161,11 @@
 	[__view.progressLayer setNeedsDisplay];
 }
 
+- (void)setCenter:(CGPoint)p {
+    center = p;
+    __view.center = center;
+}
+
 #pragma mark -
 #pragma mark Queue
 - (void)addQueueItem:(ATMHudQueueItem *)item {
