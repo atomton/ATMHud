@@ -23,7 +23,7 @@
 @end
 
 @implementation ATMHud
-@synthesize margin, padding, alpha, gray, appearScaleFactor, disappearScaleFactor, progressBorderRadius, progressBorderWidth, progressBarRadius, progressBarInset;
+@synthesize margin, padding, alpha, gray, animateDuration, appearScaleFactor, disappearScaleFactor, progressBorderRadius, progressBorderWidth, progressBarRadius, progressBarInset;
 @synthesize delegate, accessoryPosition;
 @synthesize center;
 @synthesize shadowEnabled, blockTouches, allowSuperviewInteraction;
@@ -272,6 +272,7 @@
 	margin = padding = 10.0;
 	alpha = 0.7;
 	gray = 0.0;
+	animateDuration = 0.1f;
 	progressBorderRadius = 8.0;
 	progressBorderWidth = 2.0;
 	progressBarRadius = 5.0;

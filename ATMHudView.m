@@ -382,7 +382,7 @@
 				
 				self.transform = CGAffineTransformMakeScale(p.appearScaleFactor, p.appearScaleFactor);
 
-				[UIView animateWithDuration:.1 
+				[UIView animateWithDuration:p.animateDuration 
 								 animations:^{
 									 self.transform = CGAffineTransformMakeScale(1.0, 1.0);
 									 self.alpha = 1.0;
@@ -507,7 +507,7 @@
 				[p playSound:p.hideSound];
 			}
 			
-			[UIView animateWithDuration:.1 
+			[UIView animateWithDuration:p.animateDuration
 							 animations:^{ 
 								 self.alpha = 0.0;
 								 self.transform = CGAffineTransformMakeScale(p.disappearScaleFactor, p.disappearScaleFactor);
