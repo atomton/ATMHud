@@ -30,6 +30,7 @@
 @synthesize shadowEnabled, blockTouches, allowSuperviewInteraction;
 @synthesize showSound, updateSound, hideSound;
 @synthesize __view, sound, displayQueue, queuePosition;
+@synthesize autocenter;
 
 - (id)init {
 	if ((self = [super init])) {
@@ -250,6 +251,12 @@
 #pragma mark -
 #pragma mark Controlling
 - (void)show {
+    if (autocenter) {
+        CGRect svb = [self.view superView].bounds;
+        self.view.center = CGPointMake(svb.origin.x + svb.size.width / 2,
+                                       svb.origin.y + svb.size.height / 2);
+    }
+    
 	[__view show];
 }
 
@@ -299,6 +306,7 @@
 	center = CGPointZero;
 	blockTouches = NO;
 	allowSuperviewInteraction = NO;
+    autocenter = YES;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
