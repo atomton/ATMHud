@@ -68,6 +68,7 @@ typedef enum {
 @property (nonatomic, assign) BOOL blockTouches;
 @property (nonatomic, assign) BOOL allowSuperviewInteraction;
 @property (nonatomic, assign) BOOL autocenter; // YES
+@property (nonatomic, assign) BOOL autoBringToFront; // YES
 
 @property (nonatomic, retain) NSString *showSound;
 @property (nonatomic, retain) NSString *updateSound;

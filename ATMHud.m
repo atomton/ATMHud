@@ -31,6 +31,7 @@
 @synthesize showSound, updateSound, hideSound;
 @synthesize __view, sound, displayQueue, queuePosition;
 @synthesize autocenter;
+@synthesize autoBringToFront;
 
 - (id)init {
 	if ((self = [super init])) {
@@ -257,6 +258,9 @@
                                        svb.origin.y + svb.size.height / 2);
     }
     
+    if (autoBringToFront)
+        [self.superView bringSubviewToFront:self.view];
+    
 	[__view show];
 }
 
@@ -307,6 +311,7 @@
 	blockTouches = NO;
 	allowSuperviewInteraction = NO;
     autocenter = YES;
+    autoBringToFront = YES;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
