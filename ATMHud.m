@@ -252,7 +252,7 @@
 #pragma mark Controlling
 - (void)show {
     if (autocenter) {
-        CGRect svb = [self.view superView].bounds;
+        CGRect svb = self.view.superView.bounds;
         self.view.center = CGPointMake(svb.origin.x + svb.size.width / 2,
                                        svb.origin.y + svb.size.height / 2);
     }
