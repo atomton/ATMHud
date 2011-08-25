@@ -252,6 +252,11 @@
 		}
 			
 		case 3: {
+	hud.appearScaleFactor		= 0.8f;
+	hud.disappearScaleFactor	= 0.8f;
+	hud.gray					= 0.2f;
+	hud.alpha					= 0.8f;
+
 			ATMHudQueueItem *item = [[ATMHudQueueItem alloc] init];
 			item.caption = @"Display #1";
 			item.image = nil;
