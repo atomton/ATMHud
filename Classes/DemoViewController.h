@@ -21,10 +21,10 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "ATMHudDelegate.h"
+
 @class ATMHud;
 
-@interface DemoViewController : UIViewController <ATMHudDelegate, UITableViewDataSource, UITableViewDelegate> {
+@interface DemoViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
 	UITableView *tv_demo;
 	ATMHud *hud;
 	
