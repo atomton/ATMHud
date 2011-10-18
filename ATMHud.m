@@ -170,6 +170,10 @@
 }
 
 - (void)setProgress:(CGFloat)progress {
+	if(progress < 0) progress = 0;
+	else
+	if(progress > 1.0f) progress = 1;
+	
 	__view.progress = progress;
 	
 	[__view.progressLayer setTheProgress:progress];
