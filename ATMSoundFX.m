@@ -22,14 +22,14 @@
 
 - (id)initWithContentsOfFile:(NSString *)path {
     self = [super init];
-    
+
     if (self != nil) {
         NSURL *aFileURL = [NSURL fileURLWithPath:path isDirectory:NO];
-        
+
         if (aFileURL != nil)  {
             SystemSoundID aSoundID;
             OSStatus error = AudioServicesCreateSystemSoundID((CFURLRef)aFileURL, &aSoundID);
-            
+
             if (error == kAudioServicesNoError) {
                 _soundID = aSoundID;
             } else {

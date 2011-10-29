@@ -27,11 +27,11 @@
 @interface DemoViewController : UIViewController <ATMHudDelegate, UITableViewDataSource, UITableViewDelegate> {
 	UITableView *tv_demo;
 	ATMHud *hud;
-	
+
 	NSArray *sectionHeaders;
 	NSArray *sectionFooters;
 	NSArray *cellCaptions;
-	
+
 	BOOL useFixedSize;
 }
 

@@ -23,20 +23,20 @@ typedef enum {
 	UIActivityIndicatorView *activity;
 	UIActivityIndicatorViewStyle activityStyle;
 	ATMHud *p;
-	
+
 	BOOL showActivity;
- 
+
 	CGFloat progress;
-	
+
 	CGRect targetBounds;
 	CGRect captionRect;
 	CGRect progressRect;
 	CGRect activityRect;
 	CGRect imageRect;
-	
+
 	CGSize fixedSize;
 	CGSize activitySize;
-	
+
 	CALayer *backgroundLayer;
 	CALayer *imageLayer;
 	ATMTextLayer *captionLayer;

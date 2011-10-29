@@ -26,7 +26,7 @@
 
 #pragma mark -
 #pragma mark Private interface
-@interface DemoViewController () 
+@interface DemoViewController ()
 - (void)basicHudActionForRow:(NSUInteger)row;
 - (void)advancedHudActionForRow:(NSUInteger)row;
 - (void)positioningActionForRow:(NSUInteger)row;
@@ -44,7 +44,7 @@
 		NSArray *section1 = [NSArray arrayWithObjects:@"Show and auto-hide", @"Show, update and auto-hide", @"Show progress bar", @"Show queued HUD", nil];
 		NSArray *section2 = [NSArray arrayWithObjects:@"Accessory top", @"Accessory right", @"Accessory bottom", @"Accessory left", nil];
 		NSArray *section3 = [NSArray arrayWithObject:@"Use fixed size"];
-		
+
 		sectionHeaders = [[NSArray alloc] initWithObjects:@"Basic functions", @"Advanced functions", @"Accessory positioning", @"", nil];
 		sectionFooters = [[NSArray alloc] initWithObjects:@"Tap the HUD to hide it.", @"Tap to hide is disabled.", @"", [ATMHud buildInfo], nil];
 		cellCaptions = [[NSArray alloc] initWithObjects:section0, section1, section2, section3, nil];
@@ -54,18 +54,18 @@
 
 - (void)loadView {
 	UIView *baseView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-	
+
 	tv_demo = [[UITableView alloc] initWithFrame:baseView.bounds style:UITableViewStyleGrouped];
 	tv_demo.delegate = self;
 	tv_demo.dataSource = self;
 	tv_demo.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
 								UIViewAutoresizingFlexibleHeight);
-	
+
 	[baseView addSubview:tv_demo];
-	
+
 	hud = [[ATMHud alloc] initWithDelegate:self];
 	[baseView addSubview:hud.view];
-	
+
 	self.view = baseView;
 	[baseView release];
 }
@@ -81,11 +81,11 @@
 - (void)dealloc {
 	[tv_demo release];
 	[hud release];
-	
+
 	[cellCaptions release];
 	[sectionHeaders release];
 	[sectionFooters release];
-	
+
     [super dealloc];
 }
 
@@ -108,19 +108,19 @@
 		case 0:
 			return 5;
 			break;
-			
+
 		case 1:
 			return 4;
 			break;
-			
+
 		case 2:
 			return 4;
 			break;
-			
+
 		case 3:
 			return 1;
 			break;
-			
+
 		default:
 			return 0;
 			break;
@@ -132,22 +132,22 @@
 	if (indexPath.section == 3) {
 		ident = @"SwitchCell";
 	}
-	
+
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ident];
-	
+
 	if (cell == nil) {
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ident] autorelease];
 	}
-	
+
 	if (indexPath.section == 3) {
 		UISwitch *fsSwitch = [[UISwitch alloc] init];
 		[fsSwitch sizeToFit];
 		fsSwitch.on = useFixedSize;
 		[fsSwitch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
-		
+
 		cell.accessoryView = fsSwitch;
 		[fsSwitch release];
-		
+
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	} else {
@@ -155,9 +155,9 @@
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 	}
-	
+
 	cell.textLabel.text = [[cellCaptions objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-	
+
 	return cell;
 }
 
@@ -179,16 +179,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-	
+
 	switch (indexPath.section) {
 		case 0:
 			[self basicHudActionForRow:indexPath.row];
 			break;
-			
+
 		case 1:
 			[self advancedHudActionForRow:indexPath.row];
 			break;
-			
+
 		case 2:
 			[self positioningActionForRow:indexPath.row];
 			break;
@@ -202,22 +202,22 @@
 		case 0:
 			[hud setCaption:@"Just a simple caption."];
 			break;
-			
+
 		case 1:
 			[hud setCaption:@"Caption and an activity indicator."];
 			[hud setActivity:YES];
 			break;
-			
+
 		case 2:
 			[hud setCaption:@"Caption and an image."];
 			[hud setImage:[UIImage imageNamed:@"19-check"]];
 			break;
-			
+
 		case 3:
 			[hud setActivity:YES];
 			[hud setActivityStyle:UIActivityIndicatorViewStyleWhiteLarge];
 			break;
-			
+
 		case 4:
 			[hud setCaption:@"Showing the HUD triggers a sound."];
 			[hud setShowSound:[[NSBundle mainBundle] pathForResource:@"pop" ofType:@"wav"]];
@@ -234,14 +234,14 @@
 			[hud show];
 			[hud hideAfter:2.0];
 			break;
-			
+
 		case 1:
 			[hud setCaption:@"This HUD will update in 2 seconds."];
 			[hud setActivity:YES];
 			[hud show];
 			[self performSelector:@selector(updateHud) withObject:nil afterDelay:2.0];
 			break;
-			
+
 		case 2: {
 			NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:.02 target:self selector:@selector(tick:) userInfo:nil repeats:YES];
 			[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
@@ -250,7 +250,7 @@
 			[hud show];
 			break;
 		}
-			
+
 		case 3: {
 			ATMHudQueueItem *item = [[ATMHudQueueItem alloc] init];
 			item.caption = @"Display #1";
@@ -259,7 +259,7 @@
 			item.showActivity = NO;
 			[hud addQueueItem:item];
 			[item release];
-			
+
 			item = [[ATMHudQueueItem alloc] init];
 			item.caption = @"Display #2";
 			item.image = nil;
@@ -267,7 +267,7 @@
 			item.showActivity = YES;
 			[hud addQueueItem:item];
 			[item release];
-			
+
 			item = [[ATMHudQueueItem alloc] init];
 			item.caption = @"Display #3";
 			item.image = [UIImage imageNamed:@"19-check"];
@@ -275,7 +275,7 @@
 			item.showActivity = NO;
 			[hud addQueueItem:item];
 			[item release];
-			
+
 			[hud startQueue];
 			[self performSelector:@selector(showNextDisplayInQueue) withObject:nil afterDelay:2];
 			break;
@@ -314,17 +314,17 @@
 			[hud setCaption:@"Position: Top"];
 			[hud setProgress:0.45];
 			break;
-			
+
 		case 1:
 			[hud setCaption:@"Position: Right"];
 			[hud setActivity:YES];
 			break;
-			
+
 		case 2:
 			[hud setCaption:@"Position: Bottom"];
 			[hud setImage:[UIImage imageNamed:@"11-x"]];
 			break;
-			
+
 		case 3:
 			[hud setCaption:@"Position: Left"];
 			[hud setActivity:YES];

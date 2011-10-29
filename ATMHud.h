@@ -30,20 +30,20 @@ typedef enum {
 	CGFloat progressBorderWidth;
 	CGFloat progressBarRadius;
 	CGFloat progressBarInset;
-	
+
 	CGPoint center;
-	
+
 	BOOL shadowEnabled;
 	BOOL blockTouches;
 	BOOL allowSuperviewInteraction;
-	
+
 	NSString *showSound;
 	NSString *updateSound;
 	NSString *hideSound;
-	
+
 	id <ATMHudDelegate> delegate;
 	ATMHudAccessoryPosition accessoryPosition;
-	
+
 	@private
 	ATMHudView *__view;
 	ATMSoundFX *sound;
