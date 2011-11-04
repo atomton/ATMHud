@@ -55,6 +55,7 @@ typedef enum {
 @property (nonatomic, assign) CGFloat padding;
 @property (nonatomic, assign) CGFloat alpha;
 @property (nonatomic, assign) CGFloat gray;
+@property (nonatomic, assign) CGFloat hideDelay;	// wait this long before closing (not directly used by this class)
 @property (nonatomic, assign) CGFloat animateDuration;
 @property (nonatomic, assign) CGFloat appearScaleFactor;
 @property (nonatomic, assign) CGFloat disappearScaleFactor;
