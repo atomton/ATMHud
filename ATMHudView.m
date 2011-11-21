@@ -86,7 +86,7 @@
 	[caption release];
 	[image release];
 	[activity release];
-	[p release];
+	p = nil;
 	
 	[backgroundLayer release];
 	[imageLayer release];
@@ -219,8 +219,9 @@
 				imageRect = CGRectZero;
 				imageRect.origin.x = (targetBounds.size.width-image.size.width)*0.5;
 				imageRect.origin.y = marginY;
-				imageRect.size = image.size;
-				
+				if (image.size.width > 0.0f && image.size.height > 0.0f) {
+					imageRect.size = image.size;
+				}				
 				progressRect = CGRectMake((targetBounds.size.width-progressRect.size.width)*0.5, marginY, progressRect.size.width, progressRect.size.height);
 				
 				captionRect.origin.x = (targetBounds.size.width-captionSize.width)*0.5;
