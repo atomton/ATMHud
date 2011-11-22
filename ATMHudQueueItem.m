@@ -25,10 +25,5 @@
 	return self;
 }
 
-- (void)dealloc {
-	[caption release];
-	[image release];
-	[super dealloc];
-}
 
 @end

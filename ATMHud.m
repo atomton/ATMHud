@@ -54,7 +54,6 @@
 	[base addSubview:__view];
 	
 	self.view = base;
-	[base release];
 }
 
 - (void)viewDidLoad {
@@ -73,17 +72,6 @@
     [super viewDidUnload];
 }
 
-- (void)dealloc {
-	[sound release];
-	[__view release];
-	[displayQueue release];
-	
-	[showSound release];
-	[updateSound release];
-	[hideSound release];
-	
-    [super dealloc];
-}
 
 + (NSString *)buildInfo {
 	return @"atomHUD 1.2 • 2011-03-01";

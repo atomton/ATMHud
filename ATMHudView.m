@@ -83,17 +83,7 @@
 }
 
 - (void)dealloc {
-	[caption release];
-	[image release];
-	[activity release];
 	p = nil;
-	
-	[backgroundLayer release];
-	[imageLayer release];
-	[captionLayer release];
-	[progressLayer release];
-	
-    [super dealloc];
 }
 
 - (void)setProgress:(CGFloat)_p {

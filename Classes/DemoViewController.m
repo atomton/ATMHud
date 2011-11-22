@@ -67,7 +67,6 @@
 	[baseView addSubview:hud.view];
 	
 	self.view = baseView;
-	[baseView release];
 }
 
 - (void)viewDidLoad {
@@ -78,16 +77,6 @@
     return YES;
 }
 
-- (void)dealloc {
-	[tv_demo release];
-	[hud release];
-	
-	[cellCaptions release];
-	[sectionHeaders release];
-	[sectionFooters release];
-	
-    [super dealloc];
-}
 
 #pragma mark -
 #pragma mark UITableView
@@ -136,7 +125,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ident];
 	
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ident] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ident];
 	}
 	
 	if (indexPath.section == 3) {
@@ -146,7 +135,6 @@
 		[fsSwitch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
 		
 		cell.accessoryView = fsSwitch;
-		[fsSwitch release];
 		
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -263,7 +251,6 @@
 			item.accessoryPosition = ATMHudAccessoryPositionBottom;
 			item.showActivity = NO;
 			[hud addQueueItem:item];
-			[item release];
 			
 			item = [[ATMHudQueueItem alloc] init];
 			item.caption = @"Display #2";
@@ -271,7 +258,6 @@
 			item.accessoryPosition = ATMHudAccessoryPositionRight;
 			item.showActivity = YES;
 			[hud addQueueItem:item];
-			[item release];
 			
 			item = [[ATMHudQueueItem alloc] init];
 			item.caption = @"Display #3";
@@ -279,7 +265,6 @@
 			item.accessoryPosition = ATMHudAccessoryPositionBottom;
 			item.showActivity = NO;
 			[hud addQueueItem:item];
-			[item release];
 			
 			[hud startQueue];
 			[self performSelector:@selector(showNextDisplayInQueue) withObject:nil afterDelay:2];
