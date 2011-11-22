@@ -34,7 +34,6 @@
 	rvc.title = @"atomHUD • Demo";
 	
 	nav = [[UINavigationController alloc] initWithRootViewController:rvc];
-	[rvc release];
 	
 	window.rootViewController = nav;
     [self.window makeKeyAndVisible];
@@ -63,11 +62,6 @@
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
 }
 
-- (void)dealloc {
-    [window release];
-	[nav release];
-    [super dealloc];
-}
 
 
 @end

@@ -20,8 +20,8 @@
 	UIActivityIndicatorViewStyle activityStyle;
 }
 
-@property (nonatomic, retain) NSString *caption;
-@property (nonatomic, retain) UIImage *image;
+@property (nonatomic, strong) NSString *caption;
+@property (nonatomic, strong) UIImage *image;
 @property (nonatomic, assign) BOOL showActivity;
 @property (nonatomic, assign) ATMHudAccessoryPosition accessoryPosition;
 @property (nonatomic, assign) UIActivityIndicatorViewStyle activityStyle;

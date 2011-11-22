@@ -35,12 +35,12 @@
 	BOOL useFixedSize;
 }
 
-@property (nonatomic, retain) UITableView *tv_demo;
-@property (nonatomic, retain) ATMHud *hud;
+@property (nonatomic, strong) UITableView *tv_demo;
+@property (nonatomic, strong) ATMHud *hud;
 
-@property (nonatomic, retain) NSArray *sectionHeaders;
-@property (nonatomic, retain) NSArray *sectionFooters;
-@property (nonatomic, retain) NSArray *cellCaptions;
+@property (nonatomic, strong) NSArray *sectionHeaders;
+@property (nonatomic, strong) NSArray *sectionFooters;
+@property (nonatomic, strong) NSArray *cellCaptions;
 
 @property (nonatomic, assign) BOOL useFixedSize;
 

@@ -82,19 +82,6 @@
     return self;
 }
 
-- (void)dealloc {
-	[caption release];
-	[image release];
-	[activity release];
-	[p release];
-	
-	[backgroundLayer release];
-	[imageLayer release];
-	[captionLayer release];
-	[progressLayer release];
-	
-    [super dealloc];
-}
 
 - (void)setProgress:(CGFloat)_p {
 	_p = MIN(MAX(0,_p),1);

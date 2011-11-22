@@ -41,7 +41,7 @@ typedef enum {
 	NSString *updateSound;
 	NSString *hideSound;
 	
-	id <ATMHudDelegate> delegate;
+	id <ATMHudDelegate> __unsafe_unretained delegate;
 	ATMHudAccessoryPosition accessoryPosition;
 	
 	@private
@@ -70,16 +70,16 @@ typedef enum {
 @property (nonatomic, assign) BOOL blockTouches;
 @property (nonatomic, assign) BOOL allowSuperviewInteraction;
 
-@property (nonatomic, retain) NSString *showSound;
-@property (nonatomic, retain) NSString *updateSound;
-@property (nonatomic, retain) NSString *hideSound;
+@property (nonatomic, strong) NSString *showSound;
+@property (nonatomic, strong) NSString *updateSound;
+@property (nonatomic, strong) NSString *hideSound;
 
-@property (nonatomic, assign) id <ATMHudDelegate> delegate;
+@property (nonatomic, unsafe_unretained) id <ATMHudDelegate> delegate;
 @property (nonatomic, assign) ATMHudAccessoryPosition accessoryPosition;
 
-@property (nonatomic, retain) ATMHudView *__view;
-@property (nonatomic, retain) ATMSoundFX *sound;
-@property (nonatomic, retain) NSMutableArray *displayQueue;
+@property (nonatomic, strong) ATMHudView *__view;
+@property (nonatomic, strong) ATMSoundFX *sound;
+@property (nonatomic, strong) NSMutableArray *displayQueue;
 @property (nonatomic, assign) NSInteger queuePosition;
 
 + (NSString *)buildInfo;

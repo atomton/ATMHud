@@ -15,6 +15,6 @@
 	NSString *caption;
 }
 
-@property (nonatomic, retain) NSString *caption;
+@property (nonatomic, strong) NSString *caption;
 
 @end

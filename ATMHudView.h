@@ -43,11 +43,11 @@ typedef enum {
 	ATMProgressLayer *progressLayer;
 }
 
-@property (nonatomic, retain) NSString *caption;
-@property (nonatomic, retain) UIImage *image;
-@property (nonatomic, retain) UIActivityIndicatorView *activity;
+@property (nonatomic, strong) NSString *caption;
+@property (nonatomic, strong) UIImage *image;
+@property (nonatomic, strong) UIActivityIndicatorView *activity;
 @property (nonatomic, assign) UIActivityIndicatorViewStyle activityStyle;
-@property (nonatomic, retain) ATMHud *p;
+@property (nonatomic, strong) ATMHud *p;
 
 @property (nonatomic, assign) BOOL showActivity;
 
@@ -62,10 +62,10 @@ typedef enum {
 @property (nonatomic, assign) CGSize fixedSize;
 @property (nonatomic, assign) CGSize activitySize;
 
-@property (nonatomic, retain) CALayer *backgroundLayer;
-@property (nonatomic, retain) CALayer *imageLayer;
-@property (nonatomic, retain) ATMTextLayer *captionLayer;
-@property (nonatomic, retain) ATMProgressLayer *progressLayer;
+@property (nonatomic, strong) CALayer *backgroundLayer;
+@property (nonatomic, strong) CALayer *imageLayer;
+@property (nonatomic, strong) ATMTextLayer *captionLayer;
+@property (nonatomic, strong) ATMProgressLayer *progressLayer;
 
 - (id)initWithFrame:(CGRect)frame andController:(ATMHud *)c;
 
