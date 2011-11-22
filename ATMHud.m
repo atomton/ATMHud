@@ -81,14 +81,14 @@
 #pragma mark Overrides
 - (void)setAppearScaleFactor:(CGFloat)value {
 	if (value == 0) {
-		value = 0.01;
+		value = 0.01f;
 	}
 	appearScaleFactor = value;
 }
 
 - (void)setDisappearScaleFactor:(CGFloat)value {
 	if (value == 0) {
-		value = 0.01;
+		value = 0.01f;
 	}
 	disappearScaleFactor = value;
 }
@@ -119,9 +119,9 @@
 - (void)setShadowEnabled:(BOOL)value {
 	shadowEnabled = value;
 	if (shadowEnabled) {
-		__view.layer.shadowOpacity = 0.4;
+		__view.layer.shadowOpacity = 0.4f;
 	} else {
-		__view.layer.shadowOpacity = 0.0;
+		__view.layer.shadowOpacity = 0.0f;
 	}
 }
 
@@ -188,7 +188,7 @@
 		CGSize newSize = __view.fixedSize;
 		CGSize targetSize;
 		ATMHudQueueItem *queueItem;
-		for (int i = 0; i < [displayQueue count]; i++) {
+		for (NSUInteger i = 0; i < [displayQueue count]; i++) {
 			queueItem = [displayQueue objectAtIndex:i];
 			
 			targetSize = [__view calculateSizeForQueueItem:queueItem];
@@ -209,7 +209,7 @@
 	[self showQueueAtIndex:queuePosition];
 }
 
-- (void)showQueueAtIndex:(NSInteger)index {
+- (void)showQueueAtIndex:(NSUInteger)index {
 	if ([displayQueue count] > 0) {
 		queuePosition = index;
 		if (queuePosition == [displayQueue count]) {
@@ -261,16 +261,16 @@
 #pragma mark -
 #pragma mark Internal methods
 - (void)construct {
-	margin = padding = 10.0;
-	alpha = 0.7;
-	gray = 0.0;
+	margin = padding = 10.0f;
+	alpha = 0.7f;
+	gray = 0.0f;
 	animateDuration = 0.1f;
-	progressBorderRadius = 8.0;
-	progressBorderWidth = 2.0;
-	progressBarRadius = 5.0;
-	progressBarInset = 3.0;
+	progressBorderRadius = 8.0f;
+	progressBorderWidth = 2.0f;
+	progressBarRadius = 5.0f;
+	progressBarInset = 3.0f;
 	accessoryPosition = ATMHudAccessoryPositionBottom;
-	appearScaleFactor = disappearScaleFactor = 1.4;
+	appearScaleFactor = disappearScaleFactor = 1.4f;
 	
 	__view = [[ATMHudView alloc] initWithFrame:CGRectZero andController:self];
 	__view.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin |

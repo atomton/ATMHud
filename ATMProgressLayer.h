@@ -11,14 +11,7 @@
 
 #import <QuartzCore/CALayer.h>
 
-@interface ATMProgressLayer : CALayer {
-	CGFloat theProgress;
-	CGFloat progressBorderWidth;
-	CGFloat progressBorderRadius;
-	CGFloat progressBarRadius;
-	CGFloat progressBarInset;
-}
-
+@interface ATMProgressLayer : CALayer
 @property (nonatomic, assign) CGFloat theProgress;
 @property (nonatomic, assign) CGFloat progressBorderWidth;
 @property (nonatomic, assign) CGFloat progressBorderRadius;

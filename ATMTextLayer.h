@@ -11,10 +11,7 @@
 
 #import <QuartzCore/CALayer.h>
 
-@interface ATMTextLayer : CALayer {
-	NSString *caption;
-}
-
+@interface ATMTextLayer : CALayer
 @property (nonatomic, strong) NSString *caption;
 
 @end

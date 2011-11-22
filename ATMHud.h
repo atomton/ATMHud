@@ -20,37 +20,7 @@ typedef enum {
 	ATMHudAccessoryPositionLeft
 } ATMHudAccessoryPosition;
 
-@interface ATMHud : UIViewController {
-	CGFloat margin;
-	CGFloat padding;
-	CGFloat alpha;
-	CGFloat appearScaleFactor;
-	CGFloat disappearScaleFactor;
-	CGFloat progressBorderRadius;
-	CGFloat progressBorderWidth;
-	CGFloat progressBarRadius;
-	CGFloat progressBarInset;
-	
-	CGPoint center;
-	
-	BOOL shadowEnabled;
-	BOOL blockTouches;
-	BOOL allowSuperviewInteraction;
-	
-	NSString *showSound;
-	NSString *updateSound;
-	NSString *hideSound;
-	
-	id <ATMHudDelegate> __unsafe_unretained delegate;
-	ATMHudAccessoryPosition accessoryPosition;
-	
-	@private
-	ATMHudView *__view;
-	ATMSoundFX *sound;
-	NSMutableArray *displayQueue;
-	NSInteger queuePosition;
-}
-
+@interface ATMHud : UIViewController
 @property (nonatomic, assign) CGFloat margin;
 @property (nonatomic, assign) CGFloat padding;
 @property (nonatomic, assign) CGFloat alpha;
@@ -80,7 +50,7 @@ typedef enum {
 @property (nonatomic, strong) ATMHudView *__view;
 @property (nonatomic, strong) ATMSoundFX *sound;
 @property (nonatomic, strong) NSMutableArray *displayQueue;
-@property (nonatomic, assign) NSInteger queuePosition;
+@property (nonatomic, assign) NSUInteger queuePosition;
 
 + (NSString *)buildInfo;
 
@@ -98,7 +68,7 @@ typedef enum {
 - (void)clearQueue;
 - (void)startQueue;
 - (void)showNextInQueue;
-- (void)showQueueAtIndex:(NSInteger)index;
+- (void)showQueueAtIndex:(NSUInteger)index;
 
 - (void)show;
 - (void)update;

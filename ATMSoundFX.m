@@ -12,6 +12,9 @@
 #import "ATMSoundFX.h"
 
 @implementation ATMSoundFX
+{
+	SystemSoundID _soundID;
+}
 
 + (id)soundEffectWithContentsOfFile:(NSString *)aPath {
     if (aPath) {

@@ -12,14 +12,7 @@
 #import <Foundation/Foundation.h>
 #import "ATMHud.h"
 
-@interface ATMHudQueueItem : NSObject {
-	NSString *caption;
-	UIImage *image;
-	BOOL showActivity;
-	ATMHudAccessoryPosition accessoryPosition;
-	UIActivityIndicatorViewStyle activityStyle;
-}
-
+@interface ATMHudQueueItem : NSObject
 @property (nonatomic, strong) NSString *caption;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, assign) BOOL showActivity;

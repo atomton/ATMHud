@@ -17,37 +17,12 @@ typedef enum {
 	ATMHudApplyModeHide
 } ATMHudApplyMode;
 
-@interface ATMHudView : UIView {
-	NSString *caption;
-	UIImage *image;
-	UIActivityIndicatorView *activity;
-	UIActivityIndicatorViewStyle activityStyle;
-	ATMHud *p;
-	
-	BOOL showActivity;
- 
-	CGFloat progress;
-	
-	CGRect targetBounds;
-	CGRect captionRect;
-	CGRect progressRect;
-	CGRect activityRect;
-	CGRect imageRect;
-	
-	CGSize fixedSize;
-	CGSize activitySize;
-	
-	CALayer *backgroundLayer;
-	CALayer *imageLayer;
-	ATMTextLayer *captionLayer;
-	ATMProgressLayer *progressLayer;
-}
-
+@interface ATMHudView : UIView
 @property (nonatomic, strong) NSString *caption;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) UIActivityIndicatorView *activity;
 @property (nonatomic, assign) UIActivityIndicatorViewStyle activityStyle;
-@property (nonatomic, assign) ATMHud *p;
+@property (nonatomic, unsafe_unretained) ATMHud *p;
 
 @property (nonatomic, assign) BOOL showActivity;
 

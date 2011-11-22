@@ -12,9 +12,6 @@
 #import <AudioToolbox/AudioServices.h>
 
 @interface ATMSoundFX : NSObject
-{
-	SystemSoundID _soundID;
-}
 
 + (id)soundEffectWithContentsOfFile:(NSString *)aPath;
 - (id)initWithContentsOfFile:(NSString *)path;
