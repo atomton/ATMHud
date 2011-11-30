@@ -83,6 +83,7 @@
 }
 
 - (void)dealloc {
+	// NSLog(@"ATM_HUD_VIEW DEALLOC");
 	p = nil;
 }
 
@@ -347,6 +348,8 @@
 }
 
 - (void)applyWithMode:(ATMHudApplyMode)mode {
+	id delegate = (id)p.delegate;
+
 	switch (mode) {
 		case ATMHudApplyModeShow: {
 			if (CGPointEqualToPoint(p.center, CGPointZero)) {
@@ -367,8 +370,8 @@
 				CGRect r = self.frame;
 				[self setFrame:[self sharpRect:r]];
 				
-				if ([(id)p.delegate respondsToSelector:@selector(hudWillAppear:)]) {
-					[p.delegate hudWillAppear:p];
+				if ([delegate respondsToSelector:@selector(hudWillAppear:)]) {
+					[delegate hudWillAppear:p];
 				}
 				
 				self.transform = CGAffineTransformMakeScale(p.appearScaleFactor, p.appearScaleFactor);
@@ -386,8 +389,8 @@
 										if (![p.showSound isEqualToString:@""] && p.showSound != NULL) {
 											[p playSound:p.showSound];
 										}
-										if ([(id)p.delegate respondsToSelector:@selector(hudDidAppear:)]) {
-											[p.delegate hudDidAppear:p];
+										if ([delegate respondsToSelector:@selector(hudDidAppear:)]) {
+											[delegate hudDidAppear:p];
 										}
 									} 
 								 }];
@@ -422,8 +425,8 @@
 		}
 			
 		case ATMHudApplyModeUpdate: {
-			if ([(id)p.delegate respondsToSelector:@selector(hudWillUpdate:)]) {
-				[p.delegate hudWillUpdate:p];
+			if ([delegate respondsToSelector:@selector(hudWillUpdate:)]) {
+				[delegate hudWillUpdate:p];
 			}
 			
 			if (CGPointEqualToPoint(p.center, CGPointZero)) {
@@ -465,8 +468,8 @@
 				if (![p.updateSound isEqualToString:@""] && p.updateSound != NULL) {
 					[p playSound:p.updateSound];
 				}
-				if ([(id)p.delegate respondsToSelector:@selector(hudDidUpdate:)]) {
-					[p.delegate hudDidUpdate:p];
+				if ([delegate respondsToSelector:@selector(hudDidUpdate:)]) {
+					[delegate hudDidUpdate:p];
 				}
 			}];
 			
@@ -491,8 +494,8 @@
 		}
 			
 		case ATMHudApplyModeHide: {
-			if ([(id)p.delegate respondsToSelector:@selector(hudWillDisappear:)]) {
-				[p.delegate hudWillDisappear:p];
+			if ([delegate respondsToSelector:@selector(hudWillDisappear:)]) {
+				[delegate hudWillDisappear:p];
 			}
 			if (![p.hideSound isEqualToString:@""] && p.hideSound != NULL) {
 				[p playSound:p.hideSound];
@@ -508,8 +511,8 @@
 									 self.superview.userInteractionEnabled = NO;
 									 self.transform = CGAffineTransformMakeScale(1.0, 1.0);
 									 [self reset];
-									 if ([(id)p.delegate respondsToSelector:@selector(hudDidDisappear:)]) {
-										 [p.delegate hudDidDisappear:p];
+									 if ([delegate respondsToSelector:@selector(hudDidDisappear:)]) {
+										 [delegate hudDidDisappear:p];
 									 } 
 								 }
 							 }];

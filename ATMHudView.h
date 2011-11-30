@@ -22,7 +22,7 @@ typedef enum {
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) UIActivityIndicatorView *activity;
 @property (nonatomic, assign) UIActivityIndicatorViewStyle activityStyle;
-@property (nonatomic, unsafe_unretained) ATMHud *p;
+@property (nonatomic, unsafe_unretained) ATMHud *p;	// delegate
 
 @property (nonatomic, assign) BOOL showActivity;
 

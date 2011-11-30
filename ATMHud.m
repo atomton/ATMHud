@@ -45,6 +45,11 @@
 	return self;
 }
 
+- (void)dealloc {
+	__view.p = nil;	// prevent crashes
+	NSLog(@"ATM_HUD DEALLOC");
+}
+
 - (void)loadView {
 	UIView *base = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	base.backgroundColor = [UIColor clearColor];
