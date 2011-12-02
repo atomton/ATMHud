@@ -19,6 +19,9 @@
 
 
 @implementation ATMHudView
+{
+	BOOL didHide;
+}
 @synthesize caption, image, activity, activityStyle, p;
 @synthesize showActivity;
 @synthesize progress;
@@ -208,9 +211,13 @@
 				activityRect = CGRectMake((targetBounds.size.width-activitySize.width)*0.5f, marginY, activitySize.width, activitySize.height);
 				
 				imageRect = CGRectZero;
-				imageRect.origin.x = (targetBounds.size.width-image.size.width)*0.5f;
+				if(image)
+					imageRect.origin.x = (targetBounds.size.width-image.size.width)*0.5f;
+				else
+					imageRect.origin.x = (targetBounds.size.width)*0.5f;
+				
 				imageRect.origin.y = marginY;
-				if (image.size.width > 0.0f && image.size.height > 0.0f) {
+				if (image && image.size.width > 0.0f && image.size.height > 0.0f) {
 					imageRect.size = image.size;
 				}				
 				progressRect = CGRectMake((targetBounds.size.width-progressRect.size.width)*0.5f, marginY, progressRect.size.width, progressRect.size.height);
@@ -225,8 +232,10 @@
 				
 				imageRect = CGRectZero;
 				imageRect.origin.x = marginX+p.padding+captionSize.width;
-				imageRect.origin.y = (targetBounds.size.height-image.size.height)*0.5f;
-				imageRect.size = image.size;
+				if(image) {
+					imageRect.origin.y = (targetBounds.size.height-image.size.height)*0.5f;
+					imageRect.size = image.size;
+				}
 				
 				captionRect.origin.x = marginX;
 				captionRect.origin.y = marginY;
@@ -237,9 +246,13 @@
 				activityRect = CGRectMake((targetBounds.size.width-activitySize.width)*0.5f, captionRect.size.height+marginY+p.padding, activitySize.width, activitySize.height);
 				
 				imageRect = CGRectZero;
-				imageRect.origin.x = (targetBounds.size.width-image.size.width)*0.5f;
+				if(image)
+					imageRect.origin.x = (targetBounds.size.width-image.size.width)*0.5f;
+				else
+					imageRect.origin.x = (targetBounds.size.width)*0.5f;
 				imageRect.origin.y = captionRect.size.height+marginY+p.padding;
-				imageRect.size = image.size;
+				if(image)
+					imageRect.size = image.size;
 				
 				progressRect = CGRectMake((targetBounds.size.width-progressRect.size.width)*0.5f, captionRect.size.height+marginY+p.padding, progressRect.size.width, progressRect.size.height);
 				
@@ -253,8 +266,12 @@
 				
 				imageRect = CGRectZero;
 				imageRect.origin.x = marginX;
-				imageRect.origin.y = (targetBounds.size.height-image.size.height)*0.5f;
-				imageRect.size = image.size;
+				if(image) {
+					imageRect.origin.y = (targetBounds.size.height-image.size.height)*0.5f;
+					imageRect.size = image.size;
+				} else {
+					imageRect.origin.y = (targetBounds.size.height)*0.5f;
+				}
 				
 				captionRect.origin.x = marginX+adjustment;
 				captionRect.origin.y = marginY;
@@ -265,11 +282,13 @@
 }
 
 - (CGSize)sizeForActivityStyle:(UIActivityIndicatorViewStyle)style {
+	CGSize size;
 	if (style == UIActivityIndicatorViewStyleWhiteLarge) {
-		return CGSizeMake(37, 37);
+		size = CGSizeMake(37, 37);
 	} else {
-		return CGSizeMake(20, 20);
+		size = CGSizeMake(20, 20);
 	}
+	return size;
 }
 
 - (CGSize)calculateSizeForQueueItem:(ATMHudQueueItem *)item {
@@ -382,7 +401,8 @@
 									 self.alpha = 1.0;
 								 } 
 								 completion:^(BOOL finished){
-									if (finished) {
+									// if (finished) Got to do this regardless of whether it finished or not.
+									{
 										if (!p.allowSuperviewInteraction) {
 											self.superview.userInteractionEnabled = YES;
 										}
@@ -500,19 +520,23 @@
 			if (![p.hideSound isEqualToString:@""] && p.hideSound != NULL) {
 				[p playSound:p.hideSound];
 			}
+			NSLog(@"GOT TO ATMHudApplyModeHide duration=%f delegate=%x p=%x", p.animateDuration, (unsigned int)delegate, (unsigned int)p);
 			
+			ATMHud *hud = p;
+			assert(hud);
 			[UIView animateWithDuration:p.animateDuration
 							 animations:^{ 
 								 self.alpha = 0.0;
-								 self.transform = CGAffineTransformMakeScale(p.disappearScaleFactor, p.disappearScaleFactor);
+								 self.transform = CGAffineTransformMakeScale(hud.disappearScaleFactor, hud.disappearScaleFactor);
 							 } 
 							 completion:^(BOOL finished){
-								 if (finished) {
+								 // if (finished) Got to do this regardless of whether it finished or not.
+								 {
 									 self.superview.userInteractionEnabled = NO;
 									 self.transform = CGAffineTransformMakeScale(1.0, 1.0);
 									 [self reset];
 									 if ([delegate respondsToSelector:@selector(hudDidDisappear:)]) {
-										 [delegate hudDidDisappear:p];
+										 [delegate hudDidDisappear:hud];
 									 } 
 								 }
 							 }];
@@ -522,12 +546,18 @@
 }
 
 - (void)show {
-	[self calculate];
-	[self applyWithMode:ATMHudApplyModeShow];
+	if(didHide) {
+		didHide = NO;
+		[self calculate];
+		[self applyWithMode:ATMHudApplyModeShow];
+	}
 }
 
 - (void)hide {
-	[self applyWithMode:ATMHudApplyModeHide];
+	if(!didHide) {
+		didHide = YES;	// multiple calls to hide wrecks havoc, might get called in a cleanup routine in user code just to be sure.
+		[self applyWithMode:ATMHudApplyModeHide];
+	}
 }
 
 - (void)update {
