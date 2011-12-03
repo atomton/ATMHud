@@ -81,6 +81,8 @@
 		progressRect = CGRectMake(0, 0, 210, 20);
 		activityStyle = UIActivityIndicatorViewStyleWhite;
 		activitySize = CGSizeMake(20, 20);
+		
+		didHide = YES;
     }
     return self;
 }

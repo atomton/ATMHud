@@ -9,7 +9,6 @@
  *	https://github.com/atomton/ATMHud
  */
 
-#import <UIKit/UIKit.h>
 @class ATMHudView, ATMSoundFX, ATMHudQueueItem;
 @protocol ATMHudDelegate;
 

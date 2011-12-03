@@ -9,7 +9,6 @@
  *	https://github.com/atomton/ATMHud
  */
 
-#import <Foundation/Foundation.h>
 #import "ATMHud.h"
 
 @interface ATMHudQueueItem : NSObject
