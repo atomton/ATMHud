@@ -516,6 +516,7 @@
 		}
 			
 		case ATMHudApplyModeHide: {
+NSLog(@"ATMHud: ATMHudApplyModeHide delegate=%@", delegate);
 			if ([delegate respondsToSelector:@selector(hudWillDisappear:)]) {
 				[delegate hudWillDisappear:p];
 			}
@@ -535,7 +536,7 @@
 								 // if (finished) Got to do this regardless of whether it finished or not.
 								 {
 									 self.superview.userInteractionEnabled = NO;
-									 self.transform = CGAffineTransformMakeScale(1.0, 1.0);
+									 self.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
 									 [self reset];
 									 if ([delegate respondsToSelector:@selector(hudDidDisappear:)]) {
 										 [delegate hudDidDisappear:hud];
@@ -549,16 +550,22 @@
 
 - (void)show {
 	if(didHide) {
+NSLog(@"ATMHUD SHOW!!!");
 		didHide = NO;
 		[self calculate];
 		[self applyWithMode:ATMHudApplyModeShow];
+	} else {
+NSLog(@"ATMHUD Asked to show, but already showing!!!");
 	}
 }
 
 - (void)hide {
 	if(!didHide) {
 		didHide = YES;	// multiple calls to hide wrecks havoc, might get called in a cleanup routine in user code just to be sure.
+NSLog(@"ATMHUD HIDE!!!");
 		[self applyWithMode:ATMHudApplyModeHide];
+	} else {
+NSLog(@"ATMHUD Asked to hide, but already hidden!!!");
 	}
 }
 
