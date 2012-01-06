@@ -29,6 +29,7 @@
 @synthesize shadowEnabled, blockTouches, allowSuperviewInteraction;
 @synthesize showSound, updateSound, hideSound;
 @synthesize __view, sound, displayQueue, queuePosition;
+@synthesize userObject;
 
 - (id)init {
 	if ((self = [super init])) {

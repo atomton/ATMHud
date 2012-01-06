@@ -50,6 +50,7 @@ typedef enum {
 @property (nonatomic, strong) ATMSoundFX *sound;
 @property (nonatomic, strong) NSMutableArray *displayQueue;
 @property (nonatomic, assign) NSUInteger queuePosition;
+@property (nonatomic, strong) id userObject;	// holder for user info
 
 + (NSString *)buildInfo;
 
