@@ -131,6 +131,11 @@
 	}
 }
 
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"HUD: caption=%@", __view.caption];
+}
+
 #pragma mark -
 #pragma mark Property forwards
 - (void)setCaption:(NSString *)caption {
