@@ -516,14 +516,14 @@
 		}
 			
 		case ATMHudApplyModeHide: {
-NSLog(@"ATMHud: ATMHudApplyModeHide delegate=%@", delegate);
+//NSLog(@"ATMHud: ATMHudApplyModeHide delegate=%@", delegate);
 			if ([delegate respondsToSelector:@selector(hudWillDisappear:)]) {
 				[delegate hudWillDisappear:p];
 			}
 			if (![p.hideSound isEqualToString:@""] && p.hideSound != NULL) {
 				[p playSound:p.hideSound];
 			}
-			NSLog(@"GOT TO ATMHudApplyModeHide duration=%f delegate=%x p=%x", p.animateDuration, (unsigned int)delegate, (unsigned int)p);
+//NSLog(@"GOT TO ATMHudApplyModeHide duration=%f delegate=%x p=%x", p.animateDuration, (unsigned int)delegate, (unsigned int)p);
 			
 			ATMHud *hud = p;
 			assert(hud);
@@ -550,22 +550,22 @@ NSLog(@"ATMHud: ATMHudApplyModeHide delegate=%@", delegate);
 
 - (void)show {
 	if(didHide) {
-NSLog(@"ATMHUD SHOW!!!");
+//NSLog(@"ATMHUD SHOW!!!");
 		didHide = NO;
 		[self calculate];
 		[self applyWithMode:ATMHudApplyModeShow];
 	} else {
-NSLog(@"ATMHUD Asked to show, but already showing!!!");
+//NSLog(@"ATMHUD Asked to show, but already showing!!!");
 	}
 }
 
 - (void)hide {
 	if(!didHide) {
 		didHide = YES;	// multiple calls to hide wrecks havoc, might get called in a cleanup routine in user code just to be sure.
-NSLog(@"ATMHUD HIDE!!!");
+//NSLog(@"ATMHUD HIDE!!!");
 		[self applyWithMode:ATMHudApplyModeHide];
 	} else {
-NSLog(@"ATMHUD Asked to hide, but already hidden!!!");
+//NSLog(@"ATMHUD Asked to hide, but already hidden!!!");
 	}
 }
 

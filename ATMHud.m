@@ -48,7 +48,7 @@
 
 - (void)dealloc {
 	__view.p = nil;	// prevent crashes
-	NSLog(@"ATM_HUD DEALLOC");
+	//NSLog(@"ATM_HUD DEALLOC");
 }
 
 - (void)loadView {
