@@ -52,7 +52,7 @@
 		
 		backgroundLayer = [[CALayer alloc] init];
 		backgroundLayer.cornerRadius = 10;
-		backgroundLayer.backgroundColor = [UIColor colorWithWhite:0.0 alpha:p.alpha].CGColor;
+		backgroundLayer.backgroundColor = [UIColor colorWithWhite:p.gray alpha:p.alpha].CGColor;
 		[self.layer addSublayer:backgroundLayer];
 		
 		captionLayer = [[ATMTextLayer alloc] init];
