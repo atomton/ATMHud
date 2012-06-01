@@ -14,7 +14,7 @@
 #import <AudioToolbox/AudioServices.h>
 #import "ATMHudView.h"
 #import "ATMProgressLayer.h"
-#import "ATMHudDelegate.h"
+#import "ATMHudBlock.h"
 #import "ATMSoundFX.h"
 #import "ATMHudQueueItem.h"
 
@@ -24,7 +24,7 @@
 
 @implementation ATMHud
 @synthesize margin, padding, alpha, appearScaleFactor, disappearScaleFactor, progressBorderRadius, progressBorderWidth, progressBarRadius, progressBarInset;
-@synthesize delegate, accessoryPosition;
+@synthesize block, accessoryPosition;
 @synthesize center;
 @synthesize shadowEnabled, blockTouches, allowSuperviewInteraction;
 @synthesize showSound, updateSound, hideSound;
@@ -37,9 +37,9 @@
 	return self;
 }
 
-- (id)initWithDelegate:(id)hudDelegate {
+- (id)initWithBlock:(ATMHudBlock*)hudBlock {
 	if ((self = [super init])) {
-		delegate = hudDelegate;
+		self.block = hudBlock;
 		[self construct];
 	}
 	return self;
@@ -74,6 +74,8 @@
 }
 
 - (void)dealloc {
+    self.block = nil;
+    
 	[sound release];
 	[__view release];
 	[displayQueue release];
@@ -282,9 +284,9 @@
 		if (aTouch.tapCount == 1) {
 			CGPoint p = [aTouch locationInView:self.view];
 			if (CGRectContainsPoint(__view.frame, p)) {
-				if ([(id)self.delegate respondsToSelector:@selector(userDidTapHud:)]) {
-					[self.delegate userDidTapHud:self];
-				}
+                if (self.block && self.block.tapBlock) {
+                    self.block.tapBlock(self);
+                }
 			}
 		}
 	}

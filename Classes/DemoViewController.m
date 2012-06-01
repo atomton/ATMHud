@@ -63,7 +63,9 @@
 	
 	[baseView addSubview:tv_demo];
 	
-	hud = [[ATMHud alloc] initWithDelegate:self];
+	hud = [[ATMHud alloc] initWithBlock:[ATMHudBlock blockWithUserDidTapHud:^(ATMHud *_hud) {
+        [_hud hide];
+    } willAppear:nil didAppear:nil willUpdate:nil didUpdate:nil willDisappear:nil didDisappear:nil]];
 	[baseView addSubview:hud.view];
 	
 	self.view = baseView;
@@ -343,12 +345,6 @@
 		i = 1;
 		[hud clearQueue];
 	}
-}
-
-#pragma mark -
-#pragma mark ATMHudDelegate
-- (void)userDidTapHud:(ATMHud *)_hud {
-	[_hud hide];
 }
 
 #pragma mark -

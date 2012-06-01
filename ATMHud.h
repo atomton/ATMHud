@@ -10,8 +10,8 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "ATMHudBlock.h"
 @class ATMHudView, ATMSoundFX, ATMHudQueueItem;
-@protocol ATMHudDelegate;
 
 typedef enum {
 	ATMHudAccessoryPositionTop = 0,
@@ -41,7 +41,7 @@ typedef enum {
 	NSString *updateSound;
 	NSString *hideSound;
 	
-	id <ATMHudDelegate> delegate;
+	ATMHudBlock* block;
 	ATMHudAccessoryPosition accessoryPosition;
 	
 	@private
@@ -71,7 +71,7 @@ typedef enum {
 @property (nonatomic, retain) NSString *updateSound;
 @property (nonatomic, retain) NSString *hideSound;
 
-@property (nonatomic, assign) id <ATMHudDelegate> delegate;
+@property (nonatomic, retain) ATMHudBlock* block;
 @property (nonatomic, assign) ATMHudAccessoryPosition accessoryPosition;
 
 @property (nonatomic, retain) ATMHudView *__view;
@@ -81,7 +81,7 @@ typedef enum {
 
 + (NSString *)buildInfo;
 
-- (id)initWithDelegate:(id)hudDelegate;
+- (id)initWithBlock:(ATMHudBlock*)hudBlock;
 
 - (void)setCaption:(NSString *)caption;
 - (void)setImage:(UIImage *)image;

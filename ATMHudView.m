@@ -14,7 +14,7 @@
 #import "ATMProgressLayer.h"
 #import "ATMHud.h"
 #import <QuartzCore/QuartzCore.h>
-#import "ATMHudDelegate.h"
+#import "ATMHudBlock.h"
 #import "ATMHudQueueItem.h"
 
 
@@ -376,9 +376,9 @@
 				CGRect r = self.frame;
 				[self setFrame:[self sharpRect:r]];
 				
-				if ([(id)p.delegate respondsToSelector:@selector(hudWillAppear:)]) {
-					[p.delegate hudWillAppear:p];
-				}
+                if (p.block && p.block.willAppearBlock) {
+                    p.block.willAppearBlock(p);
+                }
 				
 				self.transform = CGAffineTransformMakeScale(p.appearScaleFactor, p.appearScaleFactor);
 
@@ -395,9 +395,9 @@
 										if (![p.showSound isEqualToString:@""] && p.showSound != NULL) {
 											[p playSound:p.showSound];
 										}
-										if ([(id)p.delegate respondsToSelector:@selector(hudDidAppear:)]) {
-											[p.delegate hudDidAppear:p];
-										}
+                                        if (p.block && p.block.didAppearBlock) {
+                                            p.block.didAppearBlock(p);
+                                        }
 									} 
 								 }];
 			}];
@@ -430,10 +430,10 @@
 			break;
 		}
 			
-		case ATMHudApplyModeUpdate: {
-			if ([(id)p.delegate respondsToSelector:@selector(hudWillUpdate:)]) {
-				[p.delegate hudWillUpdate:p];
-			}
+		case ATMHudApplyModeUpdate: {            
+            if (p.block && p.block.willUpdateBlock) {
+                p.block.willUpdateBlock(p);
+            }
 			
 			if (CGPointEqualToPoint(p.center, CGPointZero)) {
 				self.frame = CGRectMake((self.superview.bounds.size.width-targetBounds.size.width)*0.5, (self.superview.bounds.size.height-targetBounds.size.height)*0.5, targetBounds.size.width, targetBounds.size.height);
@@ -474,9 +474,9 @@
 				if (![p.updateSound isEqualToString:@""] && p.updateSound != NULL) {
 					[p playSound:p.updateSound];
 				}
-				if ([(id)p.delegate respondsToSelector:@selector(hudDidUpdate:)]) {
-					[p.delegate hudDidUpdate:p];
-				}
+                if (p.block && p.block.didUpdateBlock) {
+                    p.block.didUpdateBlock(p);
+                }
 			}];
 			
 			backgroundLayer.position = CGPointMake(0.5*targetBounds.size.width, 0.5*targetBounds.size.height);
@@ -500,9 +500,9 @@
 		}
 			
 		case ATMHudApplyModeHide: {
-			if ([(id)p.delegate respondsToSelector:@selector(hudWillDisappear:)]) {
-				[p.delegate hudWillDisappear:p];
-			}
+			if (p.block && p.block.willDisappearBlock) {
+                p.block.willDisappearBlock(p);
+            }
 			if (![p.hideSound isEqualToString:@""] && p.hideSound != NULL) {
 				[p playSound:p.hideSound];
 			}
@@ -517,9 +517,9 @@
 									 self.superview.userInteractionEnabled = NO;
 									 self.transform = CGAffineTransformMakeScale(1.0, 1.0);
 									 [self reset];
-									 if ([(id)p.delegate respondsToSelector:@selector(hudDidDisappear:)]) {
-										 [p.delegate hudDidDisappear:p];
-									 } 
+                                     if (p.block && p.block.didDisappearBlock) {
+                                         p.block.didDisappearBlock(p);
+                                     }
 								 }
 							 }];
 			break;
