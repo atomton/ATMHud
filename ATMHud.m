@@ -52,7 +52,7 @@
 							 UIViewAutoresizingFlexibleHeight);
 	base.userInteractionEnabled = NO;
 	[base addSubview:__view];
-	
+
 	self.view = base;
 	[base release];
 }
@@ -77,11 +77,11 @@
 	[sound release];
 	[__view release];
 	[displayQueue release];
-	
+
 	[showSound release];
 	[updateSound release];
 	[hideSound release];
-	
+
     [super dealloc];
 }
 
@@ -156,7 +156,7 @@
 
 - (void)setProgress:(CGFloat)progress {
 	__view.progress = progress;
-	
+
 	[__view.progressLayer setTheProgress:progress];
 	[__view.progressLayer setNeedsDisplay];
 }
@@ -183,7 +183,7 @@
 		ATMHudQueueItem *queueItem;
 		for (int i = 0; i < [displayQueue count]; i++) {
 			queueItem = [displayQueue objectAtIndex:i];
-			
+
 			targetSize = [__view calculateSizeForQueueItem:queueItem];
 			if (targetSize.width > newSize.width) {
 				newSize.width = targetSize.width;
@@ -210,10 +210,10 @@
 			return;
 		}
 		ATMHudQueueItem *item = [displayQueue objectAtIndex:queuePosition];
-		
+
 		__view.caption = item.caption;
 		__view.image = item.image;
-		
+
 		BOOL flag = item.showActivity;
 		__view.showActivity = flag;
 		if (flag) {
@@ -221,10 +221,10 @@
 		} else {
 			[__view.activity stopAnimating];
 		}
-		
+
 		self.accessoryPosition = item.accessoryPosition;
 		[self setActivityStyle:item.activityStyle];
-		
+
 		if (queuePosition == 0) {
 			[__view show];
 		} else {
@@ -262,13 +262,13 @@
 	progressBarInset = 3.0;
 	accessoryPosition = ATMHudAccessoryPositionBottom;
 	appearScaleFactor = disappearScaleFactor = 1.4;
-	
+
 	__view = [[ATMHudView alloc] initWithFrame:CGRectZero andController:self];
 	__view.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin |
 							   UIViewAutoresizingFlexibleRightMargin |
 							   UIViewAutoresizingFlexibleBottomMargin |
 							   UIViewAutoresizingFlexibleLeftMargin);
-	
+
 	displayQueue = [[NSMutableArray alloc] init];
 	queuePosition = 0;
 	center = CGPointZero;

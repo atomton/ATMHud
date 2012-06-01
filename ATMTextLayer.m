@@ -31,17 +31,17 @@
 
 - (void)drawInContext:(CGContextRef)ctx {
 	UIGraphicsPushContext(ctx);
-	
+
 	CGRect f = self.bounds;
 	CGRect s = f;
 	s.origin.y -= 1;
-	
+
 	[[UIColor blackColor] set];
 	[caption drawInRect:f withFont:[UIFont boldSystemFontOfSize:14] lineBreakMode:UILineBreakModeWordWrap alignment:UITextAlignmentCenter];
-	
+
 	[[UIColor whiteColor] set];
 	[caption drawInRect:s withFont:[UIFont boldSystemFontOfSize:14] lineBreakMode:UILineBreakModeWordWrap alignment:UITextAlignmentCenter];
-	
+
 	UIGraphicsPopContext();
 }
 

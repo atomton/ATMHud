@@ -29,16 +29,16 @@
 #pragma mark -
 #pragma mark Application lifecycle
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     DemoViewController *rvc = [[DemoViewController alloc] init];
 	rvc.title = @"atomHUD • Demo";
-	
+
 	nav = [[UINavigationController alloc] initWithRootViewController:rvc];
 	[rvc release];
-	
+
 	window.rootViewController = nav;
     [self.window makeKeyAndVisible];
-    
+
     return YES;
 }
 
