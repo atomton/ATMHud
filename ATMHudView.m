@@ -86,7 +86,7 @@
 	[caption release];
 	[image release];
 	[activity release];
-	[p release];
+    p = nil;
 	
 	[backgroundLayer release];
 	[imageLayer release];

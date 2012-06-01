@@ -24,11 +24,14 @@
 
 @implementation ATMHud
 @synthesize margin, padding, alpha, appearScaleFactor, disappearScaleFactor, progressBorderRadius, progressBorderWidth, progressBarRadius, progressBarInset;
+@synthesize gray;
 @synthesize delegate, accessoryPosition;
 @synthesize center;
 @synthesize shadowEnabled, blockTouches, allowSuperviewInteraction;
 @synthesize showSound, updateSound, hideSound;
 @synthesize __view, sound, displayQueue, queuePosition;
+@synthesize autocenter;
+@synthesize autoBringToFront;
 
 - (id)init {
 	if ((self = [super init])) {
@@ -109,8 +112,16 @@
 	alpha = value;
 	[CATransaction begin];
 	[CATransaction setDisableActions:YES];
-	__view.backgroundLayer.backgroundColor = [UIColor colorWithWhite:0.0 alpha:value].CGColor;
+	__view.backgroundLayer.backgroundColor = [UIColor colorWithWhite:gray alpha:value].CGColor;
 	[CATransaction commit];
+}
+
+- (void)setGray:(CGFloat)value {
+    gray = value;
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    __view.backgroundLayer.backgroundColor = [UIColor colorWithWhite:gray alpha:alpha].CGColor;
+ 	[CATransaction commit];
 }
 
 - (void)setShadowEnabled:(BOOL)value {
@@ -159,6 +170,11 @@
 	
 	[__view.progressLayer setTheProgress:progress];
 	[__view.progressLayer setNeedsDisplay];
+}
+
+- (void)setCenter:(CGPoint)p {
+    center = p;
+    __view.center = center;
 }
 
 #pragma mark -
@@ -236,6 +252,15 @@
 #pragma mark -
 #pragma mark Controlling
 - (void)show {
+    if (autocenter) {
+        CGRect svb = self.view.superView.bounds;
+        self.view.center = CGPointMake(svb.origin.x + svb.size.width / 2,
+                                       svb.origin.y + svb.size.height / 2);
+    }
+    
+    if (autoBringToFront)
+        [self.superView bringSubviewToFront:self.view];
+    
 	[__view show];
 }
 
@@ -248,7 +273,17 @@
 }
 
 - (void)hideAfter:(NSTimeInterval)delay {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                             selector:@selector(hide)
+                                               object:nil];
+    
 	[self performSelector:@selector(hide) withObject:nil afterDelay:delay];
+}
+
+- (void)showWithCaption:(NSString *)caption andHideAfter:(NSTimeInterval)delay {
+    [self setCaption:caption];
+    [self show];
+    [self hideAfter:delay];
 }
 
 #pragma mark -
@@ -256,6 +291,7 @@
 - (void)construct {
 	margin = padding = 10.0;
 	alpha = 0.7;
+    gray = 0.0;
 	progressBorderRadius = 8.0;
 	progressBorderWidth = 2.0;
 	progressBarRadius = 5.0;
@@ -274,6 +310,8 @@
 	center = CGPointZero;
 	blockTouches = NO;
 	allowSuperviewInteraction = NO;
+    autocenter = YES;
+    autoBringToFront = YES;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {

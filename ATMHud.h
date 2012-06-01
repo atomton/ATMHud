@@ -54,6 +54,7 @@ typedef enum {
 @property (nonatomic, assign) CGFloat margin;
 @property (nonatomic, assign) CGFloat padding;
 @property (nonatomic, assign) CGFloat alpha;
+@property (nonatomic, assign) CGFloat gray;
 @property (nonatomic, assign) CGFloat appearScaleFactor;
 @property (nonatomic, assign) CGFloat disappearScaleFactor;
 @property (nonatomic, assign) CGFloat progressBorderRadius;
@@ -66,6 +67,8 @@ typedef enum {
 @property (nonatomic, assign) BOOL shadowEnabled;
 @property (nonatomic, assign) BOOL blockTouches;
 @property (nonatomic, assign) BOOL allowSuperviewInteraction;
+@property (nonatomic, assign) BOOL autocenter; // YES
+@property (nonatomic, assign) BOOL autoBringToFront; // YES
 
 @property (nonatomic, retain) NSString *showSound;
 @property (nonatomic, retain) NSString *updateSound;
@@ -101,6 +104,8 @@ typedef enum {
 - (void)update;
 - (void)hide;
 - (void)hideAfter:(NSTimeInterval)delay;
+
+- (void)showWithCaption:(NSString *)caption andHideAfter:(NSTimeInterval)delay;
 
 - (void)playSound:(NSString *)soundPath;
 
