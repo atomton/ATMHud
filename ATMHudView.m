@@ -570,4 +570,11 @@
 	[p setHideSound:@""];
 }
 
+#pragma mark -
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    self.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.bounds].CGPath;
+}
+
 @end
