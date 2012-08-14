@@ -4,6 +4,12 @@ I once needed a HUD for one of my iPhone apps, but was unhappy with the currentl
 
 -- Marcel <development@atomcraft.de>
 
+EDIT: I needed one too, but needed ARC, so this is now ARCified. Other. My Changes:
+- ARCified
+- more properties exposed
+- sound can be disabled
+
+
 Requirements
 ------------
 
