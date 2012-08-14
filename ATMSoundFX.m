@@ -9,6 +9,8 @@
  *	https://github.com/atomton/ATMHud
  */
 
+#ifdef ATM_SOUND
+
 #import "ATMSoundFX.h"
 
 @implementation ATMSoundFX
@@ -54,3 +56,4 @@
 }
 
 @end
+#endif

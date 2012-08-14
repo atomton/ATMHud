@@ -75,6 +75,8 @@ typedef enum {
 - (void)hide;
 - (void)hideAfter:(NSTimeInterval)delay;
 
+#ifdef ATM_SOUND
 - (void)playSound:(NSString *)soundPath;
+#endif
 
 @end

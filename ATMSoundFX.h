@@ -9,6 +9,7 @@
  *	https://github.com/atomton/ATMHud
  */
 
+#ifdef ATM_SOUND
 #import <AudioToolbox/AudioServices.h>
 
 @interface ATMSoundFX : NSObject
@@ -18,3 +19,4 @@
 - (void)play;
 
 @end
+#endif

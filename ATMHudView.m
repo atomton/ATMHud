@@ -408,9 +408,11 @@
 										if (!p.allowSuperviewInteraction) {
 											self.superview.userInteractionEnabled = YES;
 										}
+#ifdef ATM_SOUND
 										if (![p.showSound isEqualToString:@""] && p.showSound != NULL) {
 											[p playSound:p.showSound];
 										}
+#endif
 										if ([delegate respondsToSelector:@selector(hudDidAppear:)]) {
 											[delegate hudDidAppear:p];
 										}
@@ -486,10 +488,11 @@
 				
 				CGRect r = self.frame;
 				[self setFrame:[self sharpRect:r]];
-				
+#ifdef ATM_SOUND				
 				if (![p.updateSound isEqualToString:@""] && p.updateSound != NULL) {
 					[p playSound:p.updateSound];
 				}
+#endif
 				if ([delegate respondsToSelector:@selector(hudDidUpdate:)]) {
 					[delegate hudDidUpdate:p];
 				}
@@ -520,9 +523,11 @@
 			if ([delegate respondsToSelector:@selector(hudWillDisappear:)]) {
 				[delegate hudWillDisappear:p];
 			}
+#ifdef ATM_SOUND
 			if (![p.hideSound isEqualToString:@""] && p.hideSound != NULL) {
 				[p playSound:p.hideSound];
 			}
+#endif
 //NSLog(@"GOT TO ATMHudApplyModeHide duration=%f delegate=%x p=%x", p.animateDuration, (unsigned int)delegate, (unsigned int)p);
 			
 			ATMHud *hud = p;

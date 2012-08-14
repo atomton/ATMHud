@@ -310,9 +310,10 @@
 	}
 }
 
+#ifdef ATM_SOUND
 - (void)playSound:(NSString *)soundPath {
 	sound = [[ATMSoundFX alloc] initWithContentsOfFile:soundPath];
 	[sound play];
 }
-
+#endif
 @end
