@@ -36,6 +36,7 @@ typedef enum {
 	BOOL shadowEnabled;
 	BOOL blockTouches;
 	BOOL allowSuperviewInteraction;
+	BOOL removeViewWhenHidden;
 	
 	NSString *showSound;
 	NSString *updateSound;
@@ -66,6 +67,7 @@ typedef enum {
 @property (nonatomic, assign) BOOL shadowEnabled;
 @property (nonatomic, assign) BOOL blockTouches;
 @property (nonatomic, assign) BOOL allowSuperviewInteraction;
+@property (nonatomic, assign) BOOL removeViewWhenHidden;
 
 @property (nonatomic, retain) NSString *showSound;
 @property (nonatomic, retain) NSString *updateSound;

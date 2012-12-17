@@ -274,6 +274,7 @@
 	center = CGPointZero;
 	blockTouches = NO;
 	allowSuperviewInteraction = NO;
+	removeViewWhenHidden = NO;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
