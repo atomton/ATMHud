@@ -398,6 +398,7 @@
 										if ([(id)p.delegate respondsToSelector:@selector(hudDidAppear:)]) {
 											[p.delegate hudDidAppear:p];
 										}
+
 									} 
 								 }];
 			}];
@@ -520,6 +521,10 @@
 									 if ([(id)p.delegate respondsToSelector:@selector(hudDidDisappear:)]) {
 										 [p.delegate hudDidDisappear:p];
 									 } 
+									if (p.removeViewWhenHidden) {
+										[self removeFromSuperview];
+										p.view = nil;
+									}
 								 }
 							 }];
 			break;
