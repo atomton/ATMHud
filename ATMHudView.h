@@ -18,11 +18,11 @@ typedef enum {
 } ATMHudApplyMode;
 
 @interface ATMHudView : UIView
+@property (nonatomic, weak) ATMHud *p;	// delegate
 @property (nonatomic, strong) NSString *caption;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) UIActivityIndicatorView *activity;
 @property (nonatomic, assign) UIActivityIndicatorViewStyle activityStyle;
-@property (nonatomic, unsafe_unretained) ATMHud *p;	// delegate
 
 @property (nonatomic, assign) BOOL showActivity;
 

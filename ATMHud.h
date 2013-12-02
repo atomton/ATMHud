@@ -43,7 +43,7 @@ typedef enum {
 @property (nonatomic, copy) NSString *updateSound;
 @property (nonatomic, copy) NSString *hideSound;
 
-@property (nonatomic, unsafe_unretained) id <ATMHudDelegate> delegate;
+@property (nonatomic, weak) id <ATMHudDelegate> delegate;
 @property (nonatomic, assign) ATMHudAccessoryPosition accessoryPosition;
 
 @property (nonatomic, strong) ATMHudView *__view;

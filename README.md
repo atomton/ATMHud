@@ -4,10 +4,16 @@ I once needed a HUD for one of my iPhone apps, but was unhappy with the currentl
 
 -- Marcel <development@atomcraft.de>
 
-EDIT: I needed one too, but needed ARC, so this is now ARCified. Other. My Changes:
+
+**** Modifications, David Hoerl 2011-2013:
+
+I needed one too, but needed ARC. My changes:
 - ARCified
 - more properties exposed
-- sound can be disabled
+- sound can be compiled out of the framework if you aren't using it (does anyone?) Reduces number of required libraries.
+- converted to build error/warning free on iOS7 (required constant changes, many changes to UIKit extensions to NSString
+
+***** Below is original README ******
 
 
 Requirements

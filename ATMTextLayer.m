@@ -12,11 +12,10 @@
 #import "ATMTextLayer.h"
 
 @implementation ATMTextLayer
-@synthesize caption;
 
 - (id)initWithLayer:(id)layer {
 	if ((self = [super init])) {
-		caption = @"";
+		_caption = @"";
 	}
 	return self;
 }
@@ -30,17 +29,19 @@
 }
 
 - (void)drawInContext:(CGContextRef)ctx {
-	UIGraphicsPushContext(ctx);
+	UIGraphicsPushContext(ctx);	// Makes this contest the current context
 	
 	CGRect f = self.bounds;
 	CGRect s = f;
 	s.origin.y -= 1;
+
+	UIFont *font = [UIFont boldSystemFontOfSize:14];
+	NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+	paragraphStyle.lineBreakMode	= NSLineBreakByWordWrapping;
+	paragraphStyle.alignment		= NSTextAlignmentCenter;
 	
-	[[UIColor blackColor] set];
-	[caption drawInRect:f withFont:[UIFont boldSystemFontOfSize:14] lineBreakMode:UILineBreakModeWordWrap alignment:UITextAlignmentCenter];
-	
-	[[UIColor whiteColor] set];
-	[caption drawInRect:s withFont:[UIFont boldSystemFontOfSize:14] lineBreakMode:UILineBreakModeWordWrap alignment:UITextAlignmentCenter];
+	[_caption drawInRect:f withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor blackColor]}];
+	[_caption drawInRect:s withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor whiteColor]}];
 	
 	UIGraphicsPopContext();
 }
