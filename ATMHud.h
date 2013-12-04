@@ -62,6 +62,7 @@ typedef enum {
 - (void)setActivityStyle:(UIActivityIndicatorViewStyle)activityStyle;
 - (void)setFixedSize:(CGSize)fixedSize;
 - (void)setProgress:(CGFloat)progress;
+- (void)setCenter:(CGPoint)pt;
 
 - (void)addQueueItem:(ATMHudQueueItem *)item;
 - (void)addQueueItems:(NSArray *)items;
