@@ -48,20 +48,14 @@ I needed needed ARC, so I forked the project. My initial changes:
 The demo project shows of most of the ways you can display the HUD (but not all the UI customization options):
 
 #ScreenShots
-[Basic Functions]("ScreenShots/BasicFunctions.png")
-[Advanced Functions]("ScreenShots/AdvancedFunctions.png")
-[Simple Caption]("ScreenShots/SimpleCaption.png")
-[Caption With Activity]("ScreenShots/Caption+Activity.png")
-[Caption With Image]("ScreenShots/Caption+Image.png")
-[Activity Only]("ScreenShots/JustSpinner.png")
-[Caption With Progress Bar]("ScreenShots/Caption+ProgressBar.png")
-[Fixed Size Caption With Progress Bar]("ScreenShots/Caption+ProgressBar_FixedSize.png.png")
-
-
-AdvancedFunctions.png
-
-
-
+![Basic Functions]("ScreenShots/BasicFunctions.png")
+![Advanced Functions]("ScreenShots/AdvancedFunctions.png")
+![Simple Caption]("ScreenShots/SimpleCaption.png")
+![Caption With Activity]("ScreenShots/Caption+Activity.png")
+![Caption With Image]("ScreenShots/Caption+Image.png")
+![Activity Only]("ScreenShots/JustSpinner.png")
+![Caption With Progress Bar]("ScreenShots/Caption+ProgressBar.png")
+![Fixed Size Caption With Progress Bar]("ScreenShots/Caption+ProgressBar_FixedSize.png.png")
 
 ##***** Below is original README ******
 
