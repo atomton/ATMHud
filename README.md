@@ -4,22 +4,72 @@ I once needed a HUD for one of my iPhone apps, but was unhappy with the currentl
 
 -- Marcel <development@atomcraft.de>
 
+##**** Modifications, David Hoerl 2011-2014 ****
 
-**** Modifications, David Hoerl 2011-2013:
+The reason I adopted this HUD is because it looks so nice, and it offered a wide range of customization options. Along with that is a large number of optional delegate messages that allow you to track (and modify) the view as the user takes actions.
 
-I needed one too, but needed ARC. My changes:
-- ARCified
-- more properties exposed
-- sound can be compiled out of the framework if you aren't using it (does anyone?) Reduces number of required libraries.
-- converted to build error/warning free on iOS7 (required constant changes, many changes to UIKit extensions to NSString
+I needed needed ARC, so I forked the project. My initial changes:    
 
-***** Below is original README ******
+ * ARCified
+ * more properties exposed
+ * add the ability to attach a block to the HUD, to make it easier to take complex actions in the delegate callbacks
+ * sound can be compiled out of the framework if you aren't using it (does anyone?) Reduces number of required libraries
+ * converted to build error/warning free on iOS7 (required constant changes, many changes to UIKit extensions to NSString
+ * 64 bit clean
+
+##History:
+
+#3.0.0 - 2/11/2014
+
+ * Podspec  
+ * Modified appearance defaults to   
+    hud.appearScaleFactor = 0.8f;  
+    hud.disappearScaleFactor = 0.8f;  
+    hud.gray = 0.2f;  
+    hud.alpha = 0.8f;  
+
+ * Rolled in some of the original issues posted to atomcraft/ATMHud  
+     14 - Gray property to set background color to a gray (not black), and added a setCenter method  
+     15 - Screenshots in Readme.md  
+     21 - Pull Request - Small performance update  
+     22 - Retain Cycle - changed property to "weak"  
+     23 - removeViewWhenHidden property added (use ATMHud without a delegate)  
+   
+#2.x.x - 2011 - 2013
+* various small tweaks, mostly to address Xcode Analyze errors
+* 64 bit clean
+
+#2.0.0 - 2011
+* Forked code
+* ARCified
+
+#1.2 - Original
+
+The demo project shows of most of the ways you can display the HUD (but not all the UI customization options):
+
+#ScreenShots
+[Basic Functions]("ScreenShots/BasicFunctions.png")
+[Advanced Functions]("ScreenShots/AdvancedFunctions.png")
+[Simple Caption]("ScreenShots/SimpleCaption.png")
+[Caption With Activity]("ScreenShots/Caption+Activity.png")
+[Caption With Image]("ScreenShots/Caption+Image.png")
+[Activity Only]("ScreenShots/JustSpinner.png")
+[Caption With Progress Bar]("ScreenShots/Caption+ProgressBar.png")
+[Fixed Size Caption With Progress Bar]("ScreenShots/Caption+ProgressBar_FixedSize.png.png")
+
+
+AdvancedFunctions.png
+
+
+
+
+##***** Below is original README ******
 
 
 Requirements
 ------------
 
-  * iOS 4.0 or above
+  * iOS 4.0 or above  
   * QuartzCore.framework
   * AudioToolbox.framework (only if you want to use sounds)
   
