@@ -47,6 +47,24 @@ I needed needed ARC, so I forked the project. My initial changes:
 
 The demo project shows of most of the ways you can display the HUD (but not all the UI customization options):
 
+NOTE: The original author's text follows the screen shots.
+
+# Operation
+
+Create, configure, then show it. See the Demo app for more detail.
+
+	// Keep a strong ivar reference to it (ie, "ATMHud *hud")
+	hud = [[ATMHud alloc] initWithDelegate:self];
+	[baseView addSubview:hud.view];
+
+	[hud setCaption:@"Caption and an activity indicator."];
+	[hud setActivity:YES];
+	[hud show];
+	...
+	[hud hide];
+	// when the delegate method tells you its finished, you can nil the ivar out if you want
+	hud = nil;
+
 #ScreenShots
 ![Basic Functions](ScreenShots/BasicFunctions.png)
 ![Advanced Functions](ScreenShots/AdvancedFunctions.png)
