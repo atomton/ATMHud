@@ -12,13 +12,17 @@
 #import "ATMProgressLayer.h"
 
 @implementation ATMProgressLayer
-@synthesize theProgress, progressBorderWidth, progressBorderRadius, progressBarRadius, progressBarInset;
+
+- (void)setTheProgress:(CGFloat)p {
+	_theProgress = p;
+	[self setNeedsDisplay];
+}
 
 - (void)drawInContext:(CGContextRef)ctx {
 	UIGraphicsPushContext(ctx);
-	if (theProgress > 0) {
-		CGRect rrect = CGRectInset(self.bounds, progressBorderWidth, progressBorderWidth);
-		CGFloat radius = progressBorderRadius;
+	if (_theProgress > 0) {
+		CGRect rrect = CGRectInset(self.bounds, _progressBorderWidth, _progressBorderWidth);
+		CGFloat radius = _progressBorderRadius;
 		
 		CGFloat minx = CGRectGetMinX(rrect), midx = CGRectGetMidX(rrect), maxx = CGRectGetMaxX(rrect);
 		CGFloat miny = CGRectGetMinY(rrect), midy = CGRectGetMidY(rrect), maxy = CGRectGetMaxY(rrect);
@@ -30,13 +34,13 @@
 		CGContextAddArcToPoint(ctx, minx, maxy, minx, midy, radius);
 		CGContextClosePath(ctx);
 		CGContextSetRGBStrokeColor(ctx, 1, 1, 1, 1);
-		CGContextSetLineWidth(ctx, progressBorderWidth);
+		CGContextSetLineWidth(ctx, _progressBorderWidth);
 		CGContextDrawPath(ctx, kCGPathStroke);
 		
-		radius = progressBarRadius;
+		radius = _progressBarRadius;
 		
-		rrect = CGRectInset(rrect, progressBarInset, progressBarInset);
-		rrect.size.width = rrect.size.width * theProgress;
+		rrect = CGRectInset(rrect, _progressBarInset, _progressBarInset);
+		rrect.size.width = rrect.size.width * _theProgress;
 		minx = CGRectGetMinX(rrect), midx = CGRectGetMidX(rrect), maxx = CGRectGetMaxX(rrect);
 		miny = CGRectGetMinY(rrect), midy = CGRectGetMidY(rrect), maxy = CGRectGetMaxY(rrect);
 		CGContextMoveToPoint(ctx, minx, midy);
@@ -50,4 +54,5 @@
 	}
 	UIGraphicsPopContext();
 }
+
 @end

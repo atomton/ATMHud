@@ -9,46 +9,88 @@
  *	https://github.com/atomton/ATMHud
  */
 
-#import "ATMHud.h"
 #import <QuartzCore/QuartzCore.h>
+#ifdef ATM_SOUND
 #import <AudioToolbox/AudioServices.h>
+#endif
+#import "ATMHud.h"
 #import "ATMHudView.h"
-#import "ATMProgressLayer.h"
 #import "ATMHudDelegate.h"
-#import "ATMSoundFX.h"
 #import "ATMHudQueueItem.h"
+#ifdef ATM_SOUND
+#import "ATMSoundFX.h"
+#endif
 
-@interface ATMHud (Private)
-- (void)construct;
+#define VERSION @"atomHUD 3.0.0 • 2014-02-11"
+
+@interface ATMHud ()
+@property (nonatomic, assign) NSUInteger queuePosition;
+@property (nonatomic, assign) ATMHudAccessoryPosition accessoryPosition;
+@property (nonatomic, assign) BOOL blockTouches;
+@property (nonatomic, assign) BOOL allowSuperviewInteraction;
+#ifdef ATM_SOUND
+@property (nonatomic, copy) NSString *showSound;
+@property (nonatomic, copy) NSString *updateSound;
+@property (nonatomic, copy) NSString *hideSound;
+#endif
+
 @end
 
 @implementation ATMHud
-@synthesize margin, padding, alpha, gray, hideDelay, animateDuration, appearScaleFactor, disappearScaleFactor, progressBorderRadius, progressBorderWidth, progressBarRadius, progressBarInset;
-@synthesize delegate, accessoryPosition;
-@synthesize center;
-@synthesize shadowEnabled, blockTouches, allowSuperviewInteraction;
-@synthesize showSound, updateSound, hideSound;
-@synthesize __view, sound, displayQueue, queuePosition;
-@synthesize userObject;
+{
+	ATMHudView		*hudView;
+	NSMutableArray	*displayQueue;
+	NSDate			*minShowDate;
+}
 
-- (id)init {
++ (NSString *)version {
+	return VERSION;
+}
+
+- (instancetype)init {
 	if ((self = [super init])) {
-		[self construct];
+		_margin						= 10.0f;
+		_padding					= 10.0f;
+		_alpha						= 0.8f;		// DFH: originally 0.7
+		_gray						= 0.2f;		// DFH: originally 0.0
+		_animateDuration			= 0.1f;
+		_progressBorderRadius		= 8.0f;
+		_progressBorderWidth		= 2.0f;
+		_progressBarRadius			= 5.0f;
+		_progressBarInset			= 3.0f;
+		_appearScaleFactor			= 0.8;		// DFH: originally 1.4f
+		_disappearScaleFactor		= 0.8;		// DFH: originally 1.4f
+#if 0 // these default to these
+		_minShowTime				= 0;
+		_center						= CGPointZero;
+		_blockTouches				= NO;
+		_allowSuperviewInteraction	= NO;
+		_removeViewWhenHidden		= NO;
+		_shadowEnabled				= NO;
+		_queuePosition				= 0;
+#endif
+		hudView = [[ATMHudView alloc] initWithFrame:CGRectZero andController:self];
+		hudView.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin		|
+									UIViewAutoresizingFlexibleRightMargin	|
+									UIViewAutoresizingFlexibleBottomMargin	|
+									UIViewAutoresizingFlexibleLeftMargin );
+		[hudView reset];						// actuall sets many of our variables
 	}
 	return self;
 }
 
-- (id)initWithDelegate:(id)hudDelegate {
-	if ((self = [super init])) {
-		delegate = hudDelegate;
-		[self construct];
+- (instancetype)initWithDelegate:(id)hudDelegate {
+	if ((self = [self init])) {
+		_delegate = hudDelegate;
 	}
 	return self;
 }
 
 - (void)dealloc {
-	__view.p = nil;	// prevent crashes
-	//NSLog(@"ATM_HUD DEALLOC");
+	NSLog(@"ATM HUD DEALLOC");
+	[hudView removeFromSuperview];
+	[self.view removeFromSuperview];
+#warning Need this
 }
 
 - (void)loadView {
@@ -57,7 +99,7 @@
 	base.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
 							 UIViewAutoresizingFlexibleHeight);
 	base.userInteractionEnabled = NO;
-	[base addSubview:__view];
+	[base addSubview:hudView];
 	
 	self.view = base;
 }
@@ -78,110 +120,99 @@
     [super viewDidUnload];
 }
 
-
-+ (NSString *)buildInfo {
-	return @"atomHUD 1.2 • 2011-03-01";
-}
-
 #pragma mark -
 #pragma mark Overrides
+
 - (void)setAppearScaleFactor:(CGFloat)value {
-	if (value == 0) {
+	if (!isnormal(value)) {
 		value = 0.01f;
 	}
-	appearScaleFactor = value;
+	_appearScaleFactor = value;
 }
 
 - (void)setDisappearScaleFactor:(CGFloat)value {
-	if (value == 0) {
+	if (!isnormal(value)) {
 		value = 0.01f;
 	}
-	disappearScaleFactor = value;
+	_disappearScaleFactor = value;
 }
 
 - (void)setAlpha:(CGFloat)value {
-	alpha = value;
+	_alpha = value;
 	[CATransaction begin];
 	[CATransaction setDisableActions:YES];
-	__view.backgroundLayer.backgroundColor = [UIColor colorWithWhite:gray alpha:value].CGColor;
+	hudView.backgroundLayer.backgroundColor = [UIColor colorWithWhite:_gray alpha:value].CGColor;
 	[CATransaction commit];
 }
 
 - (void)setGray:(CGFloat)value {
-	gray = value;
+	_gray = value;
 	[CATransaction begin];
 	[CATransaction setDisableActions:YES];
-	__view.backgroundLayer.backgroundColor = [UIColor colorWithWhite:gray alpha:alpha].CGColor;
+	hudView.backgroundLayer.backgroundColor = [UIColor colorWithWhite:_gray alpha:_alpha].CGColor;
 	[CATransaction commit];
 }
 
 - (void)setCenter:(CGPoint)pt
 {
-	center = pt;
-	
-	if(__view) __view.center = center;
+	_center = pt;
+	hudView.center = pt;
 }
 
 - (void)setShadowEnabled:(BOOL)value {
-	shadowEnabled = value;
-	if (shadowEnabled) {
-		__view.layer.shadowOpacity = 0.4f;
-	} else {
-		__view.layer.shadowOpacity = 0.0f;
-	}
+	_shadowEnabled = value;
+	hudView.layer.shadowOpacity = value ? 0.4f :0.0f;
 }
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"HUD: caption=%@", __view.caption];
+	return [NSString stringWithFormat:@"HUD: caption=%@", hudView.caption];
 }
 
 #pragma mark -
 #pragma mark Property forwards
+
 - (void)setCaption:(NSString *)caption {
-	__view.caption = caption;
+	hudView.caption = caption;
 }
 
 - (void)setImage:(UIImage *)image {
-	__view.image = image;
+	hudView.image = image;
 }
 
 - (void)setActivity:(BOOL)activity {
-	__view.showActivity = activity;
+	hudView.showActivity = activity;
 	if (activity) {
-		[__view.activity startAnimating];
+		[hudView.activity startAnimating];
 	} else {
-		[__view.activity stopAnimating];
+		[hudView.activity stopAnimating];
 	}
 }
 
 - (void)setActivityStyle:(UIActivityIndicatorViewStyle)activityStyle {
-	__view.activityStyle = activityStyle;
-	if (activityStyle == UIActivityIndicatorViewStyleWhiteLarge) {
-		__view.activitySize = CGSizeMake(37, 37);
-	} else {
-		__view.activitySize = CGSizeMake(20, 20);
-	}
+	hudView.activityStyle = activityStyle;
+	hudView.activitySize = activityStyle == UIActivityIndicatorViewStyleWhiteLarge ? CGSizeMake(37, 37) : CGSizeMake(20, 20);
 }
 
 - (void)setFixedSize:(CGSize)fixedSize {
-	__view.fixedSize = fixedSize;
+	hudView.fixedSize = fixedSize;
 }
 
 - (void)setProgress:(CGFloat)progress {
-	if(progress < 0) progress = 0;
+	if (progress < 0) progress = 0;
 	else
-	if(progress > 1.0f) progress = 1;
+	if (progress > 1.0f) progress = 1;
 	
-	__view.progress = progress;
-	
-	[__view.progressLayer setTheProgress:progress];
-	[__view.progressLayer setNeedsDisplay];
+	hudView.progress = progress;
 }
 
 #pragma mark -
 #pragma mark Queue
+
 - (void)addQueueItem:(ATMHudQueueItem *)item {
+	if(!displayQueue) {
+		displayQueue = [NSMutableArray arrayWithCapacity:4];
+	}
 	[displayQueue addObject:item];
 }
 
@@ -193,16 +224,16 @@
 	[displayQueue removeAllObjects];
 }
 
-- (void)startQueue {
-	queuePosition = 0;
-	if (!CGSizeEqualToSize(__view.fixedSize, CGSizeZero)) {
-		CGSize newSize = __view.fixedSize;
+- (void)startQueueInView:(UIView *)view {
+	_queuePosition = 0;
+	if (!CGSizeEqualToSize(hudView.fixedSize, CGSizeZero)) {
+		CGSize newSize = hudView.fixedSize;
 		CGSize targetSize;
 		ATMHudQueueItem *queueItem;
 		for (NSUInteger i = 0; i < [displayQueue count]; i++) {
 			queueItem = [displayQueue objectAtIndex:i];
 			
-			targetSize = [__view calculateSizeForQueueItem:queueItem];
+			targetSize = [hudView calculateSizeForQueueItem:queueItem];
 			if (targetSize.width > newSize.width) {
 				newSize.width = targetSize.width;
 			}
@@ -212,57 +243,85 @@
 		}
 		[self setFixedSize:newSize];
 	}
-	[self showQueueAtIndex:queuePosition];
+	[self showQueueAtIndex:_queuePosition inView:view];
 }
 
 - (void)showNextInQueue {
-	queuePosition++;
-	[self showQueueAtIndex:queuePosition];
+	_queuePosition++;
+	[self showQueueAtIndex:_queuePosition inView:nil];
 }
 
-- (void)showQueueAtIndex:(NSUInteger)index {
+- (void)showQueueAtIndex:(NSUInteger)index inView:view {
 	if ([displayQueue count] > 0) {
-		queuePosition = index;
-		if (queuePosition == [displayQueue count]) {
+		_queuePosition = index;
+		if (_queuePosition == [displayQueue count]) {
 			[self hide];
 			return;
 		}
-		ATMHudQueueItem *item = [displayQueue objectAtIndex:queuePosition];
+		ATMHudQueueItem *item = [displayQueue objectAtIndex:_queuePosition];
 		
-		__view.caption = item.caption;
-		__view.image = item.image;
+		hudView.caption = item.caption;
+		hudView.image = item.image;
 		
 		BOOL flag = item.showActivity;
-		__view.showActivity = flag;
+		hudView.showActivity = flag;
 		if (flag) {
-			[__view.activity startAnimating];
+			[hudView.activity startAnimating];
 		} else {
-			[__view.activity stopAnimating];
+			[hudView.activity stopAnimating];
 		}
 		
-		self.accessoryPosition = item.accessoryPosition;
+		_accessoryPosition = item.accessoryPosition;
 		[self setActivityStyle:item.activityStyle];
 		
-		if (queuePosition == 0) {
-			[__view show];
+		if (_queuePosition == 0) {
+			[self showInView:view];
 		} else {
-			[__view update];
+			[self update];
 		}
 	}
 }
 
 #pragma mark -
 #pragma mark Controlling
+
+- (void)showInView:(UIView *)v {
+	[v addSubview:self.view];
+	[self _show];
+}
+
 - (void)show {
-	[__view show];
+	[self _show];
+}
+
+- (void)_show {
+	[self updateHideTime];
+	[hudView show];
 }
 
 - (void)update {
-	[__view update];
+	[self updateHideTime];
+	[hudView update];
+}
+
+- (void)updateHideTime {
+	if (isnormal(_minShowTime)) {
+		minShowDate = [NSDate dateWithTimeIntervalSinceNow:_minShowTime];
+	} else {
+		minShowDate = nil;	// just be sure
+	}
 }
 
 - (void)hide {
-	[__view hide];
+	NSTimeInterval x = [minShowDate timeIntervalSinceDate:[NSDate date]];	// if minShowDate==nil then x==0
+	if (x <= 0) {
+		[hudView hide];
+	} else {
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, x * NSEC_PER_SEC), dispatch_get_main_queue(), ^
+			{
+				[hudView hide];
+			} );
+	}
 }
 
 - (void)hideAfter:(NSTimeInterval)delay {
@@ -271,39 +330,18 @@
 
 #pragma mark -
 #pragma mark Internal methods
-- (void)construct {
-	margin = padding = 10.0f;
-	alpha = 0.7f;
-	gray = 0.0f;
-	animateDuration = 0.1f;
-	progressBorderRadius = 8.0f;
-	progressBorderWidth = 2.0f;
-	progressBarRadius = 5.0f;
-	progressBarInset = 3.0f;
-	accessoryPosition = ATMHudAccessoryPositionBottom;
-	appearScaleFactor = disappearScaleFactor = 1.4f;
-	
-	__view = [[ATMHudView alloc] initWithFrame:CGRectZero andController:self];
-	__view.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin |
-							   UIViewAutoresizingFlexibleRightMargin |
-							   UIViewAutoresizingFlexibleBottomMargin |
-							   UIViewAutoresizingFlexibleLeftMargin);
-	
-	displayQueue = [[NSMutableArray alloc] init];
-	queuePosition = 0;
-	center = CGPointZero;
-	blockTouches = NO;
-	allowSuperviewInteraction = NO;
-}
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	if (!blockTouches) {
+	if (!_blockTouches) {
 		UITouch *aTouch = [touches anyObject];
 		if (aTouch.tapCount == 1) {
 			CGPoint p = [aTouch locationInView:self.view];
-			if (CGRectContainsPoint(__view.frame, p)) {
-				if ([(id)self.delegate respondsToSelector:@selector(userDidTapHud:)]) {
-					[self.delegate userDidTapHud:self];
+			if (CGRectContainsPoint(hudView.frame, p)) {
+				if ([(id)_delegate respondsToSelector:@selector(userDidTapHud:)]) {
+					[_delegate userDidTapHud:self];
+				}
+				if (_blockDelegate) {
+					_blockDelegate(userDidTapHud, self);
 				}
 			}
 		}
@@ -312,8 +350,9 @@
 
 #ifdef ATM_SOUND
 - (void)playSound:(NSString *)soundPath {
-	sound = [[ATMSoundFX alloc] initWithContentsOfFile:soundPath];
-	[sound play];
+	_sound = [[ATMSoundFX alloc] initWithContentsOfFile:soundPath];
+	[_sound play];
 }
 #endif
+
 @end

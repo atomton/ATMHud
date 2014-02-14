@@ -9,7 +9,11 @@
  *	https://github.com/atomton/ATMHud
  */
 
-@class ATMHudView, ATMSoundFX, ATMHudQueueItem;
+
+@class ATMHud, ATMHudQueueItem;
+#ifdef ATM_SOUND
+@class ATMSoundFX;
+#endif
 @protocol ATMHudDelegate;
 
 typedef enum {
@@ -19,62 +23,84 @@ typedef enum {
 	ATMHudAccessoryPositionLeft
 } ATMHudAccessoryPosition;
 
+typedef enum {
+	userDidTapHud,
+	hudWillAppear,
+	hudDidAppear,
+	hudWillUpdate,
+	hudDidUpdate,
+	hudWillDisappear,
+	hudDidDisappear,
+} delegateMessages;
+typedef void (^ATMblockDelegate)(delegateMessages msg, ATMHud *hud);
+
+
 @interface ATMHud : UIViewController
-@property (nonatomic, assign) CGFloat margin;
-@property (nonatomic, assign) CGFloat padding;
-@property (nonatomic, assign) CGFloat alpha;
-@property (nonatomic, assign) CGFloat gray;
-@property (nonatomic, assign) CGFloat hideDelay;	// wait this long before closing (not directly used by this class)
-@property (nonatomic, assign) CGFloat animateDuration;
-@property (nonatomic, assign) CGFloat appearScaleFactor;
-@property (nonatomic, assign) CGFloat disappearScaleFactor;
-@property (nonatomic, assign) CGFloat progressBorderRadius;
-@property (nonatomic, assign) CGFloat progressBorderWidth;
-@property (nonatomic, assign) CGFloat progressBarRadius;
-@property (nonatomic, assign) CGFloat progressBarInset;
+// Properties persist from show to show
+@property (nonatomic, assign) CGFloat margin;						// default 10.0f;
+@property (nonatomic, assign) CGFloat padding;						// default 10.0f
+@property (nonatomic, assign) CGFloat alpha;						// default 0.8f
+@property (nonatomic, assign) CGFloat gray;							// default 0.8f
+@property (nonatomic, assign) CGFloat animateDuration;				// default 0.1f
+@property (nonatomic, assign) CGFloat progressBorderRadius;			// default 8.0f
+@property (nonatomic, assign) CGFloat progressBorderWidth;			// default 2.0f
+@property (nonatomic, assign) CGFloat progressBarRadius;			// default 5.0f
+@property (nonatomic, assign) CGFloat progressBarInset;				// default 3.0f
+@property (nonatomic, assign) CGFloat appearScaleFactor;			// default 0.8;
+@property (nonatomic, assign) CGFloat disappearScaleFactor;			// default 5.0f
+@property (nonatomic, assign) NSTimeInterval minShowTime;			// default 0 sec - do not hide even if told to until this much time elapses
+																//				   to insure HUD visible at least this long
+@property (nonatomic, assign) CGPoint center;						// default {0, 0} - clients can place the HUD center above or below the real view centerpoint
+@property (nonatomic, assign) BOOL shadowEnabled;					// default NO
 
-@property (nonatomic, assign) CGPoint center;
-
-@property (nonatomic, assign) BOOL shadowEnabled;
-@property (nonatomic, assign) BOOL blockTouches;
-@property (nonatomic, assign) BOOL allowSuperviewInteraction;
-
-@property (nonatomic, copy) NSString *showSound;
-@property (nonatomic, copy) NSString *updateSound;
-@property (nonatomic, copy) NSString *hideSound;
-
-@property (nonatomic, weak) id <ATMHudDelegate> delegate;
-@property (nonatomic, assign) ATMHudAccessoryPosition accessoryPosition;
-
-@property (nonatomic, strong) ATMHudView *__view;
+@property (nonatomic, weak) id <ATMHudDelegate> delegate;			// traditional delegate
+@property (nonatomic, copy) ATMblockDelegate blockDelegate;			// block delegate
+#ifdef ATM_SOUND
 @property (nonatomic, strong) ATMSoundFX *sound;
-@property (nonatomic, strong) NSMutableArray *displayQueue;
-@property (nonatomic, assign) NSUInteger queuePosition;
-@property (nonatomic, copy) void (^userObject)();			// for use by users
+#endif
+@property (nonatomic, assign, readonly) NSUInteger queuePosition;	// item which is showing
 
-+ (NSString *)buildInfo;
++ (NSString *)version;
 
-- (id)initWithDelegate:(id)hudDelegate;
+- (instancetype)initWithDelegate:(id)hudDelegate;
 
-- (void)setCaption:(NSString *)caption;
-- (void)setImage:(UIImage *)image;
-- (void)setActivity:(BOOL)activity;
-- (void)setActivityStyle:(UIActivityIndicatorViewStyle)activityStyle;
-- (void)setFixedSize:(CGSize)fixedSize;
-- (void)setProgress:(CGFloat)progress;
-- (void)setCenter:(CGPoint)pt;
+// These variables are reset after each hide
+- (void)setCaption:(NSString *)caption;										// Reset to @"" after each hide
+- (void)setImage:(UIImage *)image;											// Reset to nil
+- (void)setActivity:(BOOL)activity;											// Reset to NO
+- (void)setActivityStyle:(UIActivityIndicatorViewStyle)activityStyle;		// Reset to UIActivityIndicatorViewStyleWhite
+- (void)setAccessoryPosition:(ATMHudAccessoryPosition)pos;					// Reset to ATMHudAccessoryPositionBottom
+- (void)setFixedSize:(CGSize)fixedSize;										// Reset to CGSizeZero
+- (void)setProgress:(CGFloat)progress;										// Reset to 0
+- (void)setCenter:(CGPoint)pt;												// Reset to CGPointZero
+- (void)setBlockTouches:(BOOL)val;											// Reset to NO
+- (void)setAllowSuperviewInteraction:(BOOL)val;								// Reset to NO
+#ifdef ATM_SOUND
+- (void)setShowSound:(NSString *)sound;										// Reset to nil
+- (void)setUpdateSound:(NSString *)sound;									// Reset to nil
+- (void)setHideSound:(NSString *)sound;										// Reset to nil
+#endif
+
+- (ATMHudAccessoryPosition)accessoryPosition;
+- (BOOL)allowSuperviewInteraction;
+#ifdef ATM_SOUND
+- (NSString *)showSound;
+- (NSString *)updateSound;
+- (NSString *)hideSound;
+#endif
 
 - (void)addQueueItem:(ATMHudQueueItem *)item;
 - (void)addQueueItems:(NSArray *)items;
 - (void)clearQueue;
-- (void)startQueue;
+- (void)startQueueInView:(UIView *)view;
 - (void)showNextInQueue;
-- (void)showQueueAtIndex:(NSUInteger)index;
 
-- (void)show;
+- (void)showInView:(UIView *)view;
 - (void)update;
-- (void)hide;
-- (void)hideAfter:(NSTimeInterval)delay;
+- (void)hide;	// note: now removes the view from its superview
+
+- (void)show __attribute__((deprecated));								// use showInView
+- (void)hideAfter:(NSTimeInterval)delay __attribute__((deprecated));	// set minShowTime to insure the HUD shows for at least some period of time
 
 #ifdef ATM_SOUND
 - (void)playSound:(NSString *)soundPath;

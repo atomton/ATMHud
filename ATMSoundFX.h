@@ -9,14 +9,9 @@
  *	https://github.com/atomton/ATMHud
  */
 
-#ifdef ATM_SOUND
-#import <AudioToolbox/AudioServices.h>
-
 @interface ATMSoundFX : NSObject
 
-+ (id)soundEffectWithContentsOfFile:(NSString *)aPath;
-- (id)initWithContentsOfFile:(NSString *)path;
+- (instancetype)initWithContentsOfFile:(NSString *)path;
 - (void)play;
 
 @end
-#endif

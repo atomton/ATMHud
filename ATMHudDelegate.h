@@ -11,7 +11,7 @@
 
 @class ATMHud;
 
-@protocol ATMHudDelegate
+@protocol ATMHudDelegate <NSObject>
 
 @optional
 - (void)userDidTapHud:(ATMHud *)_hud;

@@ -8,33 +8,32 @@
  *
  *	https://github.com/atomton/ATMHud
  */
+ 
+#import <QuartzCore/QuartzCore.h>
 
 #import "ATMHudView.h"
 #import "ATMTextLayer.h"
 #import "ATMProgressLayer.h"
 #import "ATMHud.h"
-#import <QuartzCore/QuartzCore.h>
 #import "ATMHudDelegate.h"
 #import "ATMHudQueueItem.h"
 
+@interface ATMHudView ()
+
+@end
 
 @implementation ATMHudView
 {
-	BOOL didHide;
-	UIFont *bsf14;
-}
-@synthesize caption, image, activity, activityStyle, p;
-@synthesize showActivity;
-@synthesize progress;
-@synthesize targetBounds, captionRect, progressRect, activityRect, imageRect;
-@synthesize fixedSize, activitySize;
-@synthesize backgroundLayer, imageLayer, captionLayer, progressLayer;
-
-- (CGRect)sharpRect:(CGRect)rect {
-	CGRect r = rect;
-	r.origin.x = (int)r.origin.x;
-	r.origin.y = (int)r.origin.y;
-	return r;
+	CGRect				targetBounds;
+	CALayer				*imageLayer;
+	ATMTextLayer		*captionLayer;
+	ATMProgressLayer	*progressLayer;
+	CGRect				captionRect;
+	CGRect				progressRect;
+	CGRect				activityRect;
+	CGRect				imageRect;
+	BOOL				didHide;
+	UIFont				*bsf14;
 }
 
 - (CGPoint)sharpPoint:(CGPoint)point {
@@ -44,37 +43,37 @@
 	return _p;
 }
 
-- (id)initWithFrame:(CGRect)frame andController:(ATMHud *)c {
+- (instancetype)initWithFrame:(CGRect)frame andController:(ATMHud *)c {
     if ((self = [super initWithFrame:frame])) {
-		self.p = c;
+		_hud = c;
 		self.backgroundColor = [UIColor clearColor];
 		self.opaque = NO;
 		self.alpha = 0.0;
 		
-		bsf14 = [UIFont boldSystemFontOfSize:14];
+		bsf14 = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
 	
-		backgroundLayer = [[CALayer alloc] init];
-		backgroundLayer.cornerRadius = 10;
-		backgroundLayer.backgroundColor = [UIColor colorWithWhite:p.gray alpha:p.alpha].CGColor;
-		[self.layer addSublayer:backgroundLayer];
+		_backgroundLayer = [CALayer new];
+		_backgroundLayer.cornerRadius = 10;
+		_backgroundLayer.backgroundColor = [UIColor colorWithWhite:_hud.gray alpha:_hud.alpha].CGColor;
+		[self.layer addSublayer:_backgroundLayer];
 		
-		captionLayer = [[ATMTextLayer alloc] init];
+		captionLayer = [ATMTextLayer new];
 		captionLayer.contentsScale = [[UIScreen mainScreen] scale];
 		captionLayer.anchorPoint = CGPointMake(0, 0);
 		[self.layer addSublayer:captionLayer];
 		
-		imageLayer = [[CALayer alloc] init];
+		imageLayer = [CALayer new];
 		imageLayer.anchorPoint = CGPointMake(0, 0);
 		[self.layer addSublayer:imageLayer];
 		
-		progressLayer = [[ATMProgressLayer alloc] init];
+		progressLayer = [ATMProgressLayer new];
 		progressLayer.contentsScale = [[UIScreen mainScreen] scale];
 		progressLayer.anchorPoint = CGPointMake(0, 0);
 		[self.layer addSublayer:progressLayer];
 		
-		activity = [[UIActivityIndicatorView alloc] init];
-		activity.hidesWhenStopped = YES;
-		[self addSubview:activity];
+		_activity = [UIActivityIndicatorView new];
+		_activity.hidesWhenStopped = YES;
+		[self addSubview:_activity];
 		
 		self.layer.shadowColor = [UIColor blackColor].CGColor;
 		self.layer.shadowRadius = 8.0;
@@ -82,8 +81,8 @@
 		self.layer.shadowOpacity = 0.4f;
 		
 		progressRect = CGRectMake(0, 0, 210, 20);
-		activityStyle = UIActivityIndicatorViewStyleWhite;
-		activitySize = CGSizeMake(20, 20);
+		_activityStyle = UIActivityIndicatorViewStyleWhite;
+		_activitySize = CGSizeMake(20, 20);
 		
 		didHide = YES;
     }
@@ -91,16 +90,19 @@
 }
 
 - (void)dealloc {
-	// NSLog(@"ATM_HUD_VIEW DEALLOC");
-	p = nil;
+	NSLog(@"ATM_HUD_VIEW DEALLOC");
+#warning Need this
+
 }
 
 - (void)setProgress:(CGFloat)_p {
 	_p = MIN(MAX(0,_p),1);
 	
 	if (_p > 0 && _p < 0.08f) _p = 0.08f;
-	if(_p == progress) return;
-	progress = _p;
+	if (_p == _progress) return;
+	
+	_progress = _p;
+	progressLayer.theProgress = _progress;
 }
 
 - (CGRect)calcString:(NSString *)str sizeForSize:(CGSize)origSize
@@ -111,181 +113,181 @@
 	NSParagraphStyle *paragraphStyle = [NSMutableParagraphStyle defaultParagraphStyle];	// uses LineBreakWordWrapping
 	NSDictionary *dict = @{ NSFontAttributeName : bsf14, NSParagraphStyleAttributeName : paragraphStyle };
 	
-	CGRect r = [caption boundingRectWithSize:origSize options:NSStringDrawingUsesLineFragmentOrigin attributes:dict context:sdc];
+	CGRect r = [_caption boundingRectWithSize:origSize options:NSStringDrawingUsesLineFragmentOrigin attributes:dict context:sdc];
 	
 	return CGRectIntegral(r);
 }
 
 - (void)calculate {
-	if (!caption || [caption isEqualToString:@""]) {
-		activityRect = CGRectMake(p.margin, p.margin, activitySize.width, activitySize.height);
-		targetBounds = CGRectMake(0, 0, p.margin*2+activitySize.width, p.margin*2+activitySize.height);
+	if (![_caption length]) {
+		activityRect = CGRectMake(_hud.margin, _hud.margin, _activitySize.width, _activitySize.height);
+		targetBounds = CGRectMake(0, 0, _hud.margin*2+_activitySize.width, _hud.margin*2+_activitySize.height);
 	} else {
 		BOOL hasFixedSize = NO;
-		captionRect = [self calcString:caption sizeForSize:CGSizeMake(160, 200)];
-		if (fixedSize.width > 0 & fixedSize.height > 0) {
-			CGSize s = fixedSize;
-			if (progress > 0 && (fixedSize.width < progressRect.size.width+p.margin*2)) {
-				s.width = progressRect.size.width+p.margin*2;
+		captionRect = [self calcString:_caption sizeForSize:CGSizeMake(160, 200)];
+		if (_fixedSize.width > 0 & _fixedSize.height > 0) {
+			CGSize s = _fixedSize;
+			if (_progress > 0 && (_fixedSize.width < progressRect.size.width+_hud.margin*2)) {
+				s.width = progressRect.size.width+_hud.margin*2;
 			}
 			hasFixedSize = YES;
-			captionRect = [self calcString:caption sizeForSize:CGSizeMake(s.width-p.margin*2, 200)];
+			captionRect = [self calcString:_caption sizeForSize:CGSizeMake(s.width-_hud.margin*2, 200)];
 			targetBounds = CGRectMake(0, 0, s.width, s.height);
 		}
 		
 		float adjustment = 0;
-		CGFloat marginX = p.margin;
-		CGFloat marginY = p.margin;
+		CGFloat marginX = _hud.margin;
+		CGFloat marginY = _hud.margin;
 		if (!hasFixedSize) {
-			if (p.accessoryPosition == ATMHudAccessoryPositionTop || p.accessoryPosition == ATMHudAccessoryPositionBottom) {
-				if (progress > 0) {
-					adjustment = p.padding+progressRect.size.height;
-					if (captionRect.size.width+p.margin*2 < progressRect.size.width) {
-						captionRect = [self calcString:caption sizeForSize:CGSizeMake(progressRect.size.width, 200)];
-						targetBounds = CGRectMake(0, 0, progressRect.size.width+p.margin*2, captionRect.size.height+p.margin*2+adjustment);
+			if (_hud.accessoryPosition == ATMHudAccessoryPositionTop || _hud.accessoryPosition == ATMHudAccessoryPositionBottom) {
+				if (_progress > 0) {
+					adjustment = _hud.padding+progressRect.size.height;
+					if (captionRect.size.width+_hud.margin*2 < progressRect.size.width) {
+						captionRect = [self calcString:_caption sizeForSize:CGSizeMake(progressRect.size.width, 200)];
+						targetBounds = CGRectMake(0, 0, progressRect.size.width+_hud.margin*2, captionRect.size.height+_hud.margin*2+adjustment);
 					} else {
-						targetBounds = CGRectMake(0, 0, captionRect.size.width+p.margin*2, captionRect.size.height+p.margin*2+adjustment);
+						targetBounds = CGRectMake(0, 0, captionRect.size.width+_hud.margin*2, captionRect.size.height+_hud.margin*2+adjustment);
 					}
 				} else {
-					if (image) {
-						adjustment = p.padding+image.size.height;
-					} else if (showActivity) {
-						adjustment = p.padding+activitySize.height;
+					if (_image) {
+						adjustment = _hud.padding+_image.size.height;
+					} else if (_showActivity) {
+						adjustment = _hud.padding+_activitySize.height;
 					}
-					targetBounds = CGRectMake(0, 0, captionRect.size.width+p.margin*2, captionRect.size.height+p.margin*2+adjustment);
+					targetBounds = CGRectMake(0, 0, captionRect.size.width+_hud.margin*2, captionRect.size.height+_hud.margin*2+adjustment);
 				}
-			} else if (p.accessoryPosition == ATMHudAccessoryPositionLeft || p.accessoryPosition == ATMHudAccessoryPositionRight) {
-				if (image) {
-					adjustment = p.padding+image.size.width;
-				} else if (showActivity) {
-					adjustment = p.padding+activitySize.height;
+			} else if (_hud.accessoryPosition == ATMHudAccessoryPositionLeft || _hud.accessoryPosition == ATMHudAccessoryPositionRight) {
+				if (_image) {
+					adjustment = _hud.padding+_image.size.width;
+				} else if (_showActivity) {
+					adjustment = _hud.padding+_activitySize.height;
 				}
-				targetBounds = CGRectMake(0, 0, captionRect.size.width+p.margin*2+adjustment, captionRect.size.height+p.margin*2);
+				targetBounds = CGRectMake(0, 0, captionRect.size.width+_hud.margin*2+adjustment, captionRect.size.height+_hud.margin*2);
 			}
 		} else {
-			if (p.accessoryPosition == ATMHudAccessoryPositionTop || p.accessoryPosition == ATMHudAccessoryPositionBottom) {
-				if (progress > 0) {
-					adjustment = p.padding+progressRect.size.height;
-					if (captionRect.size.width+p.margin*2 < progressRect.size.width) {
-						captionRect = [self calcString:caption sizeForSize:CGSizeMake(progressRect.size.width, 200)];
+			if (_hud.accessoryPosition == ATMHudAccessoryPositionTop || _hud.accessoryPosition == ATMHudAccessoryPositionBottom) {
+				if (_progress > 0) {
+					adjustment = _hud.padding+progressRect.size.height;
+					if (captionRect.size.width+_hud.margin*2 < progressRect.size.width) {
+						captionRect = [self calcString:_caption sizeForSize:CGSizeMake(progressRect.size.width, 200)];
 					}
 				} else {
-					if (image) {
-						adjustment = p.padding+image.size.height;
-					} else if (showActivity) {
-						adjustment = p.padding+activitySize.height;
+					if (_image) {
+						adjustment = _hud.padding+_image.size.height;
+					} else if (_showActivity) {
+						adjustment = _hud.padding+_activitySize.height;
 					}
 				}
 				
-				int deltaWidth = lrintf(targetBounds.size.width - captionRect.size.width);
+				long deltaWidth = lrintf(targetBounds.size.width - captionRect.size.width);
 				marginX = 0.5f*deltaWidth;
-				if (marginX < p.margin) {
-					captionRect = [self calcString:caption sizeForSize:CGSizeMake(160, 200)];
-					targetBounds = CGRectMake(0, 0, captionRect.size.width+2*p.margin, targetBounds.size.height);
-					marginX = p.margin;
+				if (marginX < _hud.margin) {
+					captionRect = [self calcString:_caption sizeForSize:CGSizeMake(160, 200)];
+					targetBounds = CGRectMake(0, 0, captionRect.size.width+2*_hud.margin, targetBounds.size.height);
+					marginX = _hud.margin;
 				}
 				
-				int deltaHeight = lrintf(targetBounds.size.height - (adjustment+captionRect.size.height));
+				long deltaHeight = lrintf(targetBounds.size.height - (adjustment+captionRect.size.height));
 				marginY = 0.5f*deltaHeight;
-				if (marginY < p.margin) {
-					targetBounds = CGRectMake(0, 0, targetBounds.size.width, captionRect.size.height+2*p.margin+adjustment);
-					marginY = p.margin;
+				if (marginY < _hud.margin) {
+					targetBounds = CGRectMake(0, 0, targetBounds.size.width, captionRect.size.height+2*_hud.margin+adjustment);
+					marginY = _hud.margin;
 				}
-			} else if (p.accessoryPosition == ATMHudAccessoryPositionLeft || p.accessoryPosition == ATMHudAccessoryPositionRight) {
-				if (image) {
-					adjustment = p.padding+image.size.width;
-				} else if (showActivity) {
-					adjustment = p.padding+activitySize.width;
+			} else if (_hud.accessoryPosition == ATMHudAccessoryPositionLeft || _hud.accessoryPosition == ATMHudAccessoryPositionRight) {
+				if (_image) {
+					adjustment = _hud.padding+_image.size.width;
+				} else if (_showActivity) {
+					adjustment = _hud.padding+_activitySize.width;
 				}
 				
-				int deltaWidth = lrintf(targetBounds.size.width-(adjustment+captionRect.size.width));
+				long deltaWidth = lrintf(targetBounds.size.width-(adjustment+captionRect.size.width));
 				marginX = 0.5f*deltaWidth;
-				if (marginX < p.margin) {
-					captionRect = [self calcString:caption sizeForSize:CGSizeMake(160, 200)];
-					targetBounds = CGRectMake(0, 0, adjustment+captionRect.size.width+2*p.margin, targetBounds.size.height);
-					marginX = p.margin;
+				if (marginX < _hud.margin) {
+					captionRect = [self calcString:_caption sizeForSize:CGSizeMake(160, 200)];
+					targetBounds = CGRectMake(0, 0, adjustment+captionRect.size.width+2*_hud.margin, targetBounds.size.height);
+					marginX = _hud.margin;
 				}
 				
-				int deltaHeight = lrintf(targetBounds.size.height-captionRect.size.height);
+				long deltaHeight = lrintf(targetBounds.size.height-captionRect.size.height);
 				marginY = 0.5f*deltaHeight;
-				if (marginY < p.margin) {
-					targetBounds = CGRectMake(0, 0, targetBounds.size.width, captionRect.size.height+2*p.margin);
-					marginY = p.margin;
+				if (marginY < _hud.margin) {
+					targetBounds = CGRectMake(0, 0, targetBounds.size.width, captionRect.size.height+2*_hud.margin);
+					marginY = _hud.margin;
 				}
 			}
 		}
 		
-		switch (p.accessoryPosition) {
-			case ATMHudAccessoryPositionTop: {
-				activityRect = CGRectMake((targetBounds.size.width-activitySize.width)*0.5f, marginY, activitySize.width, activitySize.height);
-				
-				imageRect = CGRectZero;
-				if(image)
-					imageRect.origin.x = (targetBounds.size.width-image.size.width)*0.5f;
-				else
-					imageRect.origin.x = (targetBounds.size.width)*0.5f;
-				
-				imageRect.origin.y = marginY;
-				if (image && image.size.width > 0.0f && image.size.height > 0.0f) {
-					imageRect.size = image.size;
-				}				
-				progressRect = CGRectMake((targetBounds.size.width-progressRect.size.width)*0.5f, marginY, progressRect.size.width, progressRect.size.height);
-				
-				captionRect.origin.x = (targetBounds.size.width-captionRect.size.width)*0.5f;
-				captionRect.origin.y = adjustment+marginY;
-				break;
+		switch (_hud.accessoryPosition) {
+		case ATMHudAccessoryPositionTop: {
+			activityRect = CGRectMake((targetBounds.size.width-_activitySize.width)*0.5f, marginY, _activitySize.width, _activitySize.height);
+			
+			imageRect = CGRectZero;
+			if (_image)
+				imageRect.origin.x = (targetBounds.size.width-_image.size.width)*0.5f;
+			else
+				imageRect.origin.x = (targetBounds.size.width)*0.5f;
+			
+			imageRect.origin.y = marginY;
+			if (_image && _image.size.width > 0.0f && _image.size.height > 0.0f) {
+				imageRect.size = _image.size;
+			}				
+			progressRect = CGRectMake((targetBounds.size.width-progressRect.size.width)*0.5f, marginY, progressRect.size.width, progressRect.size.height);
+			
+			captionRect.origin.x = (targetBounds.size.width-captionRect.size.width)*0.5f;
+			captionRect.origin.y = adjustment+marginY;
+			break;
+		}
+			
+		case ATMHudAccessoryPositionRight: {
+			activityRect = CGRectMake(marginX+_hud.padding+captionRect.size.width, (targetBounds.size.height-_activitySize.height)*0.5f, _activitySize.width, _activitySize.height);
+			
+			imageRect = CGRectZero;
+			imageRect.origin.x = marginX+_hud.padding+captionRect.size.width;
+			if (_image) {
+				imageRect.origin.y = (targetBounds.size.height-_image.size.height)*0.5f;
+				imageRect.size = _image.size;
 			}
-				
-			case ATMHudAccessoryPositionRight: {
-				activityRect = CGRectMake(marginX+p.padding+captionRect.size.width, (targetBounds.size.height-activitySize.height)*0.5f, activitySize.width, activitySize.height);
-				
-				imageRect = CGRectZero;
-				imageRect.origin.x = marginX+p.padding+captionRect.size.width;
-				if(image) {
-					imageRect.origin.y = (targetBounds.size.height-image.size.height)*0.5f;
-					imageRect.size = image.size;
-				}
-				
-				captionRect.origin.x = marginX;
-				captionRect.origin.y = marginY;
-				break;
+			
+			captionRect.origin.x = marginX;
+			captionRect.origin.y = marginY;
+			break;
+		}
+			
+		case ATMHudAccessoryPositionBottom: {
+			activityRect = CGRectMake((targetBounds.size.width-_activitySize.width)*0.5f, captionRect.size.height+marginY+_hud.padding, _activitySize.width, _activitySize.height);
+			
+			imageRect = CGRectZero;
+			if (_image)
+				imageRect.origin.x = (targetBounds.size.width-_image.size.width)*0.5f;
+			else
+				imageRect.origin.x = (targetBounds.size.width)*0.5f;
+			imageRect.origin.y = captionRect.size.height+marginY+_hud.padding;
+			if (_image)
+				imageRect.size = _image.size;
+			
+			progressRect = CGRectMake((targetBounds.size.width-progressRect.size.width)*0.5f, captionRect.size.height+marginY+_hud.padding, progressRect.size.width, progressRect.size.height);
+			
+			captionRect.origin.x = (targetBounds.size.width-captionRect.size.width)*0.5f;
+			captionRect.origin.y = marginY;
+			break;
+		}
+			
+		case ATMHudAccessoryPositionLeft: {
+			activityRect = CGRectMake(marginX, (targetBounds.size.height-_activitySize.height)*0.5f, _activitySize.width, _activitySize.height);
+			
+			imageRect = CGRectZero;
+			imageRect.origin.x = marginX;
+			if (_image) {
+				imageRect.origin.y = (targetBounds.size.height-_image.size.height)*0.5f;
+				imageRect.size = _image.size;
+			} else {
+				imageRect.origin.y = (targetBounds.size.height)*0.5f;
 			}
-				
-			case ATMHudAccessoryPositionBottom: {
-				activityRect = CGRectMake((targetBounds.size.width-activitySize.width)*0.5f, captionRect.size.height+marginY+p.padding, activitySize.width, activitySize.height);
-				
-				imageRect = CGRectZero;
-				if(image)
-					imageRect.origin.x = (targetBounds.size.width-image.size.width)*0.5f;
-				else
-					imageRect.origin.x = (targetBounds.size.width)*0.5f;
-				imageRect.origin.y = captionRect.size.height+marginY+p.padding;
-				if(image)
-					imageRect.size = image.size;
-				
-				progressRect = CGRectMake((targetBounds.size.width-progressRect.size.width)*0.5f, captionRect.size.height+marginY+p.padding, progressRect.size.width, progressRect.size.height);
-				
-				captionRect.origin.x = (targetBounds.size.width-captionRect.size.width)*0.5f;
-				captionRect.origin.y = marginY;
-				break;
-			}
-				
-			case ATMHudAccessoryPositionLeft: {
-				activityRect = CGRectMake(marginX, (targetBounds.size.height-activitySize.height)*0.5f, activitySize.width, activitySize.height);
-				
-				imageRect = CGRectZero;
-				imageRect.origin.x = marginX;
-				if(image) {
-					imageRect.origin.y = (targetBounds.size.height-image.size.height)*0.5f;
-					imageRect.size = image.size;
-				} else {
-					imageRect.origin.y = (targetBounds.size.height)*0.5f;
-				}
-				
-				captionRect.origin.x = marginX+adjustment;
-				captionRect.origin.y = marginY;
-				break;
-			}
+			
+			captionRect.origin.x = marginX+adjustment;
+			captionRect.origin.y = marginY;
+			break;
+		}
 		}
 	}
 }
@@ -304,7 +306,7 @@
 	CGSize targetSize = CGSizeZero;
 	CGSize styleSize = [self sizeForActivityStyle:item.activityStyle];
 	if (!item.caption || [item.caption isEqualToString:@""]) {
-		targetSize = CGSizeMake(p.margin*2+styleSize.width, p.margin*2+styleSize.height);
+		targetSize = CGSizeMake(_hud.margin*2+styleSize.width, _hud.margin*2+styleSize.height);
 	} else {
 		BOOL hasFixedSize = NO;
 		captionRect = [self calcString:item.caption sizeForSize:CGSizeMake(160, 200)];
@@ -315,57 +317,57 @@
 		if (!hasFixedSize) {
 			if (item.accessoryPosition == ATMHudAccessoryPositionTop || item.accessoryPosition == ATMHudAccessoryPositionBottom) {
 				if (item.image) {
-					adjustment = p.padding+item.image.size.height;
+					adjustment = _hud.padding+item.image.size.height;
 				} else if (item.showActivity) {
-					adjustment = p.padding+styleSize.height;
+					adjustment = _hud.padding+styleSize.height;
 				}
-				targetSize = CGSizeMake(captionRect.size.width+p.margin*2, captionRect.size.height+p.margin*2+adjustment);
+				targetSize = CGSizeMake(captionRect.size.width+_hud.margin*2, captionRect.size.height+_hud.margin*2+adjustment);
 			} else if (item.accessoryPosition == ATMHudAccessoryPositionLeft || item.accessoryPosition == ATMHudAccessoryPositionRight) {
 				if (item.image) {
-					adjustment = p.padding+item.image.size.width;
+					adjustment = _hud.padding+item.image.size.width;
 				} else if (item.showActivity) {
-					adjustment = p.padding+styleSize.width;
+					adjustment = _hud.padding+styleSize.width;
 				}
-				targetSize = CGSizeMake(captionRect.size.width+p.margin*2+adjustment, captionRect.size.height+p.margin*2);
+				targetSize = CGSizeMake(captionRect.size.width+_hud.margin*2+adjustment, captionRect.size.height+_hud.margin*2);
 			}
 		} else {
 			if (item.accessoryPosition == ATMHudAccessoryPositionTop || item.accessoryPosition == ATMHudAccessoryPositionBottom) {
 				if (item.image) {
-					adjustment = p.padding+item.image.size.height;
+					adjustment = _hud.padding+item.image.size.height;
 				} else if (item.showActivity) {
-					adjustment = p.padding+styleSize.height;
+					adjustment = _hud.padding+styleSize.height;
 				}
 				
-				int deltaWidth = lrintf(targetSize.width-captionRect.size.width);
+				long deltaWidth = lrintf(targetSize.width-captionRect.size.width);
 				marginX = 0.5f*deltaWidth;
-				if (marginX < p.margin) {
-					captionRect = [self calcString:caption sizeForSize:CGSizeMake(160, 200)];
-					targetSize = CGSizeMake(captionRect.size.width+2*p.margin, targetSize.height);
+				if (marginX < _hud.margin) {
+					captionRect = [self calcString:_caption sizeForSize:CGSizeMake(160, 200)];
+					targetSize = CGSizeMake(captionRect.size.width+2*_hud.margin, targetSize.height);
 				}
 				
-				int deltaHeight = lrintf(targetSize.height-(adjustment+captionRect.size.height));
+				long deltaHeight = lrintf(targetSize.height-(adjustment+captionRect.size.height));
 				marginY = 0.5f*deltaHeight;
-				if (marginY < p.margin) {
-					targetSize = CGSizeMake(targetSize.width, captionRect.size.height+2*p.margin+adjustment);
+				if (marginY < _hud.margin) {
+					targetSize = CGSizeMake(targetSize.width, captionRect.size.height+2*_hud.margin+adjustment);
 				}
 			} else if (item.accessoryPosition == ATMHudAccessoryPositionLeft || item.accessoryPosition == ATMHudAccessoryPositionRight) {
 				if (item.image) {
-					adjustment = p.padding+item.image.size.width;
+					adjustment = _hud.padding+item.image.size.width;
 				} else if (item.showActivity) {
-					adjustment = p.padding+styleSize.width;
+					adjustment = _hud.padding+styleSize.width;
 				}
 				
-				int deltaWidth = lrintf(targetSize.width-(adjustment+captionRect.size.width));
+				long deltaWidth = lrintf(targetSize.width-(adjustment+captionRect.size.width));
 				marginX = 0.5f*deltaWidth;
-				if (marginX < p.margin) {
-					captionRect = [self calcString:caption sizeForSize:CGSizeMake(160, 200)];
-					targetSize = CGSizeMake(adjustment+captionRect.size.width+2*p.margin, targetSize.height);
+				if (marginX < _hud.margin) {
+					captionRect = [self calcString:_caption sizeForSize:CGSizeMake(160, 200)];
+					targetSize = CGSizeMake(adjustment+captionRect.size.width+2*_hud.margin, targetSize.height);
 				}
 				
-				int deltaHeight = lrintf(targetSize.height-captionRect.size.height);
+				long deltaHeight = lrintf(targetSize.height-captionRect.size.height);
 				marginY = 0.5f*deltaHeight;
-				if (marginY < p.margin) {
-					targetSize = CGSizeMake(targetSize.width, captionRect.size.height+2*p.margin);
+				if (marginY < _hud.margin) {
+					targetSize = CGSizeMake(targetSize.width, captionRect.size.height+2*_hud.margin);
 				}
 			}
 		}
@@ -374,208 +376,224 @@
 }
 
 - (void)applyWithMode:(ATMHudApplyMode)mode {
-	id delegate = (id)p.delegate;
+	id delegate = (id)_hud.delegate;
+	ATMblockDelegate blockDelegate = _hud.blockDelegate;
 
 	switch (mode) {
-		case ATMHudApplyModeShow: {
-			if (CGPointEqualToPoint(p.center, CGPointZero)) {
-				self.frame = CGRectMake((self.superview.bounds.size.width-targetBounds.size.width)*0.5f, (self.superview.bounds.size.height-targetBounds.size.height)*0.5f, targetBounds.size.width, targetBounds.size.height);
-			} else {
-				self.bounds = CGRectMake(0, 0, targetBounds.size.width, targetBounds.size.height);
-				self.center = p.center;
+	case ATMHudApplyModeShow: {
+		if (CGPointEqualToPoint(_hud.center, CGPointZero)) {
+			self.frame = CGRectMake((self.superview.bounds.size.width-targetBounds.size.width)*0.5f, (self.superview.bounds.size.height-targetBounds.size.height)*0.5f, targetBounds.size.width, targetBounds.size.height);
+		} else {
+			self.bounds = CGRectMake(0, 0, targetBounds.size.width, targetBounds.size.height);
+			self.center = _hud.center;
+		}
+		
+		[CATransaction begin];
+		[CATransaction setDisableActions:YES];
+		[CATransaction setCompletionBlock:^{
+			if (_showActivity) {
+				_activity.activityIndicatorViewStyle = _activityStyle;
+				_activity.frame = CGRectIntegral(activityRect);
 			}
 			
-			[CATransaction begin];
-			[CATransaction setDisableActions:YES];
-			[CATransaction setCompletionBlock:^{
-				if (showActivity) {
-					activity.activityIndicatorViewStyle = activityStyle;
-					activity.frame = [self sharpRect:activityRect];
-				}
-				
-				CGRect r = self.frame;
-				[self setFrame:[self sharpRect:r]];
-				
-				if ([delegate respondsToSelector:@selector(hudWillAppear:)]) {
-					[delegate hudWillAppear:p];
-				}
-				
-				self.transform = CGAffineTransformMakeScale(p.appearScaleFactor, p.appearScaleFactor);
+			CGRect r = self.frame;
+			[self setFrame:CGRectIntegral(r)];
+			
+			if ([delegate respondsToSelector:@selector(hudWillAppear:)]) {
+				[delegate hudWillAppear:_hud];
+			}
+			if (blockDelegate) {
+				blockDelegate(hudWillAppear, _hud);
+			}
+			
+			self.transform = CGAffineTransformMakeScale(_hud.appearScaleFactor, _hud.appearScaleFactor);
 
-				[UIView animateWithDuration:p.animateDuration 
-								 animations:^{
-									 self.transform = CGAffineTransformMakeScale(1.0, 1.0);
-									 self.alpha = 1.0;
-								 } 
-								 completion:^(BOOL finished){
-									// if (finished) Got to do this regardless of whether it finished or not.
-									{
-										if (!p.allowSuperviewInteraction) {
-											self.superview.userInteractionEnabled = YES;
-										}
-#ifdef ATM_SOUND
-										if (![p.showSound isEqualToString:@""] && p.showSound != NULL) {
-											[p playSound:p.showSound];
-										}
-#endif
-										if ([delegate respondsToSelector:@selector(hudDidAppear:)]) {
-											[delegate hudDidAppear:p];
-										}
-									} 
-								 }];
-			}];
-			
-			backgroundLayer.position = CGPointMake(0.5f*targetBounds.size.width, 0.5f*targetBounds.size.height);
-			backgroundLayer.bounds = targetBounds;
-			
-			captionLayer.position = [self sharpPoint:CGPointMake(captionRect.origin.x, captionRect.origin.y)];
-			captionLayer.bounds = CGRectMake(0, 0, captionRect.size.width, captionRect.size.height);
-			CABasicAnimation *cAnimation = [CABasicAnimation animationWithKeyPath:@"caption"];
-			cAnimation.duration = 0.001;
-			cAnimation.toValue = caption;
-			[captionLayer addAnimation:cAnimation forKey:@"captionAnimation"];
-			captionLayer.caption = caption;
-			
-			imageLayer.contents = (id)image.CGImage;
-			imageLayer.position = [self sharpPoint:CGPointMake(imageRect.origin.x, imageRect.origin.y)];
-			imageLayer.bounds = CGRectMake(0, 0, imageRect.size.width, imageRect.size.height);
-			
-			progressLayer.position = [self sharpPoint:CGPointMake(progressRect.origin.x, progressRect.origin.y)];
-			progressLayer.bounds = CGRectMake(0, 0, progressRect.size.width, progressRect.size.height);
-			progressLayer.progressBorderRadius = p.progressBorderRadius;
-			progressLayer.progressBorderWidth = p.progressBorderWidth;
-			progressLayer.progressBarRadius = p.progressBarRadius;
-			progressLayer.progressBarInset = p.progressBarInset;
-			progressLayer.theProgress = progress;
-			[progressLayer setNeedsDisplay];
-			
-			[CATransaction commit];
-			break;
-		}
-			
-		case ATMHudApplyModeUpdate: {
-			if ([delegate respondsToSelector:@selector(hudWillUpdate:)]) {
-				[delegate hudWillUpdate:p];
-			}
-			
-			if (CGPointEqualToPoint(p.center, CGPointZero)) {
-				self.frame = CGRectMake((self.superview.bounds.size.width-targetBounds.size.width)*0.5f, (self.superview.bounds.size.height-targetBounds.size.height)*0.5f, targetBounds.size.width, targetBounds.size.height);
-			} else {
-				self.bounds = CGRectMake(0, 0, targetBounds.size.width, targetBounds.size.height);
-				self.center = p.center;
-			}
-			
-			CABasicAnimation *ccAnimation = [CABasicAnimation animationWithKeyPath:@"caption"];
-			ccAnimation.duration = 0.001;
-			ccAnimation.toValue = @"";
-			ccAnimation.delegate = self;
-			[captionLayer addAnimation:ccAnimation forKey:@"captionClearAnimation"];
-			captionLayer.caption = @"";
-			
-			[CATransaction begin];
-			[CATransaction setDisableActions:YES];
-			[CATransaction setCompletionBlock:^{
-				backgroundLayer.bounds = targetBounds;
-				
-				progressLayer.theProgress = progress;
-				[progressLayer setNeedsDisplay];
-				
-				CABasicAnimation *cAnimation = [CABasicAnimation animationWithKeyPath:@"caption"];
-				cAnimation.duration = 0.001;
-				cAnimation.toValue = caption;
-				[captionLayer addAnimation:cAnimation forKey:@"captionAnimation"];
-				captionLayer.caption = caption;
-				
-				if (showActivity) {
-					activity.activityIndicatorViewStyle = activityStyle;
-					activity.frame = [self sharpRect:activityRect];
-				}
-				
-				CGRect r = self.frame;
-				[self setFrame:[self sharpRect:r]];
-#ifdef ATM_SOUND				
-				if (![p.updateSound isEqualToString:@""] && p.updateSound != NULL) {
-					[p playSound:p.updateSound];
-				}
-#endif
-				if ([delegate respondsToSelector:@selector(hudDidUpdate:)]) {
-					[delegate hudDidUpdate:p];
-				}
-			}];
-			
-			backgroundLayer.position = CGPointMake(0.5f*targetBounds.size.width, 0.5f*targetBounds.size.height);
-			imageLayer.position = [self sharpPoint:CGPointMake(imageRect.origin.x, imageRect.origin.y)];
-			progressLayer.position = [self sharpPoint:CGPointMake(progressRect.origin.x, progressRect.origin.y)];
-			
-			imageLayer.bounds = CGRectMake(0, 0, imageRect.size.width, imageRect.size.height);
-			progressLayer.bounds = CGRectMake(0, 0, progressRect.size.width, progressRect.size.height);
-			
-			progressLayer.progressBorderRadius = p.progressBorderRadius;
-			progressLayer.progressBorderWidth = p.progressBorderWidth;
-			progressLayer.progressBarRadius = p.progressBarRadius;
-			progressLayer.progressBarInset = p.progressBarInset;
-			
-			captionLayer.position = [self sharpPoint:CGPointMake(captionRect.origin.x, captionRect.origin.y)];
-			captionLayer.bounds = CGRectMake(0, 0, captionRect.size.width, captionRect.size.height);
-			
-			imageLayer.contents = (id)image.CGImage;
-			[CATransaction commit];
-			break;
-		}
-			
-		case ATMHudApplyModeHide: {
-			//NSLog(@"ATMHud: ATMHudApplyModeHide delegate=%@", delegate);
-			if ([delegate respondsToSelector:@selector(hudWillDisappear:)]) {
-				[delegate hudWillDisappear:p];
-			}
-#ifdef ATM_SOUND
-			if (![p.hideSound isEqualToString:@""] && p.hideSound != NULL) {
-				[p playSound:p.hideSound];
-			}
-#endif
-			//NSLog(@"GOT TO ATMHudApplyModeHide duration=%f delegate=%x p=%x", p.animateDuration, (unsigned int)delegate, (unsigned int)p);
-			
-			ATMHud *hud = p;
-			assert(hud);
-			[UIView animateWithDuration:p.animateDuration
-							 animations:^{ 
-								 self.alpha = 0.0;
-								 self.transform = CGAffineTransformMakeScale(hud.disappearScaleFactor, hud.disappearScaleFactor);
+			[UIView animateWithDuration:_hud.animateDuration 
+							 animations:^{
+								 self.transform = CGAffineTransformMakeScale(1.0, 1.0);
+								 self.alpha = 1.0;
 							 } 
 							 completion:^(BOOL finished){
-								 // if (finished) Got to do this regardless of whether it finished or not.
-								 {
-									 self.superview.userInteractionEnabled = NO;
-									 self.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
-									 [self reset];
-									 if ([delegate respondsToSelector:@selector(hudDidDisappear:)]) {
-										 [delegate hudDidDisappear:hud];
-									 } 
-								 }
+								// if (finished) Got to do this regardless of whether it finished or not.
+								{
+									if (!_hud.allowSuperviewInteraction) {
+										self.superview.userInteractionEnabled = YES;
+									}
+#ifdef ATM_SOUND
+									if (![_hud.showSound isEqualToString:@""] && _hud.showSound != NULL) {
+										[_hud playSound:_hud.showSound];
+									}
+#endif
+									if ([delegate respondsToSelector:@selector(hudDidAppear:)]) {
+										[delegate hudDidAppear:_hud];
+									}
+									if (blockDelegate) {
+										blockDelegate(hudDidAppear, _hud);
+									}
+								}
 							 }];
-			break;
+		}];
+		
+		_backgroundLayer.position = CGPointMake(0.5f*targetBounds.size.width, 0.5f*targetBounds.size.height);
+		_backgroundLayer.bounds = targetBounds;
+		
+		captionLayer.position = [self sharpPoint:CGPointMake(captionRect.origin.x, captionRect.origin.y)];
+		captionLayer.bounds = CGRectMake(0, 0, captionRect.size.width, captionRect.size.height);
+		CABasicAnimation *cAnimation = [CABasicAnimation animationWithKeyPath:@"caption"];
+		cAnimation.duration = 0.001;
+		cAnimation.toValue = _caption;
+		[captionLayer addAnimation:cAnimation forKey:@"captionAnimation"];
+		captionLayer.caption = _caption;
+		imageLayer.contents = (id)_image.CGImage;
+		imageLayer.position = [self sharpPoint:CGPointMake(imageRect.origin.x, imageRect.origin.y)];
+		imageLayer.bounds = CGRectMake(0, 0, imageRect.size.width, imageRect.size.height);
+		
+		progressLayer.position = [self sharpPoint:CGPointMake(progressRect.origin.x, progressRect.origin.y)];
+		progressLayer.bounds = CGRectMake(0, 0, progressRect.size.width, progressRect.size.height);
+		progressLayer.progressBorderRadius = _hud.progressBorderRadius;
+		progressLayer.progressBorderWidth = _hud.progressBorderWidth;
+		progressLayer.progressBarRadius = _hud.progressBarRadius;
+		progressLayer.progressBarInset = _hud.progressBarInset;
+		progressLayer.theProgress = _progress;
+		[progressLayer setNeedsDisplay];
+		
+		[CATransaction commit];
+		break;
+	}
+		
+	case ATMHudApplyModeUpdate: {
+		if ([delegate respondsToSelector:@selector(hudWillUpdate:)]) {
+			[delegate hudWillUpdate:_hud];
 		}
+		if (blockDelegate) {
+			blockDelegate(hudWillUpdate, _hud);
+		}
+		
+		if (CGPointEqualToPoint(_hud.center, CGPointZero)) {
+			self.frame = CGRectMake((self.superview.bounds.size.width-targetBounds.size.width)*0.5f, (self.superview.bounds.size.height-targetBounds.size.height)*0.5f, targetBounds.size.width, targetBounds.size.height);
+		} else {
+			self.bounds = CGRectMake(0, 0, targetBounds.size.width, targetBounds.size.height);
+			self.center = _hud.center;
+		}
+		
+		CABasicAnimation *ccAnimation = [CABasicAnimation animationWithKeyPath:@"caption"];
+		ccAnimation.duration = 0.001;
+		ccAnimation.toValue = @"";
+		ccAnimation.delegate = self;
+		[captionLayer addAnimation:ccAnimation forKey:@"captionClearAnimation"];
+		captionLayer.caption = @"";
+		
+		[CATransaction begin];
+		[CATransaction setDisableActions:YES];
+		[CATransaction setCompletionBlock:^{
+			_backgroundLayer.bounds = targetBounds;
+			
+			progressLayer.theProgress = _progress;
+			[progressLayer setNeedsDisplay];
+			
+			CABasicAnimation *cAnimation = [CABasicAnimation animationWithKeyPath:@"caption"];
+			cAnimation.duration = 0.001;
+			cAnimation.toValue = _caption;
+			[captionLayer addAnimation:cAnimation forKey:@"captionAnimation"];
+			captionLayer.caption = _caption;
+			
+			if (_showActivity) {
+				_activity.activityIndicatorViewStyle = _activityStyle;
+				_activity.frame = CGRectIntegral(activityRect);
+			}
+			
+			CGRect r = self.frame;
+			[self setFrame:CGRectIntegral(r)];
+#ifdef ATM_SOUND				
+			if (![_hud.updateSound isEqualToString:@""] && _hud.updateSound != NULL) {
+				[_hud playSound:_hud.updateSound];
+			}
+#endif
+			if ([delegate respondsToSelector:@selector(hudDidUpdate:)]) {
+				[delegate hudDidUpdate:_hud];
+			}
+			if (blockDelegate) {
+				blockDelegate(hudDidUpdate, _hud);
+			}
+		}];
+		
+		_backgroundLayer.position = CGPointMake(0.5f*targetBounds.size.width, 0.5f*targetBounds.size.height);
+		imageLayer.position = [self sharpPoint:CGPointMake(imageRect.origin.x, imageRect.origin.y)];
+		progressLayer.position = [self sharpPoint:CGPointMake(progressRect.origin.x, progressRect.origin.y)];
+		
+		imageLayer.bounds = CGRectMake(0, 0, imageRect.size.width, imageRect.size.height);
+		progressLayer.bounds = CGRectMake(0, 0, progressRect.size.width, progressRect.size.height);
+		
+		progressLayer.progressBorderRadius = _hud.progressBorderRadius;
+		progressLayer.progressBorderWidth = _hud.progressBorderWidth;
+		progressLayer.progressBarRadius = _hud.progressBarRadius;
+		progressLayer.progressBarInset = _hud.progressBarInset;
+		
+		captionLayer.position = [self sharpPoint:CGPointMake(captionRect.origin.x, captionRect.origin.y)];
+		captionLayer.bounds = CGRectMake(0, 0, captionRect.size.width, captionRect.size.height);
+		
+		imageLayer.contents = (id)_image.CGImage;
+		[CATransaction commit];
+		break;
+	}
+		
+	case ATMHudApplyModeHide: {
+		//NSLog(@"ATMHud: ATMHudApplyModeHide delegate=%@", delegate);
+		if ([delegate respondsToSelector:@selector(hudWillDisappear:)]) {
+			[delegate hudWillDisappear:_hud];
+		}
+		if (blockDelegate) {
+			blockDelegate(hudWillDisappear, _hud);
+		}
+#ifdef ATM_SOUND
+		if (![_hud.hideSound isEqualToString:@""] && _hud.hideSound != NULL) {
+			[_hud playSound:_hud.hideSound];
+		}
+#endif
+		//NSLog(@"GOT TO ATMHudApplyModeHide duration=%f delegate=%x _hud=%x", _hud.animateDuration, (unsigned int)delegate, (unsigned int)_hud);
+		
+		[UIView animateWithDuration:_hud.animateDuration
+						animations:^{
+							self.alpha = 0.0;
+							self.transform = CGAffineTransformMakeScale(_hud.disappearScaleFactor, _hud.disappearScaleFactor);
+						} 
+						completion:^(BOOL finished){
+							 // if (finished) Got to do this regardless of whether it finished or not.
+							{
+								self.superview.userInteractionEnabled = NO;
+								self.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+								[self reset];
+								if ([delegate respondsToSelector:@selector(hudDidDisappear:)]) {
+									[delegate hudDidDisappear:_hud];
+								} 
+								if (blockDelegate) {
+									blockDelegate(hudDidDisappear, _hud);
+								}
+							}
+						 }];
+		break;
+	}
 	}
 }
 
 - (void)show {
-	if(didHide) {
-//NSLog(@"ATMHUD SHOW!!!");
+	if (didHide) {
+		//NSLog(@"ATMHUD SHOW!!!");
 		didHide = NO;
 		[self calculate];
 		[self applyWithMode:ATMHudApplyModeShow];
 	} else {
-//NSLog(@"ATMHUD Asked to show, but already showing!!!");
+		//NSLog(@"ATMHUD Asked to show, but already showing!!!");
 	}
 }
 
 - (void)hide {
-	if(!didHide) {
+	if (!didHide) {
 		didHide = YES;	// multiple calls to hide wrecks havoc, might get called in a cleanup routine in user code just to be sure.
-//NSLog(@"ATMHUD HIDE!!!");
+		//NSLog(@"ATMHUD HIDE!!!");
 		[self applyWithMode:ATMHudApplyModeHide];
 	} else {
-//NSLog(@"ATMHUD Asked to hide, but already hidden!!!");
+		//NSLog(@"ATMHUD Asked to hide, but already hidden!!!");
 	}
 }
 
@@ -585,17 +603,16 @@
 }
 
 - (void)reset {
-	[p setCaption:@""];
-	[p setImage:nil];
-	[p setProgress:0];
-	[p setActivity:NO];
-	[p setActivityStyle:UIActivityIndicatorViewStyleWhite];
-	[p setAccessoryPosition:ATMHudAccessoryPositionBottom];
-	[p setBlockTouches:NO];
-	[p setAllowSuperviewInteraction:NO];
-	// TODO: Reset or not reset, that is the question.
-	[p setFixedSize:CGSizeZero];
-	[p setCenter:CGPointZero];
+	[_hud setCaption:@""];
+	[_hud setImage:nil];
+	[_hud setProgress:0];
+	[_hud setActivity:NO];
+	[_hud setActivityStyle:UIActivityIndicatorViewStyleWhite];
+	[_hud setAccessoryPosition:ATMHudAccessoryPositionBottom];
+	[_hud setBlockTouches:NO];
+	[_hud setAllowSuperviewInteraction:NO];
+	[_hud setFixedSize:CGSizeZero];
+	[_hud setCenter:CGPointZero];
 	
 	[CATransaction begin];
 	[CATransaction setDisableActions:YES];
@@ -608,9 +625,22 @@
 	[captionLayer addAnimation:cAnimation forKey:@"captionAnimation"];
 	captionLayer.caption = @"";
 	
-	[p setShowSound:@""];
-	[p setUpdateSound:@""];
-	[p setHideSound:@""];
+	[_hud setShowSound:@""];
+	[_hud setUpdateSound:@""];
+	[_hud setHideSound:@""];
+
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.100 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
+		{
+			[_hud.view removeFromSuperview];
+		} );
+}
+
+#pragma mark -
+
+// Issue #21 - provided by paweldudek 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.bounds].CGPath;
 }
 
 @end

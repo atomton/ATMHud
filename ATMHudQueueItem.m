@@ -12,15 +12,12 @@
 #import "ATMHudQueueItem.h"
 
 @implementation ATMHudQueueItem
-@synthesize caption, image, showActivity, accessoryPosition, activityStyle;
 
-- (id)init {
+- (instancetype)init {
 	if ((self = [super init])) {
-		caption = @"";
-		image = nil;
-		showActivity = NO;
-		accessoryPosition = ATMHudAccessoryPositionBottom;
-		activityStyle = UIActivityIndicatorViewStyleWhite;
+		_caption = @"";
+		_accessoryPosition = ATMHudAccessoryPositionBottom;
+		_activityStyle = UIActivityIndicatorViewStyleWhite;
 	}
 	return self;
 }

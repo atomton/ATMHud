@@ -11,14 +11,9 @@
 
 #import "ATMTextLayer.h"
 
-@implementation ATMTextLayer
+//#define DROP_SHADOW
 
-- (id)initWithLayer:(id)layer {
-	if ((self = [super init])) {
-		_caption = @"";
-	}
-	return self;
-}
+@implementation ATMTextLayer
 
 + (BOOL)needsDisplayForKey:(NSString *)key {
 	if ([key isEqualToString:@"caption"]) {
@@ -28,23 +23,33 @@
 	}
 }
 
+- (instancetype)initWithLayer:(id)layer {
+	if ((self = [super init])) {
+		self.caption = @"";
+	}
+	return self;
+}
+
 - (void)drawInContext:(CGContextRef)ctx {
 	UIGraphicsPushContext(ctx);	// Makes this contest the current context
-	
-	CGRect f = self.bounds;
-	CGRect s = f;
-	s.origin.y -= 1;
 
-	UIFont *font = [UIFont boldSystemFontOfSize:14];
-	NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-	paragraphStyle.lineBreakMode	= NSLineBreakByWordWrapping;
-	paragraphStyle.alignment		= NSTextAlignmentCenter;
-	
-	[_caption drawInRect:f withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor blackColor]}];
-	[_caption drawInRect:s withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor whiteColor]}];
+	CGRect f = self.bounds;
+#ifdef DROP_SHADOW
+	CGRect s = f;
+#endif
+	f.origin.y -= 1;	// seems weird, but the text looks a bit better being just a pixel higher! This is how the original code worked.
+
+	UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+	NSMutableParagraphStyle *paragraphStyle	= [NSMutableParagraphStyle new];
+	paragraphStyle.lineBreakMode			= NSLineBreakByWordWrapping;
+	paragraphStyle.alignment				= NSTextAlignmentCenter;
+
+#ifdef DROP_SHADOW
+	[_caption drawInRect:s withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor blackColor]}];
+#endif
+	[_caption drawInRect:f withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor whiteColor]}];
 	
 	UIGraphicsPopContext();
 }
-
 
 @end

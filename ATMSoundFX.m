@@ -9,34 +9,25 @@
  *	https://github.com/atomton/ATMHud
  */
 
-#ifdef ATM_SOUND
+#import <AudioToolbox/AudioServices.h>
 
 #import "ATMSoundFX.h"
 
 @implementation ATMSoundFX
 {
-	SystemSoundID _soundID;
+	SystemSoundID soundID;
 }
 
-+ (id)soundEffectWithContentsOfFile:(NSString *)aPath {
-    if (aPath) {
-        return [[ATMSoundFX alloc] initWithContentsOfFile:aPath];
-    }
-    return nil;
-}
-
-- (id)initWithContentsOfFile:(NSString *)path {
-    self = [super init];
-    
-    if (self != nil) {
+- (instancetype)initWithContentsOfFile:(NSString *)path {
+    if ((self = [super init])) {
         NSURL *aFileURL = [NSURL fileURLWithPath:path isDirectory:NO];
         
-        if (aFileURL != nil)  {
+        if (aFileURL)  {
             SystemSoundID aSoundID;
             OSStatus error = AudioServicesCreateSystemSoundID((__bridge CFURLRef)aFileURL, &aSoundID);
             
             if (error == kAudioServicesNoError) {
-                _soundID = aSoundID;
+                soundID = aSoundID;
             } else {
                 self = nil;
             }
@@ -47,13 +38,16 @@
     return self;
 }
 
--(void)dealloc {
-    AudioServicesDisposeSystemSoundID(_soundID);
+- (void)dealloc {
+	if (soundID) {
+		// one presumes dealloc called even if init failed, since super succeeded...
+		AudioServicesDisposeSystemSoundID(soundID);
+		NSLog(@"SOUND DEALLOC");
+	}
 }
 
--(void)play {
-    AudioServicesPlaySystemSound(_soundID);
+- (void)play {
+    AudioServicesPlaySystemSound(soundID);
 }
 
 @end
-#endif

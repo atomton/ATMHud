@@ -23,6 +23,7 @@
 #import "ATMHudAppDelegate.h"
 #import "DemoViewController.h"
 
+
 @implementation ATMHudAppDelegate
 @synthesize window, nav;
 
@@ -30,14 +31,14 @@
 #pragma mark Application lifecycle
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
-    DemoViewController *rvc = [[DemoViewController alloc] init];
+    DemoViewController *rvc = [DemoViewController new];
 	rvc.title = @"atomHUD • Demo";
 	
 	nav = [[UINavigationController alloc] initWithRootViewController:rvc];
 	
 	window.rootViewController = nav;
     [self.window makeKeyAndVisible];
-    
+	
     return YES;
 }
 
@@ -62,6 +63,5 @@
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
 }
 
-
-
 @end
+
