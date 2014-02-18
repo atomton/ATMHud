@@ -4,9 +4,10 @@
  *
  *  Created by Marcel Müller on 2011-03-01.
  *  Copyright (c) 2010-2011, Marcel Müller (atomcraft)
+ *  Copyright (c) 2012-2014, David Hoerl
  *  All rights reserved.
  *
- *	https://github.com/atomton/ATMHud
+ *	https://github.com/atomton/ATMHud (original)
  */
  
 #import <QuartzCore/QuartzCore.h>
@@ -36,16 +37,24 @@
 	UIFont				*bsf14;
 }
 
-- (CGPoint)sharpPoint:(CGPoint)point {
+- (CGPoint)integralPoint:(CGPoint)point
+{
 	CGPoint _p = point;
-	_p.x = (int)_p.x;
-	_p.y = (int)_p.y;
+	_p.x = rintf((float)_p.x);
+	_p.y = rintf((float)_p.y);
 	return _p;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame andController:(ATMHud *)c {
+- (void)removeFromSuperview
+{
+	NSLog(@"removeFromSuperview");
+	[super removeFromSuperview];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame andController:(ATMHud *)h
+{
     if ((self = [super initWithFrame:frame])) {
-		_hud = c;
+		_hud = h;
 		self.backgroundColor = [UIColor clearColor];
 		self.opaque = NO;
 		self.alpha = 0.0;
@@ -89,13 +98,13 @@
     return self;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
 	NSLog(@"ATM_HUD_VIEW DEALLOC");
-#warning Need this
-
 }
 
-- (void)setProgress:(CGFloat)_p {
+- (void)setProgress:(CGFloat)_p
+{
 	_p = MIN(MAX(0,_p),1);
 	
 	if (_p > 0 && _p < 0.08f) _p = 0.08f;
@@ -118,7 +127,8 @@
 	return CGRectIntegral(r);
 }
 
-- (void)calculate {
+- (void)calculate
+{
 	if (![_caption length]) {
 		activityRect = CGRectMake(_hud.margin, _hud.margin, _activitySize.width, _activitySize.height);
 		targetBounds = CGRectMake(0, 0, _hud.margin*2+_activitySize.width, _hud.margin*2+_activitySize.height);
@@ -292,7 +302,8 @@
 	}
 }
 
-- (CGSize)sizeForActivityStyle:(UIActivityIndicatorViewStyle)style {
+- (CGSize)sizeForActivityStyle:(UIActivityIndicatorViewStyle)style
+{
 	CGSize size;
 	if (style == UIActivityIndicatorViewStyleWhiteLarge) {
 		size = CGSizeMake(37, 37);
@@ -302,7 +313,8 @@
 	return size;
 }
 
-- (CGSize)calculateSizeForQueueItem:(ATMHudQueueItem *)item {
+- (CGSize)calculateSizeForQueueItem:(ATMHudQueueItem *)item
+{
 	CGSize targetSize = CGSizeZero;
 	CGSize styleSize = [self sizeForActivityStyle:item.activityStyle];
 	if (!item.caption || [item.caption isEqualToString:@""]) {
@@ -375,12 +387,14 @@
 	return targetSize;
 }
 
-- (void)applyWithMode:(ATMHudApplyMode)mode {
+- (void)applyWithMode:(ATMHudApplyMode)mode
+{
 	id delegate = (id)_hud.delegate;
 	ATMblockDelegate blockDelegate = _hud.blockDelegate;
 
 	switch (mode) {
 	case ATMHudApplyModeShow: {
+		// NSLog(@"ATMHud: ATMHudApplyModeShow delegate=%@", delegate);
 		if (CGPointEqualToPoint(_hud.center, CGPointZero)) {
 			self.frame = CGRectMake((self.superview.bounds.size.width-targetBounds.size.width)*0.5f, (self.superview.bounds.size.height-targetBounds.size.height)*0.5f, targetBounds.size.width, targetBounds.size.height);
 		} else {
@@ -397,8 +411,7 @@
 			}
 			
 			CGRect r = self.frame;
-			[self setFrame:CGRectIntegral(r)];
-			
+			self.frame = CGRectIntegral(r);
 			if ([delegate respondsToSelector:@selector(hudWillAppear:)]) {
 				[delegate hudWillAppear:_hud];
 			}
@@ -437,7 +450,7 @@
 		_backgroundLayer.position = CGPointMake(0.5f*targetBounds.size.width, 0.5f*targetBounds.size.height);
 		_backgroundLayer.bounds = targetBounds;
 		
-		captionLayer.position = [self sharpPoint:CGPointMake(captionRect.origin.x, captionRect.origin.y)];
+		captionLayer.position = [self integralPoint:CGPointMake(captionRect.origin.x, captionRect.origin.y)];
 		captionLayer.bounds = CGRectMake(0, 0, captionRect.size.width, captionRect.size.height);
 		CABasicAnimation *cAnimation = [CABasicAnimation animationWithKeyPath:@"caption"];
 		cAnimation.duration = 0.001;
@@ -445,10 +458,10 @@
 		[captionLayer addAnimation:cAnimation forKey:@"captionAnimation"];
 		captionLayer.caption = _caption;
 		imageLayer.contents = (id)_image.CGImage;
-		imageLayer.position = [self sharpPoint:CGPointMake(imageRect.origin.x, imageRect.origin.y)];
+		imageLayer.position = [self integralPoint:CGPointMake(imageRect.origin.x, imageRect.origin.y)];
 		imageLayer.bounds = CGRectMake(0, 0, imageRect.size.width, imageRect.size.height);
 		
-		progressLayer.position = [self sharpPoint:CGPointMake(progressRect.origin.x, progressRect.origin.y)];
+		progressLayer.position = [self integralPoint:CGPointMake(progressRect.origin.x, progressRect.origin.y)];
 		progressLayer.bounds = CGRectMake(0, 0, progressRect.size.width, progressRect.size.height);
 		progressLayer.progressBorderRadius = _hud.progressBorderRadius;
 		progressLayer.progressBorderWidth = _hud.progressBorderWidth;
@@ -462,6 +475,7 @@
 	}
 		
 	case ATMHudApplyModeUpdate: {
+		// NSLog(@"ATMHud: ATMHudApplyModeUpdate delegate=%@", delegate);
 		if ([delegate respondsToSelector:@selector(hudWillUpdate:)]) {
 			[delegate hudWillUpdate:_hud];
 		}
@@ -518,8 +532,8 @@
 		}];
 		
 		_backgroundLayer.position = CGPointMake(0.5f*targetBounds.size.width, 0.5f*targetBounds.size.height);
-		imageLayer.position = [self sharpPoint:CGPointMake(imageRect.origin.x, imageRect.origin.y)];
-		progressLayer.position = [self sharpPoint:CGPointMake(progressRect.origin.x, progressRect.origin.y)];
+		imageLayer.position = [self integralPoint:CGPointMake(imageRect.origin.x, imageRect.origin.y)];
+		progressLayer.position = [self integralPoint:CGPointMake(progressRect.origin.x, progressRect.origin.y)];
 		
 		imageLayer.bounds = CGRectMake(0, 0, imageRect.size.width, imageRect.size.height);
 		progressLayer.bounds = CGRectMake(0, 0, progressRect.size.width, progressRect.size.height);
@@ -529,7 +543,7 @@
 		progressLayer.progressBarRadius = _hud.progressBarRadius;
 		progressLayer.progressBarInset = _hud.progressBarInset;
 		
-		captionLayer.position = [self sharpPoint:CGPointMake(captionRect.origin.x, captionRect.origin.y)];
+		captionLayer.position = [self integralPoint:CGPointMake(captionRect.origin.x, captionRect.origin.y)];
 		captionLayer.bounds = CGRectMake(0, 0, captionRect.size.width, captionRect.size.height);
 		
 		imageLayer.contents = (id)_image.CGImage;
@@ -538,7 +552,7 @@
 	}
 		
 	case ATMHudApplyModeHide: {
-		//NSLog(@"ATMHud: ATMHudApplyModeHide delegate=%@", delegate);
+		// NSLog(@"ATMHud: ATMHudApplyModeHide delegate=%@", delegate);
 		if ([delegate respondsToSelector:@selector(hudWillDisappear:)]) {
 			[delegate hudWillDisappear:_hud];
 		}
@@ -551,7 +565,8 @@
 		}
 #endif
 		//NSLog(@"GOT TO ATMHudApplyModeHide duration=%f delegate=%x _hud=%x", _hud.animateDuration, (unsigned int)delegate, (unsigned int)_hud);
-		
+
+		__weak ATMHudView *weakSelf = self;
 		[UIView animateWithDuration:_hud.animateDuration
 						animations:^{
 							self.alpha = 0.0;
@@ -560,14 +575,23 @@
 						completion:^(BOOL finished){
 							 // if (finished) Got to do this regardless of whether it finished or not.
 							{
-								self.superview.userInteractionEnabled = NO;
-								self.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
-								[self reset];
+								weakSelf.superview.userInteractionEnabled = NO;
+								weakSelf.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+#define NO_CRASH
+								[weakSelf reset];
+#ifdef NO_CRASH
+								[weakSelf.hud.view removeFromSuperview];
+#else
+								dispatch_async(dispatch_get_main_queue(), ^
+									{
+										[weakSelf.hud.view removeFromSuperview];
+									} );
+#endif
 								if ([delegate respondsToSelector:@selector(hudDidDisappear:)]) {
-									[delegate hudDidDisappear:_hud];
+									[delegate hudDidDisappear:weakSelf.hud];
 								} 
 								if (blockDelegate) {
-									blockDelegate(hudDidDisappear, _hud);
+									blockDelegate(hudDidDisappear, weakSelf.hud);
 								}
 							}
 						 }];
@@ -576,7 +600,8 @@
 	}
 }
 
-- (void)show {
+- (void)show
+{
 	if (didHide) {
 		//NSLog(@"ATMHUD SHOW!!!");
 		didHide = NO;
@@ -587,7 +612,8 @@
 	}
 }
 
-- (void)hide {
+- (void)hide
+{
 	if (!didHide) {
 		didHide = YES;	// multiple calls to hide wrecks havoc, might get called in a cleanup routine in user code just to be sure.
 		//NSLog(@"ATMHUD HIDE!!!");
@@ -597,22 +623,29 @@
 	}
 }
 
-- (void)update {
+- (void)update
+{
 	[self calculate];
 	[self applyWithMode:ATMHudApplyModeUpdate];
 }
 
-- (void)reset {
-	[_hud setCaption:@""];
-	[_hud setImage:nil];
-	[_hud setProgress:0];
-	[_hud setActivity:NO];
-	[_hud setActivityStyle:UIActivityIndicatorViewStyleWhite];
-	[_hud setAccessoryPosition:ATMHudAccessoryPositionBottom];
-	[_hud setBlockTouches:NO];
-	[_hud setAllowSuperviewInteraction:NO];
-	[_hud setFixedSize:CGSizeZero];
-	[_hud setCenter:CGPointZero];
+- (void)reset
+{
+	ATMHud *hud = _hud;
+	if(!hud) return;
+	
+assert([NSThread isMainThread]);
+
+	[hud setCaption:@""];
+	[hud setImage:nil];
+	[hud setProgress:0];
+	[hud setActivity:NO];
+	[hud setActivityStyle:UIActivityIndicatorViewStyleWhite];
+	[hud setAccessoryPosition:ATMHudAccessoryPositionBottom];
+	[hud setBlockTouches:NO];
+	[hud setAllowSuperviewInteraction:NO];
+	[hud setFixedSize:CGSizeZero];
+	[hud setCenter:CGPointZero];
 	
 	[CATransaction begin];
 	[CATransaction setDisableActions:YES];
@@ -624,21 +657,19 @@
 	cAnimation.toValue = @"";
 	[captionLayer addAnimation:cAnimation forKey:@"captionAnimation"];
 	captionLayer.caption = @"";
-	
-	[_hud setShowSound:@""];
-	[_hud setUpdateSound:@""];
-	[_hud setHideSound:@""];
 
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.100 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
-		{
-			[_hud.view removeFromSuperview];
-		} );
+#ifdef ATM_SOUND
+	[hud setShowSound:@""];
+	[hud setUpdateSound:@""];
+	[hud setHideSound:@""];
+#endif
 }
 
 #pragma mark -
 
 // Issue #21 - provided by paweldudek 
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [super layoutSubviews];
     self.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.bounds].CGPath;
 }

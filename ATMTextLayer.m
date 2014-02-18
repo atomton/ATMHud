@@ -4,9 +4,10 @@
  *
  *  Created by Marcel Müller on 2011-03-01.
  *  Copyright (c) 2010-2011, Marcel Müller (atomcraft)
+ *  Copyright (c) 2012-2014, David Hoerl
  *  All rights reserved.
  *
- *	https://github.com/atomton/ATMHud
+ *	https://github.com/atomton/ATMHud (original)
  */
 
 #import "ATMTextLayer.h"
@@ -15,7 +16,8 @@
 
 @implementation ATMTextLayer
 
-+ (BOOL)needsDisplayForKey:(NSString *)key {
++ (BOOL)needsDisplayForKey:(NSString *)key
+{
 	if ([key isEqualToString:@"caption"]) {
 		return YES;
 	} else {
@@ -23,16 +25,17 @@
 	}
 }
 
-- (instancetype)initWithLayer:(id)layer {
+- (instancetype)initWithLayer:(id)layer
+{
 	if ((self = [super init])) {
 		self.caption = @"";
 	}
 	return self;
 }
 
-- (void)drawInContext:(CGContextRef)ctx {
+- (void)drawInContext:(CGContextRef)ctx
+{
 	UIGraphicsPushContext(ctx);	// Makes this contest the current context
-
 	CGRect f = self.bounds;
 #ifdef DROP_SHADOW
 	CGRect s = f;

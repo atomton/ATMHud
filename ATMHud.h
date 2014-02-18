@@ -4,9 +4,10 @@
  *
  *  Created by Marcel Müller on 2011-03-01.
  *  Copyright (c) 2010-2011, Marcel Müller (atomcraft)
+ *  Copyright (c) 2012-2014, David Hoerl
  *  All rights reserved.
  *
- *	https://github.com/atomton/ATMHud
+ *	https://github.com/atomton/ATMHud (original)
  */
 
 
@@ -23,6 +24,7 @@ typedef enum {
 	ATMHudAccessoryPositionLeft
 } ATMHudAccessoryPosition;
 
+// See DemoViewController for blockDelegate usage 
 typedef enum {
 	userDidTapHud,
 	hudWillAppear,
@@ -31,6 +33,11 @@ typedef enum {
 	hudDidUpdate,
 	hudWillDisappear,
 	hudDidDisappear,
+	// add your own functionality to the blockDelegate, for instance to dismiss an action sheet
+	usrAction1,
+	usrAction2,
+	usrAction3,
+	usrAction4,
 } delegateMessages;
 typedef void (^ATMblockDelegate)(delegateMessages msg, ATMHud *hud);
 

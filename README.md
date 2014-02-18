@@ -9,16 +9,17 @@ I once needed a HUD for one of my iPhone apps, but was unhappy with the currentl
 Create, configure, then show it. See the Demo app for more detail.
 
 	// Keep a strong ivar reference to it (ie, "ATMHud *hud")
-	hud = [[ATMHud alloc] initWithDelegate:self];
-	[baseView addSubview:hud.view];
+	hud = [[ATMHud alloc] initWithDelegate:self];  
+	// or  hud = [ATMHud new]; using the block delegate
 
 	[hud setCaption:@"Caption and an activity indicator."];
 	[hud setActivity:YES];
-	[hud show];
+	[hud showInView:self.view];
 	...
 	[hud hide];
-	// when the delegate method tells you its finished, you can nil the ivar out if you want
+	// when the delegate method tells you it's finished, you can nil the ivar out if you want
 	hud = nil;
+	// if you use the block delegate, you can release the hud there (see DemoViewController)
 
 ##**** Modifications, David Hoerl 2011-2014 ****
 
@@ -28,8 +29,8 @@ I needed needed ARC, so I forked the project. My initial changes:
 
  * ARCified
  * more properties exposed
- * add the ability to attach a block to the HUD, to make it easier to take complex actions in the delegate callbacks
- * sound can be compiled out of the framework if you aren't using it (does anyone?) Reduces number of required libraries
+ * blockDelegate along with or for use without the traditional 'delegate'  callbacks
+ * sound can be compiled out of the framework if you aren't using it (assuming most do not.)
  * converted to build error/warning free on iOS7 (required constant changes, many changes to UIKit extensions to NSString
  * 64 bit clean
 

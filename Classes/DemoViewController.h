@@ -4,6 +4,7 @@
  *
  *  Created by Marcel Müller on 2011-03-01.
  *  Copyright (c) 2010-2011, Marcel Müller (atomcraft)
+ *  Copyright (c) 2012-2014, David Hoerl
  *  All rights reserved.
  *
  *	This sample project uses the sound
@@ -17,31 +18,11 @@
  *	with kind permission of Joseph Wain.
  *	You can get them here: http://glyphish.com/
  *
- *	https://github.com/atomton/ATMHud
+ *	https://github.com/atomton/ATMHud (original)
  */
 
-#import <UIKit/UIKit.h>
 #import "ATMHudDelegate.h"
 @class ATMHud;
 
-@interface DemoViewController : UIViewController <ATMHudDelegate, UITableViewDataSource, UITableViewDelegate> {
-	UITableView *tv_demo;
-	ATMHud *hud;
-	
-	NSArray *sectionHeaders;
-	NSArray *sectionFooters;
-	NSArray *cellCaptions;
-	
-	BOOL useFixedSize;
-}
-
-@property (nonatomic, strong) UITableView *tv_demo;
-@property (nonatomic, strong) ATMHud *hud;
-
-@property (nonatomic, strong) NSArray *sectionHeaders;
-@property (nonatomic, strong) NSArray *sectionFooters;
-@property (nonatomic, strong) NSArray *cellCaptions;
-
-@property (nonatomic, assign) BOOL useFixedSize;
-
+@interface DemoViewController : UIViewController <ATMHudDelegate, UITableViewDataSource, UITableViewDelegate>
 @end

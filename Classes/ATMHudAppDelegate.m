@@ -4,6 +4,7 @@
  *
  *  Created by Marcel Müller on 2011-03-01.
  *  Copyright (c) 2010-2011, Marcel Müller (atomcraft)
+ *  Copyright (c) 2012-2014, David Hoerl
  *  All rights reserved.
  *
  *	This sample project uses the sound
@@ -17,7 +18,7 @@
  *	with kind permission of Joseph Wain.
  *	You can get them here: http://glyphish.com/
  *
- *	https://github.com/atomton/ATMHud
+ *	https://github.com/atomton/ATMHud (original)
  */
 
 #import "ATMHudAppDelegate.h"
@@ -42,25 +43,31 @@
     return YES;
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application {
+- (void)applicationWillResignActive:(UIApplication *)application
+{
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application {
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application {
+- (void)applicationWillTerminate:(UIApplication *)application
+{
 }
 
 #pragma mark -
 #pragma mark Memory management
 
-- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
+{
 }
 
 @end
