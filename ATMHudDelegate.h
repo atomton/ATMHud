@@ -15,12 +15,16 @@
 @protocol ATMHudDelegate <NSObject>
 
 @optional
-- (void)userDidTapHud:(ATMHud *)_hud;
-- (void)hudWillAppear:(ATMHud *)_hud;
-- (void)hudDidAppear:(ATMHud *)_hud;
-- (void)hudWillUpdate:(ATMHud *)_hud;
-- (void)hudDidUpdate:(ATMHud *)_hud;
-- (void)hudWillDisappear:(ATMHud *)_hud;
-- (void)hudDidDisappear:(ATMHud *)_hud;
+- (void)userDidTapHud:(ATMHud *)theHud;			// tapped the visible HUD
+- (void)userDidTapOutsideHud:(ATMHud *)theHud;	// tapped outside the HUD
+
+- (void)hudWillAppear:(ATMHud *)theHud;
+- (void)hudDidAppear:(ATMHud *)theHud;
+- (void)hudWillUpdate:(ATMHud *)theHud;
+- (void)hudDidUpdate:(ATMHud *)theHud;
+- (void)hudWillDisappear:(ATMHud *)theHud;
+
+@required
+- (void)hudDidDisappear:(ATMHud *)theHud;
 
 @end

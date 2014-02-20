@@ -23,20 +23,26 @@ Create, configure, then show it. See the Demo app for more detail.
 
 ##**** Modifications, David Hoerl 2011-2014 ****
 
-The reason I adopted this HUD is because it looks so nice, and it offered a wide range of customization options. Along with that is a large number of optional delegate messages that allow you to track (and modify) the view as the user takes actions.
+The reason I adopted this HUD is because it looks so nice, and it offered a wide range of customization options as well as the ability to get a slew of delegate messages as the HUD was presented and dismissed. Along with those you can get messages when the user taps within, or outside, the HUD.
 
 I needed needed ARC, so I forked the project. My initial changes:    
 
  * ARCified
- * more properties exposed
+ * Modern syntax, default setters (no @synthesize)
+ * more of the existing properties exposed along with some new ones
  * blockDelegate along with or for use without the traditional 'delegate'  callbacks
  * sound can be compiled out of the framework if you aren't using it (assuming most do not.)
  * converted to build error/warning free on iOS7 (required constant changes, many changes to UIKit extensions to NSString
  * 64 bit clean
+ * handles view rotation (was a bug on original repository, unsure if I fixed it or not)
+
+##Futures:
+
+iOS7  circular determinate progress indicator (just ask for it!)
 
 ##History:
 
-#3.0.0 - 2/11/2014
+#3.0.0 - 2/20/2014
 
  * Added a Podspec to CocoaPods for this version
  * Font now uses UIFont ' preferredFontForTextStyle:UIFontTextStyleSubheadline''
@@ -49,6 +55,8 @@ I needed needed ARC, so I forked the project. My initial changes:
  * Rolled in some of the original issues posted to atomcraft/ATMHud  
      14 - Gray property to set background color to a gray (not black), and added a setCenter method  
      15 - Screenshots in Readme.md  
+     17 - Different orientation support? (assume this meant a landscape issue) 
+     18 - use blocks api instead delegate
      21 - Pull Request - Small performance update  
      22 - Retain Cycle - changed property to "weak"  
      23 - removeViewWhenHidden property added (use ATMHud without a delegate)  

@@ -71,6 +71,7 @@
 		_allowSuperviewInteraction	= NO;
 		_removeViewWhenHidden		= NO;
 		_shadowEnabled				= NO;
+		_backgroundAlpha			= 0;
 		_queuePosition				= 0;
 #endif
 		hudView = [[ATMHudView alloc] initWithFrame:CGRectZero andController:self];
@@ -102,11 +103,12 @@
 - (void)loadView
 {
 	UIView *base = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	base.backgroundColor = [UIColor clearColor];
-	base.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
-							 UIViewAutoresizingFlexibleHeight);
-	base.userInteractionEnabled = NO;
+	base.backgroundColor		= [UIColor colorWithWhite:_backgroundAlpha alpha:_backgroundAlpha];
+	base.autoresizingMask		= (UIViewAutoresizingFlexibleWidth |
+							       UIViewAutoresizingFlexibleHeight);
+	base.userInteractionEnabled	= NO;
 	[base addSubview:hudView];
+
 	self.view = base;
 }
 
@@ -314,6 +316,8 @@
 
 - (void)showInView:(UIView *)v
 {
+	self.view.frame = v.bounds;
+
 	[v addSubview:self.view];
 	[self _show];
 }
@@ -346,6 +350,8 @@
 
 - (void)hide
 {
+	_blockTouches = YES;
+
 	NSTimeInterval x = [minShowDate timeIntervalSinceDate:[NSDate date]];	// if minShowDate==nil then x==0
 	if (x <= 0) {
 		[hudView hide];
@@ -359,6 +365,8 @@
 
 - (void)hideAfter:(NSTimeInterval)delay
 {
+	_blockTouches = YES;
+
 	[self performSelector:@selector(hide) withObject:nil afterDelay:delay];
 }
 
@@ -368,6 +376,7 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	if (!_blockTouches) {
+		_blockTouches = YES;
 		UITouch *aTouch = [touches anyObject];
 		if (aTouch.tapCount == 1) {
 			CGPoint p = [aTouch locationInView:self.view];
@@ -378,8 +387,16 @@
 				if (_blockDelegate) {
 					_blockDelegate(userDidTapHud, self);
 				}
+			} else {
+				if ([(id)_delegate respondsToSelector:@selector(userDidTapOutsideHud:)]) {
+					[_delegate userDidTapOutsideHud:self];
+				}
+				if (_blockDelegate) {
+					_blockDelegate(userDidTapOutsideHud, self);
+				}
 			}
 		}
+		_blockTouches = NO;
 	}
 }
 

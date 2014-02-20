@@ -26,13 +26,16 @@ typedef enum {
 
 // See DemoViewController for blockDelegate usage 
 typedef enum {
-	userDidTapHud,
+	userDidTapHud,			// actual HUD
+	userDidTapOutsideHud,	// somewhere else in the view
+
 	hudWillAppear,
 	hudDidAppear,
 	hudWillUpdate,
 	hudDidUpdate,
 	hudWillDisappear,
 	hudDidDisappear,
+
 	// add your own functionality to the blockDelegate, for instance to dismiss an action sheet
 	usrAction1,
 	usrAction2,
@@ -44,7 +47,7 @@ typedef void (^ATMblockDelegate)(delegateMessages msg, ATMHud *hud);
 
 @interface ATMHud : UIViewController
 // Properties persist from show to show
-@property (nonatomic, assign) CGFloat margin;						// default 10.0f;
+@property (nonatomic, assign) CGFloat margin;						// default 10.0f
 @property (nonatomic, assign) CGFloat padding;						// default 10.0f
 @property (nonatomic, assign) CGFloat alpha;						// default 0.8f
 @property (nonatomic, assign) CGFloat gray;							// default 0.8f
@@ -56,9 +59,10 @@ typedef void (^ATMblockDelegate)(delegateMessages msg, ATMHud *hud);
 @property (nonatomic, assign) CGFloat appearScaleFactor;			// default 0.8;
 @property (nonatomic, assign) CGFloat disappearScaleFactor;			// default 5.0f
 @property (nonatomic, assign) NSTimeInterval minShowTime;			// default 0 sec - do not hide even if told to until this much time elapses
-																//				   to insure HUD visible at least this long
+																	//                 to insure HUD visible at least this long
 @property (nonatomic, assign) CGPoint center;						// default {0, 0} - clients can place the HUD center above or below the real view centerpoint
 @property (nonatomic, assign) BOOL shadowEnabled;					// default NO
+@property (nonatomic, assign) CGFloat backgroundAlpha;				// default 0.0f; applied as [UIColor colorWithWhite:backgroundAlpha alpha:backgroundAlpha];
 
 @property (nonatomic, weak) id <ATMHudDelegate> delegate;			// traditional delegate
 @property (nonatomic, copy) ATMblockDelegate blockDelegate;			// block delegate

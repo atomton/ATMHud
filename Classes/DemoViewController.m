@@ -23,12 +23,13 @@
 
 #import "DemoViewController.h"
 #import "ATMHud.h"
+#import "ATMHudDelegate.h"
 #import "ATMHudQueueItem.h"
 
 #pragma mark -
 #pragma mark Private interface
 
-@interface DemoViewController () 
+@interface DemoViewController () <ATMHudDelegate>
 - (void)basicHudActionForRow:(NSUInteger)row;
 - (void)advancedHudActionForRow:(NSUInteger)row;
 - (void)positioningActionForRow:(NSUInteger)row;
@@ -430,9 +431,14 @@ assert([NSThread isMainThread]);
 #pragma mark -
 #pragma mark ATMHudDelegate
 
-- (void)userDidTapHud:(ATMHud *)_hud
+- (void)userDidTapHud:(ATMHud *)theHud
 {
-	[_hud hide];
+	[theHud hide];
+}
+
+- (void)hudDidDisappear:(ATMHud *)theHud
+{
+	// normally you would release your ivar here, but this app reuses the HUD so it never gets released
 }
 
 #pragma mark -
