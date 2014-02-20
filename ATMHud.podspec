@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'ATMHud'
-  s.version               = '2.0.0'
+  s.version               = '3.0.0'
   s.platform              = :ios
   s.ios.deployment_target = '7.0'
   s.license               = 'BSD'
