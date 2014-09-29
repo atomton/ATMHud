@@ -1,0 +1,5 @@
+#! /bin/ksh
+
+set -x
+cp *.podspec /Volumes/Data/git/Specs/ATMHud/3.0
+

@@ -10,6 +10,9 @@
  *	https://github.com/atomton/ATMHud (original)
  */
 
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
 #import "ATMProgressLayer.h"
 
 @implementation ATMProgressLayer
