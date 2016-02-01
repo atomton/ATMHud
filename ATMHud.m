@@ -94,10 +94,10 @@
 
 - (void)dealloc
 {
-	NSLog(@"ATM HUD DEALLOC...");
+	//NSLog(@"ATM HUD DEALLOC...");
 	[hudView removeFromSuperview];
 	[self.view removeFromSuperview];
-	NSLog(@"...ATM HUD DEALLOC");
+	//NSLog(@"...ATM HUD DEALLOC");
 }
 
 - (void)loadView

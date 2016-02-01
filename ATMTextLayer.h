@@ -10,6 +10,8 @@
  *	https://github.com/atomton/ATMHud (original)
  */
 
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 #import <QuartzCore/CALayer.h>
 
 @interface ATMTextLayer : CALayer

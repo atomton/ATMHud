@@ -10,6 +10,7 @@
  *	https://github.com/atomton/ATMHud (original)
  */
 
+#import <UIKit/UIKit.h>
 
 @class ATMHud, ATMHudQueueItem;
 #ifdef ATM_SOUND

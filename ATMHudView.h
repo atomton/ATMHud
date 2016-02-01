@@ -10,6 +10,8 @@
  *	https://github.com/atomton/ATMHud (original)
  */
 
+#import <UIKit/UIKit.h>
+
 @class ATMTextLayer, ATMProgressLayer, ATMHud, ATMHudQueueItem;
 
 typedef enum {
