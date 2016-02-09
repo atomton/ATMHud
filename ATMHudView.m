@@ -47,7 +47,7 @@
 
 - (void)removeFromSuperview
 {
-	NSLog(@"removeFromSuperview");
+	//NSLog(@"removeFromSuperview");
 	[super removeFromSuperview];
 }
 
@@ -100,7 +100,7 @@
 
 - (void)dealloc
 {
-	NSLog(@"ATM_HUD_VIEW DEALLOC");
+	//NSLog(@"ATM_HUD_VIEW DEALLOC");
 }
 
 - (void)setProgress:(CGFloat)_p
