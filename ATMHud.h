@@ -61,6 +61,7 @@ typedef void (^ATMblockDelegate)(delegateMessages msg, ATMHud *hud);
 @property (nonatomic, assign) CGFloat disappearScaleFactor;			// default 5.0f
 @property (nonatomic, assign) NSTimeInterval minShowTime;			// default 0 sec - do not hide even if told to until this much time elapses
 																	//                 to insure HUD visible at least this long
+																	// set "minShowTime" before "show" , then send show, then send hide
 @property (nonatomic, assign) CGPoint center;						// default {0, 0} - clients can place the HUD center above or below the real view centerpoint
 @property (nonatomic, assign) BOOL shadowEnabled;					// default NO
 @property (nonatomic, assign) CGFloat backgroundAlpha;				// default 0.0f; applied as [UIColor colorWithWhite:backgroundAlpha alpha:backgroundAlpha];
@@ -112,7 +113,7 @@ typedef void (^ATMblockDelegate)(delegateMessages msg, ATMHud *hud);
 - (void)hide;	// note: now removes the view from its superview
 
 - (void)show __attribute__((deprecated));								// use showInView
-- (void)hideAfter:(NSTimeInterval)delay __attribute__((deprecated));	// set minShowTime to insure the HUD shows for at least some period of time
+- (void)hideAfter:(NSTimeInterval)delay __attribute__((deprecated));	// set "minShowTime" before "show" , then show, then send "hide"
 
 #ifdef ATM_SOUND
 - (void)playSound:(NSString *)soundPath;

@@ -342,7 +342,9 @@
 - (void)updateHideTime
 {
 	if (isnormal(_minShowTime)) {
+NSLog(@"NOW %@", [NSDate new]);
 		minShowDate = [NSDate dateWithTimeIntervalSinceNow:_minShowTime];
+NSLog(@"LATER %@", minShowDate);
 	} else {
 		minShowDate = nil;	// just be sure
 	}
@@ -353,9 +355,11 @@
 	_blockTouches = YES;
 
 	NSTimeInterval x = [minShowDate timeIntervalSinceDate:[NSDate date]];	// if minShowDate==nil then x==0
-	if (x <= 0) {
+	if (x <= 0 && hudView != nil) {
+NSLog(@"HIDE NOW!!!");
 		[hudView hide];
 	} else {
+NSLog(@"Dispatch after %lf", x);
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, x * NSEC_PER_SEC), dispatch_get_main_queue(), ^
 			{
 				[hudView hide];
