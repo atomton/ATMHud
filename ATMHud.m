@@ -22,7 +22,7 @@
 #import "ATMSoundFX.h"
 #endif
 
-#define VERSION @"atomHUD 3.0.0 • 2014-02-11"
+#define VERSION @"atomHUD 4.0.0 • 2016-02-15"
 
 @interface ATMHud ()
 @property (nonatomic, assign) NSUInteger queuePosition;
@@ -65,7 +65,7 @@
 		_appearScaleFactor			= 0.8;		// DFH: originally 1.4f
 		_disappearScaleFactor		= 0.8;		// DFH: originally 1.4f
 		_backgroundAlpha			= 0.15;
-		_hudBackgroundColor			= [[UIColor alloc] initWithRed:.88 green:.91 blue:.91 alpha:_alpha]; // DFH was [UIColor colorWithWhite:_hud.gray alpha:_hud.alpha]
+		_hudBackgroundColor			= [[UIColor alloc] initWithRed:.98 green:.99 blue:1.0 alpha:_alpha]; // DFH was [UIColor colorWithWhite:_hud.gray alpha:_hud.alpha]
 
 #if 0 // these default to these
 		_minShowTime				= 0;
@@ -81,7 +81,7 @@
 									UIViewAutoresizingFlexibleRightMargin	|
 									UIViewAutoresizingFlexibleBottomMargin	|
 									UIViewAutoresizingFlexibleLeftMargin );
-		hudView.backgroundColor = _hudBackgroundColor;
+		hudView.hudBackgroundColor = _hudBackgroundColor;
 		[hudView reset];						// actually sets many of our variables
 	}
 	return self;
@@ -413,14 +413,14 @@
 					[_delegate userDidTapHud:self];
 				}
 				if (_blockDelegate) {
-					_blockDelegate(userDidTapHud, self);
+					_blockDelegate(ATMHudActionUserDidTapHud, self);
 				}
 			} else {
 				if ([(id)_delegate respondsToSelector:@selector(userDidTapOutsideHud:)]) {
 					[_delegate userDidTapOutsideHud:self];
 				}
 				if (_blockDelegate) {
-					_blockDelegate(userDidTapOutsideHud, self);
+					_blockDelegate(ATMHudActionUserDidTapOutsideHud, self);
 				}
 			}
 		}

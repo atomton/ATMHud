@@ -18,33 +18,36 @@
 #endif
 @protocol ATMHudDelegate;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, ATMHudAccessoryPosition) {
 	ATMHudAccessoryPositionTop = 0,
 	ATMHudAccessoryPositionRight,
 	ATMHudAccessoryPositionBottom,
 	ATMHudAccessoryPositionLeft
-} ATMHudAccessoryPosition;
+};
 
 // See DemoViewController for blockDelegate usage 
-typedef enum {
-	userDidTapHud,			// actual HUD
-	userDidTapOutsideHud,	// somewhere else in the view
+typedef NS_ENUM(NSInteger, ATMHudAction) {
+	ATMHudActionUserDidTapHud,			// actual HUD
+	ATMHudActionUserDidTapOutsideHud,	// somewhere else in the view
 
-	hudWillAppear,
-	hudDidAppear,
-	hudWillUpdate,
-	hudDidUpdate,
-	hudWillDisappear,
-	hudDidDisappear,
+	ATMHudActionWillAppear,
+	ATMHudActionDidAppear,
+	ATMHudActionWillUpdate,
+	ATMHudActionDidUpdate,
+	ATMHudActionWillDisappear,
+	ATMHudActionDidDisappear,
 
 	// add your own functionality to the blockDelegate, for instance to dismiss an action sheet
-	usrAction1,
-	usrAction2,
-	usrAction3,
-	usrAction4,
-} delegateMessages;
-typedef void (^ATMblockDelegate)(delegateMessages msg, ATMHud *hud);
+	ATMHudActionUsrAction1,
+	ATMHudActionUsrAction2,
+	ATMHudActionUsrAction3,
+	ATMHudActionUsrAction4,
+};
 
+
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void (^ATMblockDelegate)(ATMHudAction msg, ATMHud *hud);
 
 @interface ATMHud : UIViewController
 // Properties persist from show to show
@@ -80,7 +83,7 @@ typedef void (^ATMblockDelegate)(delegateMessages msg, ATMHud *hud);
 
 // These variables are reset after each hide
 - (void)setCaption:(NSString *)caption;										// Reset to @"" after each hide
-- (void)setImage:(UIImage *)image;											// Reset to nil
+- (void)setImage:(UIImage * _Nullable )image;								// Reset to nil
 - (void)setActivity:(BOOL)activity;											// Reset to NO
 - (void)setActivityStyle:(UIActivityIndicatorViewStyle)activityStyle;		// Reset to UIActivityIndicatorViewStyleWhite
 - (void)setAccessoryPosition:(ATMHudAccessoryPosition)pos;					// Reset to ATMHudAccessoryPositionBottom
@@ -104,7 +107,7 @@ typedef void (^ATMblockDelegate)(delegateMessages msg, ATMHud *hud);
 #endif
 
 - (void)addQueueItem:(ATMHudQueueItem *)item;
-- (void)addQueueItems:(NSArray *)items;
+- (void)addQueueItems:(NSArray<ATMHudQueueItem *> *)items;
 - (void)clearQueue;
 - (void)startQueueInView:(UIView *)view;
 - (void)showNextInQueue;
@@ -121,3 +124,5 @@ typedef void (^ATMblockDelegate)(delegateMessages msg, ATMHud *hud);
 #endif
 
 @end
+
+NS_ASSUME_NONNULL_END

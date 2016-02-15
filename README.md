@@ -4,6 +4,8 @@ I once needed a HUD for one of my iPhone apps, but was unhappy with the currentl
 
 -- Marcel <development@atomcraft.de> [original author]
 
+Heavily modified by D. Hoerl
+
 # Operation
 
 Create, configure, then show it. See the Demo app for more detail.
@@ -21,7 +23,7 @@ Create, configure, then show it. See the Demo app for more detail.
 	hud = nil;
 	// if you use the block delegate, you can release the hud there (see DemoViewController)
 
-##**** Modifications, David Hoerl 2011-2014 ****
+##**** Original Modifications, David Hoerl 2011-2014 ****
 
 The reason I adopted this HUD is because it looks so nice, and it offered a wide range of customization options as well as the ability to get a slew of delegate messages as the HUD was presented and dismissed. Along with those you can get messages when the user taps within, or outside, the HUD.
 
@@ -41,6 +43,14 @@ I needed needed ARC, so I forked the project. My initial changes:
 iOS7  circular determinate progress indicator (just ask for it!)
 
 ##History:
+
+#4.0.0 - 2/15/2016
+
+ * Adopt more modern look - white with dark objects (text, progress indication, etc)
+ * Enums -> NS_ENUM for Swift
+ * Nullabilty for Swift
+ 
+Note: if you used the older code and switch to this version, you may need to do some edits to your project.
 
 #3.0.0 - 2/20/2014
 

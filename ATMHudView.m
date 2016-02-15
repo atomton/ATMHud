@@ -66,7 +66,7 @@
 		bsf14 = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
 	
 		_backgroundLayer = [CALayer new];
-		_backgroundLayer.cornerRadius = 4;	// DFH: was 10
+		_backgroundLayer.cornerRadius = 6;	// DFH: was 10
 		_backgroundLayer.backgroundColor = _hudBackgroundColor.CGColor;
 		[self.layer addSublayer:_backgroundLayer];
 		
@@ -90,11 +90,11 @@
 		_activity.hidesWhenStopped = YES;
 		[self addSubview:_activity];
 		
-		self.layer.shadowColor = [UIColor blackColor].CGColor;
-		self.layer.shadowRadius = 5.0;		// DFH: was 8
-		self.layer.shadowOffset = CGSizeMake(0.0, 0.0);		// DFH: was 3
-		self.layer.shadowOpacity = 0.05f;		// DFH: was 0.3
-		
+//		self.layer.shadowColor = [UIColor blackColor].CGColor;
+//		self.layer.shadowRadius = 5.0;		// DFH: was 8
+//		self.layer.shadowOffset = CGSizeMake(0.0, 0.0);		// DFH: was 3
+//		self.layer.shadowOpacity = 0.05f;		// DFH: was 0.3
+
 		progressRect = CGRectMake(0, 0, PROGRESS_WIDTH, PROGRESS_HEIGHT);	// DFH: hardcoded size of progress control
 		_activitySize = CGSizeMake(20, 20);
 		
@@ -426,7 +426,7 @@
 				[delegate hudWillAppear:_hud];
 			}
 			if (blockDelegate) {
-				blockDelegate(hudWillAppear, _hud);
+				blockDelegate(ATMHudActionWillAppear, _hud);
 			}
 			
 			self.transform = CGAffineTransformMakeScale(_hud.appearScaleFactor, _hud.appearScaleFactor);
@@ -451,7 +451,7 @@
 										[delegate hudDidAppear:_hud];
 									}
 									if (blockDelegate) {
-										blockDelegate(hudDidAppear, _hud);
+										blockDelegate(ATMHudActionDidAppear, _hud);
 									}
 								}
 							 }];
@@ -490,7 +490,7 @@
 			[delegate hudWillUpdate:_hud];
 		}
 		if (blockDelegate) {
-			blockDelegate(hudWillUpdate, _hud);
+			blockDelegate(ATMHudActionWillUpdate, _hud);
 		}
 		
 		if (CGPointEqualToPoint(_hud.center, CGPointZero)) {
@@ -537,7 +537,7 @@
 				[delegate hudDidUpdate:_hud];
 			}
 			if (blockDelegate) {
-				blockDelegate(hudDidUpdate, _hud);
+				blockDelegate(ATMHudActionDidUpdate, _hud);
 			}
 		}];
 		
@@ -567,7 +567,7 @@
 			[delegate hudWillDisappear:_hud];
 		}
 		if (blockDelegate) {
-			blockDelegate(hudWillDisappear, _hud);
+			blockDelegate(ATMHudActionWillDisappear, _hud);
 		}
 #ifdef ATM_SOUND
 		if (![_hud.hideSound isEqualToString:@""] && _hud.hideSound != NULL) {
@@ -601,7 +601,7 @@
 									[delegate hudDidDisappear:weakSelf.hud];
 								} 
 								if (blockDelegate) {
-									blockDelegate(hudDidDisappear, weakSelf.hud);
+									blockDelegate(ATMHudActionDidDisappear, weakSelf.hud);
 								}
 							}
 						 }];

@@ -230,15 +230,15 @@
 		hud2 = [ATMHud new];
 		[hud2 setCaption:@"Just a simple caption."];
 		__weak DemoViewController *weakSelf = self;
-		hud2.blockDelegate = ^(delegateMessages msg, ATMHud *h)
+		hud2.blockDelegate = ^(ATMHudAction msg, ATMHud *h)
 								{
 assert([NSThread isMainThread]);
-									NSLog(@"MSG %d", msg);
+									NSLog(@"MSG %d", (int)msg);
 									switch(msg) {
-									case userDidTapHud:
+									case ATMHudActionUserDidTapHud:
 										[h hide];
 										break;
-									case hudDidDisappear:
+									case ATMHudActionDidDisappear:
 									{
 //dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
     {
