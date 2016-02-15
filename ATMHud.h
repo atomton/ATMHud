@@ -65,6 +65,7 @@ typedef void (^ATMblockDelegate)(delegateMessages msg, ATMHud *hud);
 @property (nonatomic, assign) CGPoint center;						// default {0, 0} - clients can place the HUD center above or below the real view centerpoint
 @property (nonatomic, assign) BOOL shadowEnabled;					// default NO
 @property (nonatomic, assign) CGFloat backgroundAlpha;				// default 0.0f; applied as [UIColor colorWithWhite:backgroundAlpha alpha:backgroundAlpha];
+@property (nonatomic, strong) UIColor *hudBackgroundColor;			// default is a light slightly blue color
 
 @property (nonatomic, weak) id <ATMHudDelegate> delegate;			// traditional delegate
 @property (nonatomic, copy) ATMblockDelegate blockDelegate;			// block delegate

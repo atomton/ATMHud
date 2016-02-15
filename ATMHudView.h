@@ -33,6 +33,7 @@ typedef enum {
 @property (nonatomic, assign) CGSize fixedSize;
 @property (nonatomic, assign) CGSize activitySize;
 @property (nonatomic, strong) CALayer *backgroundLayer;
+@property (nonatomic, strong) UIColor *hudBackgroundColor;
 
 - (instancetype)initWithFrame:(CGRect)frame andController:(ATMHud *)c;
 

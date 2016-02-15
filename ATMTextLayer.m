@@ -48,10 +48,9 @@
 	paragraphStyle.alignment				= NSTextAlignmentCenter;
 
 #ifdef DROP_SHADOW
-	[_caption drawInRect:s withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor blackColor]}];
+	[_caption drawInRect:s withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor grayColor]}];
 #endif
-	//[_caption drawInRect:f withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor whiteColor]}];
-	[_caption drawInRect:f withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor blackColor]}];	// DFH
+	[_caption drawInRect:f withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor blackColor]}];
 
 	UIGraphicsPopContext();
 }

@@ -67,8 +67,7 @@
 	
 		_backgroundLayer = [CALayer new];
 		_backgroundLayer.cornerRadius = 4;	// DFH: was 10
-		//_backgroundLayer.backgroundColor = [UIColor colorWithWhite:_hud.alpha alpha:_hud.alpha].CGColor;	// DFH 1.0-_hud.gray
-		_backgroundLayer.backgroundColor = [[UIColor alloc] initWithRed:.88 green:.91 blue:.91 alpha:_hud.alpha].CGColor;
+		_backgroundLayer.backgroundColor = _hudBackgroundColor.CGColor;
 		[self.layer addSublayer:_backgroundLayer];
 		
 		captionLayer = [ATMTextLayer new];
@@ -118,6 +117,11 @@
 	
 	_progress = _p;
 	progressLayer.theProgress = _progress;
+}
+
+- (void)setHudBackgroundColor:(UIColor *)color {
+	_hudBackgroundColor = color;
+	_backgroundLayer.backgroundColor = color.CGColor;
 }
 
 - (CGRect)calcString:(NSString *)str sizeForSize:(CGSize)origSize

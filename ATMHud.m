@@ -54,7 +54,7 @@
 {
 	if ((self = [super init])) {
 		_margin						= 20.0f;	// DFH: was 10
-		_padding					= 10.0f;	// DFH: was 10
+		_padding					= 10.0f;
 		_alpha						= 0.95f;	// DFH: originally 0.7
 		_gray						= 0.1f;		// DFH: originally 0.0
 		_animateDuration			= 0.1f;
@@ -65,6 +65,8 @@
 		_appearScaleFactor			= 0.8;		// DFH: originally 1.4f
 		_disappearScaleFactor		= 0.8;		// DFH: originally 1.4f
 		_backgroundAlpha			= 0.15;
+		_hudBackgroundColor			= [[UIColor alloc] initWithRed:.88 green:.91 blue:.91 alpha:_alpha]; // DFH was [UIColor colorWithWhite:_hud.gray alpha:_hud.alpha]
+
 #if 0 // these default to these
 		_minShowTime				= 0;
 		_center						= CGPointZero;
@@ -79,6 +81,7 @@
 									UIViewAutoresizingFlexibleRightMargin	|
 									UIViewAutoresizingFlexibleBottomMargin	|
 									UIViewAutoresizingFlexibleLeftMargin );
+		hudView.backgroundColor = _hudBackgroundColor;
 		[hudView reset];						// actually sets many of our variables
 	}
 	return self;
@@ -181,6 +184,11 @@
 	hudView.layer.shadowOpacity = value ? 0.4f :0.0f;
 }
 
+- (void)setHudBackgroundColor:(UIColor *)color {
+	_hudBackgroundColor = color;
+	hudView.backgroundColor = _hudBackgroundColor;
+}
+
 - (NSString *)description
 {
 	return [NSString stringWithFormat:@"HUD: caption=%@", hudView.caption];
@@ -205,9 +213,9 @@
 	if (activity) {
 		[hudView.activity startAnimating];
 		hudView.activity.alpha = 0;
-		//[NSTimer scheduledTimerWithTimeInterval:.1 target:self selector:@selector(changeColor) userInfo:nil repeats:NO];
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
 			{
+				// Workaround for bug where Apple ignores the color property
 				[self changeColor];
 			} );
 	} else {
@@ -309,9 +317,9 @@
 		if (flag) {
 			[hudView.activity startAnimating];
 			hudView.activity.alpha = 0;
-			//[NSTimer scheduledTimerWithTimeInterval:.1 target:self selector:@selector(changeColor) userInfo:nil repeats:NO];
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
 				{
+					// Workaround for bug where Apple ignores the color property
 					[self changeColor];
 				} );
 		} else {
