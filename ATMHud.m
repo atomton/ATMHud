@@ -53,17 +53,18 @@
 - (instancetype)init
 {
 	if ((self = [super init])) {
-		_margin						= 10.0f;
-		_padding					= 10.0f;
-		_alpha						= 0.8f;		// DFH: originally 0.7
-		_gray						= 0.2f;		// DFH: originally 0.0
+		_margin						= 20.0f;	// DFH: was 10
+		_padding					= 10.0f;	// DFH: was 10
+		_alpha						= 0.95f;	// DFH: originally 0.7
+		_gray						= 0.1f;		// DFH: originally 0.0
 		_animateDuration			= 0.1f;
-		_progressBorderRadius		= 8.0f;
-		_progressBorderWidth		= 2.0f;
-		_progressBarRadius			= 5.0f;
-		_progressBarInset			= 3.0f;
+		_progressBorderRadius		= 4.0f;		// DFH: was 8
+		_progressBorderWidth		= 0.5;		// DFH: was 2
+		_progressBarRadius			= 2.0f;		// DFH: was 5
+		_progressBarInset			= 3.0f;		// DFH: was 3
 		_appearScaleFactor			= 0.8;		// DFH: originally 1.4f
 		_disappearScaleFactor		= 0.8;		// DFH: originally 1.4f
+		_backgroundAlpha			= 0.15;
 #if 0 // these default to these
 		_minShowTime				= 0;
 		_center						= CGPointZero;
@@ -71,7 +72,6 @@
 		_allowSuperviewInteraction	= NO;
 		_removeViewWhenHidden		= NO;
 		_shadowEnabled				= NO;
-		_backgroundAlpha			= 0;
 		_queuePosition				= 0;
 #endif
 		hudView = [[ATMHudView alloc] initWithFrame:CGRectZero andController:self];
@@ -204,9 +204,21 @@
 	hudView.showActivity = activity;
 	if (activity) {
 		[hudView.activity startAnimating];
+		hudView.activity.alpha = 0;
+		//[NSTimer scheduledTimerWithTimeInterval:.1 target:self selector:@selector(changeColor) userInfo:nil repeats:NO];
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
+			{
+				[self changeColor];
+			} );
 	} else {
 		[hudView.activity stopAnimating];
 	}
+}
+
+- (void)changeColor
+{
+    hudView.activity.color = [UIColor blackColor];
+	[UIView animateWithDuration:.250+_animateDuration animations: ^{ hudView.activity.alpha = 1; }];
 }
 
 - (void)setActivityStyle:(UIActivityIndicatorViewStyle)activityStyle
@@ -296,6 +308,12 @@
 		hudView.showActivity = flag;
 		if (flag) {
 			[hudView.activity startAnimating];
+			hudView.activity.alpha = 0;
+			//[NSTimer scheduledTimerWithTimeInterval:.1 target:self selector:@selector(changeColor) userInfo:nil repeats:NO];
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
+				{
+					[self changeColor];
+				} );
 		} else {
 			[hudView.activity stopAnimating];
 		}
@@ -342,9 +360,9 @@
 - (void)updateHideTime
 {
 	if (isnormal(_minShowTime)) {
-NSLog(@"NOW %@", [NSDate new]);
+		//NSLog(@"NOW %@", [NSDate new]);
 		minShowDate = [NSDate dateWithTimeIntervalSinceNow:_minShowTime];
-NSLog(@"LATER %@", minShowDate);
+		//NSLog(@"LATER %@", minShowDate);
 	} else {
 		minShowDate = nil;	// just be sure
 	}
@@ -356,10 +374,8 @@ NSLog(@"LATER %@", minShowDate);
 
 	NSTimeInterval x = [minShowDate timeIntervalSinceDate:[NSDate date]];	// if minShowDate==nil then x==0
 	if (x <= 0 && hudView != nil) {
-NSLog(@"HIDE NOW!!!");
 		[hudView hide];
 	} else {
-NSLog(@"Dispatch after %lf", x);
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, x * NSEC_PER_SEC), dispatch_get_main_queue(), ^
 			{
 				[hudView hide];

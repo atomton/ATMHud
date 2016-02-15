@@ -50,8 +50,9 @@
 #ifdef DROP_SHADOW
 	[_caption drawInRect:s withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor blackColor]}];
 #endif
-	[_caption drawInRect:f withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor whiteColor]}];
-	
+	//[_caption drawInRect:f withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor whiteColor]}];
+	[_caption drawInRect:f withAttributes:@{ NSFontAttributeName : font, NSParagraphStyleAttributeName : paragraphStyle, NSForegroundColorAttributeName : [UIColor blackColor]}];	// DFH
+
 	UIGraphicsPopContext();
 }
 

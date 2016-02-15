@@ -19,6 +19,7 @@
 #import "ATMHudDelegate.h"
 #import "ATMHudQueueItem.h"
 
+
 @interface ATMHudView ()
 
 @end
@@ -51,6 +52,9 @@
 	[super removeFromSuperview];
 }
 
+#define PROGRESS_HEIGHT	10
+#define PROGRESS_WIDTH	210
+
 - (instancetype)initWithFrame:(CGRect)frame andController:(ATMHud *)h
 {
     if ((self = [super initWithFrame:frame])) {
@@ -62,8 +66,9 @@
 		bsf14 = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
 	
 		_backgroundLayer = [CALayer new];
-		_backgroundLayer.cornerRadius = 10;
-		_backgroundLayer.backgroundColor = [UIColor colorWithWhite:_hud.gray alpha:_hud.alpha].CGColor;
+		_backgroundLayer.cornerRadius = 4;	// DFH: was 10
+		//_backgroundLayer.backgroundColor = [UIColor colorWithWhite:_hud.alpha alpha:_hud.alpha].CGColor;	// DFH 1.0-_hud.gray
+		_backgroundLayer.backgroundColor = [[UIColor alloc] initWithRed:.88 green:.91 blue:.91 alpha:_hud.alpha].CGColor;
 		[self.layer addSublayer:_backgroundLayer];
 		
 		captionLayer = [ATMTextLayer new];
@@ -73,24 +78,25 @@
 		
 		imageLayer = [CALayer new];
 		imageLayer.anchorPoint = CGPointMake(0, 0);
+
 		[self.layer addSublayer:imageLayer];
 		
 		progressLayer = [ATMProgressLayer new];
 		progressLayer.contentsScale = [[UIScreen mainScreen] scale];
 		progressLayer.anchorPoint = CGPointMake(0, 0);
 		[self.layer addSublayer:progressLayer];
-		
-		_activity = [UIActivityIndicatorView new];
+
+		_activityStyle = UIActivityIndicatorViewStyleWhiteLarge;
+		_activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: _activityStyle]; // UIActivityIndicatorView
 		_activity.hidesWhenStopped = YES;
 		[self addSubview:_activity];
 		
 		self.layer.shadowColor = [UIColor blackColor].CGColor;
-		self.layer.shadowRadius = 8.0;
-		self.layer.shadowOffset = CGSizeMake(0.0, 3.0);
-		self.layer.shadowOpacity = 0.4f;
+		self.layer.shadowRadius = 5.0;		// DFH: was 8
+		self.layer.shadowOffset = CGSizeMake(0.0, 0.0);		// DFH: was 3
+		self.layer.shadowOpacity = 0.05f;		// DFH: was 0.3
 		
-		progressRect = CGRectMake(0, 0, 210, 20);
-		_activityStyle = UIActivityIndicatorViewStyleWhite;
+		progressRect = CGRectMake(0, 0, PROGRESS_WIDTH, PROGRESS_HEIGHT);	// DFH: hardcoded size of progress control
 		_activitySize = CGSizeMake(20, 20);
 		
 		didHide = YES;
@@ -230,7 +236,7 @@
 		switch (_hud.accessoryPosition) {
 		case ATMHudAccessoryPositionTop: {
 			activityRect = CGRectMake((targetBounds.size.width-_activitySize.width)*0.5f, marginY, _activitySize.width, _activitySize.height);
-			
+
 			imageRect = CGRectZero;
 			if (_image)
 				imageRect.origin.x = (targetBounds.size.width-_image.size.width)*0.5f;
@@ -250,7 +256,7 @@
 			
 		case ATMHudAccessoryPositionRight: {
 			activityRect = CGRectMake(marginX+_hud.padding+captionRect.size.width, (targetBounds.size.height-_activitySize.height)*0.5f, _activitySize.width, _activitySize.height);
-			
+
 			imageRect = CGRectZero;
 			imageRect.origin.x = marginX+_hud.padding+captionRect.size.width;
 			if (_image) {
@@ -265,7 +271,7 @@
 			
 		case ATMHudAccessoryPositionBottom: {
 			activityRect = CGRectMake((targetBounds.size.width-_activitySize.width)*0.5f, captionRect.size.height+marginY+_hud.padding, _activitySize.width, _activitySize.height);
-			
+
 			imageRect = CGRectZero;
 			if (_image)
 				imageRect.origin.x = (targetBounds.size.width-_image.size.width)*0.5f;
@@ -284,7 +290,7 @@
 			
 		case ATMHudAccessoryPositionLeft: {
 			activityRect = CGRectMake(marginX, (targetBounds.size.height-_activitySize.height)*0.5f, _activitySize.width, _activitySize.height);
-			
+
 			imageRect = CGRectZero;
 			imageRect.origin.x = marginX;
 			if (_image) {
@@ -460,7 +466,7 @@
 		imageLayer.contents = (id)_image.CGImage;
 		imageLayer.position = [self integralPoint:CGPointMake(imageRect.origin.x, imageRect.origin.y)];
 		imageLayer.bounds = CGRectMake(0, 0, imageRect.size.width, imageRect.size.height);
-		
+
 		progressLayer.position = [self integralPoint:CGPointMake(progressRect.origin.x, progressRect.origin.y)];
 		progressLayer.bounds = CGRectMake(0, 0, progressRect.size.width, progressRect.size.height);
 		progressLayer.progressBorderRadius = _hud.progressBorderRadius;
@@ -640,7 +646,7 @@ assert([NSThread isMainThread]);
 	[hud setImage:nil];
 	[hud setProgress:0];
 	[hud setActivity:NO];
-	[hud setActivityStyle:UIActivityIndicatorViewStyleWhite];
+	[hud setActivityStyle:UIActivityIndicatorViewStyleWhiteLarge];
 	[hud setAccessoryPosition:ATMHudAccessoryPositionBottom];
 	[hud setBlockTouches:NO];
 	[hud setAllowSuperviewInteraction:NO];

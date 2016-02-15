@@ -76,7 +76,7 @@
 
 - (void)loadView
 {
-	UIView *baseView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+	UIView *baseView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	
 	tv_demo = [[UITableView alloc] initWithFrame:baseView.bounds style:UITableViewStyleGrouped];
 	tv_demo.delegate = self;
@@ -282,12 +282,12 @@ assert([NSThread isMainThread]);
 		
 	case 2:
 		[hud setCaption:@"Caption and an image."];
-		[hud setImage:[UIImage imageNamed:@"19-check"]];
+		[hud setImage:[[UIImage imageNamed:@"19-check"] imageWithRenderingMode: UIImageRenderingModeAlwaysTemplate]];
 		break;
 		
 	case 3:
 		[hud setActivity:YES];
-		[hud setActivityStyle:UIActivityIndicatorViewStyleWhiteLarge];
+		//[hud setActivityStyle:UIActivityIndicatorViewStyleWhiteLarge];
 		break;
 #ifdef ATM_SOUND
 	case 4:

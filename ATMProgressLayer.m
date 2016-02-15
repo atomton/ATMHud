@@ -39,7 +39,8 @@
 		CGContextAddArcToPoint(ctx, maxx, maxy, midx, maxy, radius);
 		CGContextAddArcToPoint(ctx, minx, maxy, minx, midy, radius);
 		CGContextClosePath(ctx);
-		CGContextSetRGBStrokeColor(ctx, 1, 1, 1, 1);
+		//CGContextSetRGBStrokeColor(ctx, 1, 1, 1, 1);
+		CGContextSetRGBStrokeColor(ctx,0, 0, 0, 1);
 		CGContextSetLineWidth(ctx, _progressBorderWidth);
 		CGContextDrawPath(ctx, kCGPathStroke);
 		
@@ -55,7 +56,8 @@
 		CGContextAddArcToPoint(ctx, maxx, maxy, midx, maxy, radius);
 		CGContextAddArcToPoint(ctx, minx, maxy, minx, midy, radius);
 		CGContextClosePath(ctx);
-		CGContextSetRGBFillColor(ctx,1, 1, 1, 1);
+		//CGContextSetRGBFillColor(ctx,1, 1, 1, 1);
+		CGContextSetRGBFillColor(ctx,0, 0, 0, 1);	// DFH
 		CGContextDrawPath(ctx, kCGPathFill);
 	}
 	UIGraphicsPopContext();
