@@ -20,9 +20,13 @@
 #import "ATMHudQueueItem.h"
 
 
-@interface ATMHudView ()
+//@interface ATMHudView ()
+//@end
 
-@end
+#define SHADOW_OPACITY	0.4f
+#define PROGRESS_HEIGHT	10
+#define PROGRESS_WIDTH	210
+#define CORNER_RADIUS	10
 
 @implementation ATMHudView
 {
@@ -52,9 +56,6 @@
 	[super removeFromSuperview];
 }
 
-#define PROGRESS_HEIGHT	10
-#define PROGRESS_WIDTH	210
-
 - (instancetype)initWithFrame:(CGRect)frame andController:(ATMHud *)h
 {
     if ((self = [super initWithFrame:frame])) {
@@ -66,7 +67,7 @@
 		bsf14 = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
 	
 		_backgroundLayer = [CALayer new];
-		_backgroundLayer.cornerRadius = 6;	// DFH: was 10
+		_backgroundLayer.cornerRadius = CORNER_RADIUS;
 		_backgroundLayer.backgroundColor = _hudBackgroundColor.CGColor;
 		[self.layer addSublayer:_backgroundLayer];
 		

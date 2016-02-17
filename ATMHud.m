@@ -24,6 +24,8 @@
 
 #define VERSION @"atomHUD 4.0.0 • 2016-02-15"
 
+#define SHADOW_OPACITY 0.4f
+
 @interface ATMHud ()
 @property (nonatomic, assign) NSUInteger queuePosition;
 @property (nonatomic, assign) ATMHudAccessoryPosition accessoryPosition;
@@ -181,7 +183,7 @@
 - (void)setShadowEnabled:(BOOL)value
 {
 	_shadowEnabled = value;
-	hudView.layer.shadowOpacity = value ? 0.4f :0.0f;
+	hudView.layer.shadowOpacity = value ? SHADOW_OPACITY :0.0f;
 }
 
 - (void)setHudBackgroundColor:(UIColor *)color {
