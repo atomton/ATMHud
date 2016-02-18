@@ -155,7 +155,7 @@
 			captionRect = [self calcString:_caption sizeForSize:CGSizeMake(s.width-_hud.margin*2, 200)];
 			targetBounds = CGRectMake(0, 0, s.width, s.height);
 		}
-		
+// QOS_CLASS_USER_INITIATED
 		float adjustment = 0;
 		CGFloat marginX = _hud.margin;
 		CGFloat marginY = _hud.margin;
