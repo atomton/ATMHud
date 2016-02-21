@@ -12,11 +12,21 @@
 
 #import <QuartzCore/CALayer.h>
 
+typedef NS_ENUM(NSInteger, ATMHudProgressStyle) {
+	ATMHudProgressStyleBar,
+	ATMHudProgressStyleCircle
+};
+
 @interface ATMProgressLayer : CALayer
+@property (nonatomic, assign) ATMHudProgressStyle progressStyle;
+
 @property (nonatomic, assign) CGFloat theProgress;
 @property (nonatomic, assign) CGFloat progressBorderWidth;
 @property (nonatomic, assign) CGFloat progressBorderRadius;
-@property (nonatomic, assign) CGFloat progressBarRadius;
-@property (nonatomic, assign) CGFloat progressBarInset;
+@property (nonatomic, assign) CGFloat progressRadius;
+@property (nonatomic, assign) CGFloat progressInset;
+
+- (CGSize)progressSize;
 
 @end
+

@@ -12,6 +12,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "ATMProgressLayer.h"	// For the style enum
+
 @class ATMHud, ATMHudQueueItem;
 #ifdef ATM_SOUND
 @class ATMSoundFX;
@@ -57,9 +59,10 @@ typedef void (^ATMblockDelegate)(ATMHudAction msg, ATMHud *hud);
 @property (nonatomic, assign) CGFloat gray;							// default 0.8f
 @property (nonatomic, assign) CGFloat animateDuration;				// default 0.1f
 @property (nonatomic, assign) CGFloat progressBorderRadius;			// default 8.0f
+@property (nonatomic, assign) ATMHudProgressStyle progressStyle;	// default ATMHudProgressStyleBar. Must set before the HudView is created.
 @property (nonatomic, assign) CGFloat progressBorderWidth;			// default 2.0f
-@property (nonatomic, assign) CGFloat progressBarRadius;			// default 5.0f
-@property (nonatomic, assign) CGFloat progressBarInset;				// default 3.0f
+@property (nonatomic, assign) CGFloat progressRadius;				// default 5.0f
+@property (nonatomic, assign) CGFloat progressInset;				// default 3.0f
 @property (nonatomic, assign) CGFloat appearScaleFactor;			// default 0.8;
 @property (nonatomic, assign) CGFloat disappearScaleFactor;			// default 5.0f
 @property (nonatomic, assign) NSTimeInterval minShowTime;			// default 0 sec - do not hide even if told to until this much time elapses
@@ -67,6 +70,7 @@ typedef void (^ATMblockDelegate)(ATMHudAction msg, ATMHud *hud);
 																	// set "minShowTime" before "show" , then send show, then send hide
 @property (nonatomic, assign) CGPoint center;						// default {0, 0} - clients can place the HUD center above or below the real view centerpoint
 @property (nonatomic, assign) BOOL shadowEnabled;					// default NO
+@property (nonatomic, assign) BOOL usesParallax;					// default YES
 @property (nonatomic, assign) CGFloat backgroundAlpha;				// default 0.0f; applied as [UIColor colorWithWhite:backgroundAlpha alpha:backgroundAlpha];
 @property (nonatomic, strong) UIColor *hudBackgroundColor;			// default is a light slightly blue color
 

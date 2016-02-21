@@ -60,13 +60,15 @@
 		_alpha						= 0.95f;	// DFH: originally 0.7
 		_gray						= 0.1f;		// DFH: originally 0.0
 		_animateDuration			= 0.1f;
+		_progressStyle				= ATMHudProgressStyleBar;
 		_progressBorderRadius		= 4.0f;		// DFH: was 8
 		_progressBorderWidth		= 0.5;		// DFH: was 2
-		_progressBarRadius			= 2.0f;		// DFH: was 5
-		_progressBarInset			= 3.0f;		// DFH: was 3
+		_progressRadius				= 2.0f;		// DFH: was 5
+		_progressInset				= 3.0f;		// DFH: was 3
 		_appearScaleFactor			= 0.8;		// DFH: originally 1.4f
 		_disappearScaleFactor		= 0.8;		// DFH: originally 1.4f
 		_backgroundAlpha			= 0.15;
+		_usesParallax				= YES;
 		_hudBackgroundColor			= [[UIColor alloc] initWithRed:.98 green:.99 blue:1.0 alpha:_alpha]; // DFH was [UIColor colorWithWhite:_hud.gray alpha:_hud.alpha]
 
 #if 0 // these default to these

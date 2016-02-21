@@ -92,6 +92,8 @@
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+
 	useFixedSize = NO;
 }
 
@@ -100,6 +102,11 @@
     return YES;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+
+	//[self tableView: tv_demo didSelectRowAtIndexPath: [NSIndexPath indexPathForRow:2 inSection:1] ];
+}
 
 #pragma mark -
 #pragma mark UITableView
@@ -321,10 +328,13 @@ assert([NSThread isMainThread]);
 		break;
 		
 	case 2: {
-		NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:.02 target:self selector:@selector(tick:) userInfo:nil repeats:YES];
+		NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:.1 target:self selector:@selector(tick:) userInfo:nil repeats:YES];
 		[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 		[hud setCaption:@"Performing operation..."];
+
+		hud.progressStyle = ATMHudProgressStyleCircle;
 		[hud setProgress:0.08];
+	
 		[hud showInView:self.view];
 		break;
 	}

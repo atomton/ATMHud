@@ -47,6 +47,8 @@ iOS7  circular determinate progress indicator (just ask for it!)
 #4.0.0 - 2/15/2016
 
  * Adopt more modern look - white with dark objects (text, progress indication, etc)
+ * Parallax added as a default
+ * Circular Progess Style Option
  * Enums -> NS_ENUM for Swift
  * Nullabilty for Swift
  

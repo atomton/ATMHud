@@ -24,8 +24,6 @@
 //@end
 
 #define SHADOW_OPACITY	0.4f
-#define PROGRESS_HEIGHT	10
-#define PROGRESS_WIDTH	210
 #define CORNER_RADIUS	10
 
 @implementation ATMHudView
@@ -35,8 +33,8 @@
 	ATMTextLayer		*captionLayer;
 	ATMProgressLayer	*progressLayer;
 	CGRect				captionRect;
-	CGRect				progressRect;
 	CGRect				activityRect;
+	CGRect				progressRect;
 	CGRect				imageRect;
 	BOOL				didHide;
 	UIFont				*bsf14;
@@ -90,16 +88,42 @@
 		_activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: _activityStyle]; // UIActivityIndicatorView
 		_activity.hidesWhenStopped = YES;
 		[self addSubview:_activity];
-		
-//		self.layer.shadowColor = [UIColor blackColor].CGColor;
-//		self.layer.shadowRadius = 5.0;		// DFH: was 8
-//		self.layer.shadowOffset = CGSizeMake(0.0, 0.0);		// DFH: was 3
-//		self.layer.shadowOpacity = 0.05f;		// DFH: was 0.3
 
-		progressRect = CGRectMake(0, 0, PROGRESS_WIDTH, PROGRESS_HEIGHT);	// DFH: hardcoded size of progress control
+		// Remove shadow - its just an old school effect
+		// self.layer.shadowColor = [UIColor blackColor].CGColor;
+		// self.layer.shadowRadius = 5.0;		// DFH: was 8
+		// self.layer.shadowOffset = CGSizeMake(0.0, 0.0);		// DFH: was 3
+		// self.layer.shadowOpacity = 0.05f;		// DFH: was 0.3
+
 		_activitySize = CGSizeMake(20, 20);
 		
 		didHide = YES;
+
+		if(_hud.usesParallax) {
+			// Set vertical effect
+			UIInterpolatingMotionEffect *verticalMotionEffect = 
+			  [[UIInterpolatingMotionEffect alloc] 
+			  initWithKeyPath:@"center.y"
+						 type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+			verticalMotionEffect.minimumRelativeValue = @(-10);
+			verticalMotionEffect.maximumRelativeValue = @(10);
+
+			// Set horizontal effect 
+			UIInterpolatingMotionEffect *horizontalMotionEffect = 
+			  [[UIInterpolatingMotionEffect alloc] 
+			  initWithKeyPath:@"center.x"     
+						 type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+			horizontalMotionEffect.minimumRelativeValue = @(-10);
+			horizontalMotionEffect.maximumRelativeValue = @(10);
+
+			// Create group to combine both
+			UIMotionEffectGroup *group = [UIMotionEffectGroup new];
+			group.motionEffects = @[horizontalMotionEffect, verticalMotionEffect];
+
+			// Add both effects to your view
+			[self addMotionEffect:group];
+		}
+
     }
     return self;
 }
@@ -140,6 +164,9 @@
 
 - (void)calculate
 {
+	progressLayer.progressStyle = _hud.progressStyle;
+	progressRect.size = progressLayer.progressSize;
+
 	if (![_caption length]) {
 		activityRect = CGRectMake(_hud.margin, _hud.margin, _activitySize.width, _activitySize.height);
 		targetBounds = CGRectMake(0, 0, _hud.margin*2+_activitySize.width, _hud.margin*2+_activitySize.height);
@@ -155,7 +182,7 @@
 			captionRect = [self calcString:_caption sizeForSize:CGSizeMake(s.width-_hud.margin*2, 200)];
 			targetBounds = CGRectMake(0, 0, s.width, s.height);
 		}
-// QOS_CLASS_USER_INITIATED
+
 		float adjustment = 0;
 		CGFloat marginX = _hud.margin;
 		CGFloat marginY = _hud.margin;
@@ -252,8 +279,8 @@
 			if (_image && _image.size.width > 0.0f && _image.size.height > 0.0f) {
 				imageRect.size = _image.size;
 			}				
-			progressRect = CGRectMake((targetBounds.size.width-progressRect.size.width)*0.5f, marginY, progressRect.size.width, progressRect.size.height);
-			
+			//progressRect = CGRectMake((targetBounds.size.width-progressRect.size.width)*0.5f, marginY, progressRect.size.width, progressRect.size.height);
+			progressRect.origin = CGPointMake((targetBounds.size.width-progressRect.size.width)*0.5f, marginY);
 			captionRect.origin.x = (targetBounds.size.width-captionRect.size.width)*0.5f;
 			captionRect.origin.y = adjustment+marginY;
 			break;
@@ -286,8 +313,8 @@
 			if (_image)
 				imageRect.size = _image.size;
 			
-			progressRect = CGRectMake((targetBounds.size.width-progressRect.size.width)*0.5f, captionRect.size.height+marginY+_hud.padding, progressRect.size.width, progressRect.size.height);
-			
+			//progressRect = CGRectMake((targetBounds.size.width-progressRect.size.width)*0.5f, captionRect.size.height+marginY+_hud.padding, progressRect.size.width, progressRect.size.height);
+			progressRect.origin = CGPointMake((targetBounds.size.width-progressRect.size.width)*0.5f, captionRect.size.height+marginY+_hud.padding);
 			captionRect.origin.x = (targetBounds.size.width-captionRect.size.width)*0.5f;
 			captionRect.origin.y = marginY;
 			break;
@@ -476,8 +503,8 @@
 		progressLayer.bounds = CGRectMake(0, 0, progressRect.size.width, progressRect.size.height);
 		progressLayer.progressBorderRadius = _hud.progressBorderRadius;
 		progressLayer.progressBorderWidth = _hud.progressBorderWidth;
-		progressLayer.progressBarRadius = _hud.progressBarRadius;
-		progressLayer.progressBarInset = _hud.progressBarInset;
+		progressLayer.progressRadius = _hud.progressRadius;
+		progressLayer.progressInset = _hud.progressInset;
 		progressLayer.theProgress = _progress;
 		[progressLayer setNeedsDisplay];
 		
@@ -544,6 +571,8 @@
 		
 		_backgroundLayer.position = CGPointMake(0.5f*targetBounds.size.width, 0.5f*targetBounds.size.height);
 		imageLayer.position = [self integralPoint:CGPointMake(imageRect.origin.x, imageRect.origin.y)];
+
+
 		progressLayer.position = [self integralPoint:CGPointMake(progressRect.origin.x, progressRect.origin.y)];
 		
 		imageLayer.bounds = CGRectMake(0, 0, imageRect.size.width, imageRect.size.height);
@@ -551,8 +580,8 @@
 		
 		progressLayer.progressBorderRadius = _hud.progressBorderRadius;
 		progressLayer.progressBorderWidth = _hud.progressBorderWidth;
-		progressLayer.progressBarRadius = _hud.progressBarRadius;
-		progressLayer.progressBarInset = _hud.progressBarInset;
+		progressLayer.progressRadius = _hud.progressRadius;
+		progressLayer.progressInset = _hud.progressInset;
 		
 		captionLayer.position = [self integralPoint:CGPointMake(captionRect.origin.x, captionRect.origin.y)];
 		captionLayer.bounds = CGRectMake(0, 0, captionRect.size.width, captionRect.size.height);
