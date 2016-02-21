@@ -62,7 +62,6 @@
 	CGContextAddArcToPoint(ctx, maxx, maxy, midx, maxy, radius);
 	CGContextAddArcToPoint(ctx, minx, maxy, minx, midy, radius);
 	CGContextClosePath(ctx);
-	//CGContextSetRGBStrokeColor(ctx, 1, 1, 1, 1);
 	CGContextSetRGBStrokeColor(ctx,0, 0, 0, 1);
 	CGContextSetLineWidth(ctx, _progressBorderWidth);
 	CGContextDrawPath(ctx, kCGPathStroke);
@@ -79,8 +78,7 @@
 	CGContextAddArcToPoint(ctx, maxx, maxy, midx, maxy, radius);
 	CGContextAddArcToPoint(ctx, minx, maxy, minx, midy, radius);
 	CGContextClosePath(ctx);
-	//CGContextSetRGBFillColor(ctx,1, 1, 1, 1);
-	CGContextSetRGBFillColor(ctx,0, 0, 0, 1);	// DFH
+	CGContextSetRGBFillColor(ctx,0, 0, 0, 1);
 	CGContextDrawPath(ctx, kCGPathFill);
 }
 
@@ -105,7 +103,6 @@
 
 	CGFloat radians = (2*M_PI*_theProgress);
 	CGContextAddArc(ctx, midx, midy, radius, -2.0*M_PI/4.0, -2.0*M_PI/4.0 + radians, 0);
-	//CGContextClosePath(ctx);
 
 	CGContextSetRGBStrokeColor(ctx,0, 0, 0, 1);
 	CGContextSetLineWidth(ctx, progressWidth);
