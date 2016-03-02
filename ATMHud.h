@@ -76,6 +76,7 @@ typedef void (^ATMblockDelegate)(ATMHudAction msg, ATMHud *hud);
 
 @property (nonatomic, weak) id <ATMHudDelegate> delegate;			// traditional delegate
 @property (nonatomic, copy) ATMblockDelegate blockDelegate;			// block delegate
+@property (nonatomic, copy, nullable) void (^convenienceBlock)();	// ATMHud will keep this block around for you
 #ifdef ATM_SOUND
 @property (nonatomic, strong) ATMSoundFX *sound;
 #endif
