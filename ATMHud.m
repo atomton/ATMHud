@@ -211,6 +211,7 @@
 	hudView.image = image;
 }
 
+#if 1
 - (void)setActivity:(BOOL)activity
 {
 	hudView.showActivity = activity;
@@ -232,6 +233,24 @@
     hudView.activity.color = [UIColor blackColor];
 	[UIView animateWithDuration:.250+_animateDuration animations: ^{ hudView.activity.alpha = 1; }];
 }
+#else // in case need to test some other better solution
+- (void)setActivity:(BOOL)activity
+{
+	hudView.showActivity = activity;
+	if (activity) {
+assert([NSThread isMainThread]);
+hudView.activity.color = [UIColor colorWithRed:252.0/255.0 green:113.0/255.0 blue:9.0/255.0 alpha:1.0];
+		[hudView.activity startAnimating];
+	} else {
+		[hudView.activity stopAnimating];
+	}
+}
+- (void)changeColor
+{
+    NSLog(@"?????!!!");
+}
+
+#endif
 
 - (void)setActivityStyle:(UIActivityIndicatorViewStyle)activityStyle
 {
