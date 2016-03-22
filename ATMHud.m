@@ -102,9 +102,17 @@
 - (void)dealloc
 {
 	//NSLog(@"ATM HUD DEALLOC...");
-	[hudView removeFromSuperview];
-	[self.view removeFromSuperview];
+	[self unloadView];
 	//NSLog(@"...ATM HUD DEALLOC");
+}
+
+- (void)unloadView
+{
+	assert([NSThread isMainThread]);
+	if(self.view.window != nil) {
+		//[hudView removeFromSuperview]; // TODO: this should be redundant, since its a child view of the ATMHud view"
+		[self.view removeFromSuperview];
+	}
 }
 
 - (void)loadView

@@ -119,7 +119,9 @@ typedef void (^ATMblockDelegate)(ATMHudAction msg, ATMHud *hud);
 
 - (void)showInView:(UIView *)view;
 - (void)update;
-- (void)hide;	// note: now removes the view from its superview
+- (void)hide;			// Ordered removal. Note: now removes the hudView from its superview
+- (void)unloadView;		// Blunt force removal. Do not call hide.
+
 
 - (void)show __attribute__((deprecated));								// use showInView
 - (void)hideAfter:(NSTimeInterval)delay __attribute__((deprecated));	// set "minShowTime" before "show" , then show, then send "hide"
