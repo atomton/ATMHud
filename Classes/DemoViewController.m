@@ -4,6 +4,7 @@
  *
  *  Created by Marcel Müller on 2011-03-01.
  *  Copyright (c) 2010-2011, Marcel Müller (atomcraft)
+ *  Copyright (c) 2012-2014, David Hoerl
  *  All rights reserved.
  *
  *	This sample project uses the sound
@@ -17,43 +18,65 @@
  *	with kind permission of Joseph Wain.
  *	You can get them here: http://glyphish.com/
  *
- *	https://github.com/atomton/ATMHud
+ *	https://github.com/atomton/ATMHud (original)
  */
 
 #import "DemoViewController.h"
 #import "ATMHud.h"
+#import "ATMHudDelegate.h"
 #import "ATMHudQueueItem.h"
 
 #pragma mark -
 #pragma mark Private interface
-@interface DemoViewController () 
+
+@interface DemoViewController () <ATMHudDelegate>
 - (void)basicHudActionForRow:(NSUInteger)row;
 - (void)advancedHudActionForRow:(NSUInteger)row;
 - (void)positioningActionForRow:(NSUInteger)row;
 @end
 
 @implementation DemoViewController
-@synthesize tv_demo, hud, useFixedSize;
-@synthesize sectionHeaders, sectionFooters, cellCaptions;
+{
+	UITableView			*tv_demo;
+	ATMHud				*hud;				// never released
+	ATMHud				*hud2;				// always released
+	
+	NSArray				*sectionHeaders;
+	NSArray				*sectionFooters;
+	NSArray				*cellCaptions;
+	
+	BOOL useFixedSize;
+}
+
+//@synthesize hud, useFixedSize;
+//@synthesize sectionHeaders, sectionFooters, cellCaptions;
 
 #pragma mark -
 #pragma mark View lifecycle
-- (id)init {
+
+- (id)init
+{
 	if ((self = [super init])) {
-		NSArray *section0 = [NSArray arrayWithObjects:@"Show with caption only", @"Show with caption and activity", @"Show with caption and image", @"Show activity only", @"Play sound on show", nil];
-		NSArray *section1 = [NSArray arrayWithObjects:@"Show and auto-hide", @"Show, update and auto-hide", @"Show progress bar", @"Show queued HUD", nil];
-		NSArray *section2 = [NSArray arrayWithObjects:@"Accessory top", @"Accessory right", @"Accessory bottom", @"Accessory left", nil];
-		NSArray *section3 = [NSArray arrayWithObject:@"Use fixed size"];
+		NSArray *section0 = @[@"Show with caption only", @"Show with caption and activity", @"Show with caption and image", @"Show activity only",
+#ifdef ATM_SOUND
+		@"Play sound on show",
+#endif
+		];
+		NSArray *section1 = @[@"Show and auto-hide", @"Show, update and auto-hide", @"Show progress bar", @"Show queued HUD"];
+		NSArray *section2 = @[@"Accessory top", @"Accessory right", @"Accessory bottom", @"Accessory left"];
+		NSArray *section3 = @[@"Alloc/Release & BlockDel."];
+		NSArray *section4 = @[@"Use fixed size"];
 		
-		sectionHeaders = [[NSArray alloc] initWithObjects:@"Basic functions", @"Advanced functions", @"Accessory positioning", @"", nil];
-		sectionFooters = [[NSArray alloc] initWithObjects:@"Tap the HUD to hide it.", @"Tap to hide is disabled.", @"", [ATMHud buildInfo], nil];
-		cellCaptions = [[NSArray alloc] initWithObjects:section0, section1, section2, section3, nil];
+		sectionHeaders	= @[@"Basic functions", @"Advanced functions", @"Accessory positioning", @"Instantiated and Released", @""];
+		sectionFooters	= @[@"Tap the HUD to hide it.", @"Tap to hide is disabled.", @"", @"Tap the HUD to hide it.", [ATMHud version]];
+		cellCaptions	= @[section0, section1, section2, section3, section4];
 	}
 	return self;
 }
 
-- (void)loadView {
-	UIView *baseView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+- (void)loadView
+{
+	UIView *baseView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	
 	tv_demo = [[UITableView alloc] initWithFrame:baseView.bounds style:UITableViewStyleGrouped];
 	tv_demo.delegate = self;
@@ -62,91 +85,72 @@
 								UIViewAutoresizingFlexibleHeight);
 	
 	[baseView addSubview:tv_demo];
+	self.view = baseView;
 	
 	hud = [[ATMHud alloc] initWithDelegate:self];
-	[baseView addSubview:hud.view];
-	
-	self.view = baseView;
-	[baseView release];
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+
 	useFixedSize = NO;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
     return YES;
 }
 
-- (void)dealloc {
-	[tv_demo release];
-	[hud release];
-	
-	[cellCaptions release];
-	[sectionHeaders release];
-	[sectionFooters release];
-	
-    [super dealloc];
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+
+	//[self tableView: tv_demo didSelectRowAtIndexPath: [NSIndexPath indexPathForRow:2 inSection:1] ];
 }
 
 #pragma mark -
 #pragma mark UITableView
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	return [sectionHeaders objectAtIndex:section];
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+	return sectionHeaders[section];
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
-	return [sectionFooters objectAtIndex:section];
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+	return sectionFooters[section];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 4;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+	return [cellCaptions count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	switch (section) {
-		case 0:
-			return 5;
-			break;
-			
-		case 1:
-			return 4;
-			break;
-			
-		case 2:
-			return 4;
-			break;
-			
-		case 3:
-			return 1;
-			break;
-			
-		default:
-			return 0;
-			break;
-	}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+	return [cellCaptions[section] count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
 	NSString *ident = @"DefaultCell";
-	if (indexPath.section == 3) {
+	if (indexPath.section == ([cellCaptions count] - 1)) {
 		ident = @"SwitchCell";
 	}
 	
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ident];
 	
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ident] autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ident];
 	}
 	
-	if (indexPath.section == 3) {
-		UISwitch *fsSwitch = [[UISwitch alloc] init];
+	if (indexPath.section == ([cellCaptions count] - 1)) {
+		UISwitch *fsSwitch = [UISwitch new];
 		[fsSwitch sizeToFit];
 		fsSwitch.on = useFixedSize;
 		[fsSwitch addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
 		
 		cell.accessoryView = fsSwitch;
-		[fsSwitch release];
 		
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -156,134 +160,216 @@
 		cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 	}
 	
-	cell.textLabel.text = [[cellCaptions objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+	cell.textLabel.text = cellCaptions[indexPath.section][indexPath.row];
 	
 	return cell;
 }
 
-- (void)switchToggled:(UISwitch *)sw {
+- (void)switchToggled:(UISwitch *)sw
+{
 	useFixedSize = [sw isOn];
-	if (useFixedSize) {
-		[hud setFixedSize:CGSizeMake(200, 100)];
-	} else {
-		[hud setFixedSize:CGSizeZero];
-	}
 }
 
-- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (indexPath.section == 3) {
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (indexPath.section == ([cellCaptions count] - 1)) {
 		return nil;
 	}
 	return indexPath;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 	
+	if (useFixedSize) {
+		[hud setFixedSize:CGSizeMake(200, 100)];
+	} else {
+		[hud setFixedSize:CGSizeZero];
+	}
+
+#pragma mark -
+#pragma mark Experiment with different UI values
+#pragma mark -
+
+#if 0
+	hud.appearScaleFactor		= 0.8f;
+	hud.disappearScaleFactor	= 0.8f;
+	hud.gray					= 0.2f;
+	hud.alpha					= 0.8f;
+	hud.margin					= 10.0f;
+	hud.padding					= 10.0f;
+	hud.alpha					= 0.8f;		// DFH: originally 0.7
+	hud.gray					= 0.2f;		// DFH: originally 0.0
+	hud.animateDuration			= 0.1f;
+	hud.progressBorderRadius	= 8.0f;
+	hud.progressBorderWidth		= 2.0f;
+	hud.progressBarRadius		= 5.0f;
+	hud.progressBarInset		= 3.0f;
+	hud.accessoryPosition		= ATMHudAccessoryPositionBottom;
+	hud.appearScaleFactor		= 0.8;		// DFH: originally 1.4f
+	hud.disappearScaleFactor	= 0.8;		// DFH: originally 1.4f
+#if 1 // these default to these
+	hud.minShowTime					= 0;
+	hud.center						= CGPointZero;
+	hud.blockTouches				= NO;
+	hud.allowSuperviewInteraction	= NO;
+	hud.shadowEnabled				= NO;
+#endif
+
+#endif
+
 	switch (indexPath.section) {
-		case 0:
-			[self basicHudActionForRow:indexPath.row];
-			break;
-			
-		case 1:
-			[self advancedHudActionForRow:indexPath.row];
-			break;
-			
-		case 2:
-			[self positioningActionForRow:indexPath.row];
-			break;
+	case 0:
+		[self basicHudActionForRow:indexPath.row];
+		break;
+		
+	case 1:
+		[self advancedHudActionForRow:indexPath.row];
+		break;
+		
+	case 2:
+		[self positioningActionForRow:indexPath.row];
+		break;
+	
+	case 3:
+	{
+		hud2 = [ATMHud new];
+		[hud2 setCaption:@"Just a simple caption."];
+		__weak DemoViewController *weakSelf = self;
+		hud2.blockDelegate = ^(ATMHudAction msg, ATMHud *h)
+								{
+assert([NSThread isMainThread]);
+									NSLog(@"MSG %d", (int)msg);
+									switch(msg) {
+									case ATMHudActionUserDidTapHud:
+										[h hide];
+										break;
+									case ATMHudActionDidDisappear:
+									{
+//dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
+    {
+										// All this to avoid Xcode warnigs
+										DemoViewController *strongSelf = weakSelf;
+										if(strongSelf) {
+											NSLog(@"Will dealloc...");
+											strongSelf->hud2 = nil;
+											NSLog(@"DID dealloc");
+										}
+    }
+//);
+
+									}	break;
+									default:
+										break;
+									}
+								};
+		[hud2 showInView:self.view];
+	}	break;
+	
 	}
 }
 
 #pragma mark -
 #pragma mark Demonstration functions and selectors
-- (void)basicHudActionForRow:(NSUInteger)row {
+- (void)basicHudActionForRow:(NSUInteger)row
+{
+	hud.minShowTime = 0;
+	[hud setBlockTouches:NO];
+
 	switch (row) {
-		case 0:
-			[hud setCaption:@"Just a simple caption."];
-			break;
-			
-		case 1:
-			[hud setCaption:@"Caption and an activity indicator."];
-			[hud setActivity:YES];
-			break;
-			
-		case 2:
-			[hud setCaption:@"Caption and an image."];
-			[hud setImage:[UIImage imageNamed:@"19-check"]];
-			break;
-			
-		case 3:
-			[hud setActivity:YES];
-			[hud setActivityStyle:UIActivityIndicatorViewStyleWhiteLarge];
-			break;
-			
-		case 4:
-			[hud setCaption:@"Showing the HUD triggers a sound."];
-			[hud setShowSound:[[NSBundle mainBundle] pathForResource:@"pop" ofType:@"wav"]];
-			break;
+	case 0:
+		[hud setCaption:@"Just a simple caption."];
+		break;
+		
+	case 1:
+		[hud setCaption:@"Caption and an activity indicator."];
+		[hud setActivity:YES];
+		break;
+		
+	case 2:
+		[hud setCaption:@"Caption and an image."];
+		[hud setImage:[[UIImage imageNamed:@"19-check"] imageWithRenderingMode: UIImageRenderingModeAlwaysTemplate]];
+		break;
+		
+	case 3:
+		[hud setActivity:YES];
+		//[hud setActivityStyle:UIActivityIndicatorViewStyleWhiteLarge];
+		break;
+#ifdef ATM_SOUND
+	case 4:
+		[hud setCaption:@"Showing the HUD triggers a sound."];
+		[hud setShowSound:[[NSBundle mainBundle] pathForResource:@"pop" ofType:@"wav"]];
+		break;
+#endif
 	}
-	[hud show];
+	[hud showInView:self.view];
 }
 
-- (void)advancedHudActionForRow:(NSUInteger)row {
+- (void)advancedHudActionForRow:(NSUInteger)row
+{
+	hud.minShowTime = 0;
 	[hud setBlockTouches:YES];
+
 	switch (row) {
-		case 0:
-			[hud setCaption:@"This HUD will auto-hide in 2 seconds."];
-			[hud show];
-			[hud hideAfter:2.0];
-			break;
-			
-		case 1:
-			[hud setCaption:@"This HUD will update in 2 seconds."];
-			[hud setActivity:YES];
-			[hud show];
-			[self performSelector:@selector(updateHud) withObject:nil afterDelay:2.0];
-			break;
-			
-		case 2: {
-			NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:.02 target:self selector:@selector(tick:) userInfo:nil repeats:YES];
-			[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
-			[hud setCaption:@"Performing operation..."];
-			[hud setProgress:0.08];
-			[hud show];
-			break;
-		}
-			
-		case 3: {
-			ATMHudQueueItem *item = [[ATMHudQueueItem alloc] init];
-			item.caption = @"Display #1";
-			item.image = nil;
-			item.accessoryPosition = ATMHudAccessoryPositionBottom;
-			item.showActivity = NO;
-			[hud addQueueItem:item];
-			[item release];
-			
-			item = [[ATMHudQueueItem alloc] init];
-			item.caption = @"Display #2";
-			item.image = nil;
-			item.accessoryPosition = ATMHudAccessoryPositionRight;
-			item.showActivity = YES;
-			[hud addQueueItem:item];
-			[item release];
-			
-			item = [[ATMHudQueueItem alloc] init];
-			item.caption = @"Display #3";
-			item.image = [UIImage imageNamed:@"19-check"];
-			item.accessoryPosition = ATMHudAccessoryPositionBottom;
-			item.showActivity = NO;
-			[hud addQueueItem:item];
-			[item release];
-			
-			[hud startQueue];
-			[self performSelector:@selector(showNextDisplayInQueue) withObject:nil afterDelay:2];
-			break;
-		}
+	case 0:
+		[hud setCaption:@"This HUD will auto-hide in 2 seconds."];
+		hud.minShowTime = 2;			// new way
+		[hud showInView:self.view];
+		//[hud hideAfter:2.0];			// old way
+		[hud hide];
+		break;
+		
+	case 1:
+		[hud setCaption:@"This HUD will update in 2 seconds."];
+		[hud setActivity:YES];
+		[hud showInView:self.view];
+		[self performSelector:@selector(updateHud) withObject:nil afterDelay:2.0];
+		break;
+		
+	case 2: {
+		NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:.1 target:self selector:@selector(tick:) userInfo:nil repeats:YES];
+		[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+		[hud setCaption:@"Performing operation..."];
+
+		hud.progressStyle = ATMHudProgressStyleCircle;
+		[hud setProgress:0.08];
+	
+		[hud showInView:self.view];
+		break;
+	}
+		
+	case 3: {
+		ATMHudQueueItem *item = [ATMHudQueueItem new];
+		item.caption = @"Display #1";
+		item.image = nil;
+		item.accessoryPosition = ATMHudAccessoryPositionBottom;
+		item.showActivity = NO;
+		[hud addQueueItem:item];
+		
+		item = [ATMHudQueueItem new];
+		item.caption = @"Display #2";
+		item.image = nil;
+		item.accessoryPosition = ATMHudAccessoryPositionRight;
+		item.showActivity = YES;
+		[hud addQueueItem:item];
+		
+		item = [ATMHudQueueItem new];
+		item.caption = @"Display #3";
+		item.image = [UIImage imageNamed:@"19-check"];
+		item.accessoryPosition = ATMHudAccessoryPositionBottom;
+		item.showActivity = NO;
+		[hud addQueueItem:item];
+		
+		[hud startQueueInView:self.view];
+		[self performSelector:@selector(showNextDisplayInQueue) withObject:nil afterDelay:2];
+		break;
+	}
 	}
 }
 
-- (void)tick:(NSTimer *)timer {
+- (void)tick:(NSTimer *)timer
+{
 	static CGFloat p = 0.08;
 	p += 0.01;
 	[hud setProgress:p];
@@ -295,45 +381,52 @@
 	}
 }
 
-- (void)resetProgress {
+- (void)resetProgress
+{
 	[hud setProgress:0];
 }
 
-- (void)updateHud {
+- (void)updateHud
+{
 	[hud setCaption:@"And now it will hide."];
 	[hud setActivity:NO];
 	[hud setImage:[UIImage imageNamed:@"19-check"]];
+	
+	hud.minShowTime = 2;	// new way
 	[hud update];
-	[hud hideAfter:2.0];
+	[hud hide];				// new way
+	//[hud hideAfter:2.0];	// old way
 }
 
-- (void)positioningActionForRow:(NSUInteger)row {
-	[hud setAccessoryPosition:row];
+- (void)positioningActionForRow:(NSUInteger)row
+{
+	[hud setAccessoryPosition:(ATMHudAccessoryPosition)row];
 	switch (row) {
-		case 0:
-			[hud setCaption:@"Position: Top"];
-			[hud setProgress:0.45];
-			break;
-			
-		case 1:
-			[hud setCaption:@"Position: Right"];
-			[hud setActivity:YES];
-			break;
-			
-		case 2:
-			[hud setCaption:@"Position: Bottom"];
-			[hud setImage:[UIImage imageNamed:@"11-x"]];
-			break;
-			
-		case 3:
-			[hud setCaption:@"Position: Left"];
-			[hud setActivity:YES];
-			break;
+	case 0:
+		[hud setCaption:@"Position: Top"];
+		[hud setProgress:0.45];
+		break;
+		
+	case 1:
+		[hud setCaption:@"Position: Right"];
+		[hud setActivity:YES];
+		break;
+		
+	case 2:
+		[hud setCaption:@"Position: Bottom"];
+		[hud setImage:[UIImage imageNamed:@"11-x"]];
+		break;
+		
+	case 3:
+		[hud setCaption:@"Position: Left"];
+		[hud setActivity:YES];
+		break;
 	}
-	[hud show];
+	[hud showInView:self.view];
 }
 
-- (void)showNextDisplayInQueue {
+- (void)showNextDisplayInQueue
+{
 	static int i = 1;
 	[hud showNextInQueue];
 	if (i < 3) {
@@ -347,8 +440,15 @@
 
 #pragma mark -
 #pragma mark ATMHudDelegate
-- (void)userDidTapHud:(ATMHud *)_hud {
-	[_hud hide];
+
+- (void)userDidTapHud:(ATMHud *)theHud
+{
+	[theHud hide];
+}
+
+- (void)hudDidDisappear:(ATMHud *)theHud
+{
+	// normally you would release your ivar here, but this app reuses the HUD so it never gets released
 }
 
 #pragma mark -
@@ -356,7 +456,8 @@
 
 // Uncomment this method to see a demonstration of playing a sound everytime a HUD appears.
 /*
-- (void)hudDidAppear:(ATMHud *)_hud {
+- (void)hudDidAppear:(ATMHud *)_hud
+{
 	NSString *soundFilePath = [[NSBundle mainBundle] pathForResource: @"pop"
 															  ofType: @"wav"];
 	[hud playSound:soundFilePath];
